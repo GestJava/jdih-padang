@@ -1,0 +1,55 @@
+#!/usr/bin/env php
+<?php
+
+/*
+ * --------------------------------------------------------------------
+ * CodeIgniter Command-Line Tool
+ * --------------------------------------------------------------------
+ *
+ * The main entry point into the CLI system and allows you to run
+ * commands and perform maintenance on your application.
+ */
+
+// Refuse to run from the web
+if (php_sapi_name() !== 'cli') {
+    exit('This script can only be run from the command line.');
+}
+
+// Check PHP version
+$minPHPVersion = '7.4';
+if (version_compare(PHP_VERSION, $minPHPVersion, '<')) {
+    die("Your PHP version must be {$minPHPVersion} or higher to run CodeIgniter. Current version: " . PHP_VERSION);
+}
+
+// Path to the front controller (this file)
+// Based on index.php in root (d:\jdih\jdih\index.php)
+define('FCPATH', __DIR__ . DIRECTORY_SEPARATOR);
+
+// Ensure the current directory is pointing to the front controller's directory
+chdir(__DIR__);
+
+// Load our paths config file
+require FCPATH . 'app/Config/Paths.php';
+
+$paths = new Config\Paths();
+
+// Location of the framework bootstrap file.
+require rtrim($paths->systemDirectory, '\\/ ') . DIRECTORY_SEPARATOR . 'bootstrap.php';
+
+// Load environment settings from .env files
+$env = new \CodeIgniter\Config\DotEnv(ROOTPATH);
+$env->load();
+
+// Define ENVIRONMENT
+if (! defined('ENVIRONMENT')) {
+    define('ENVIRONMENT', env('CI_ENVIRONMENT', 'production'));
+}
+
+// Initialize the framework
+$app = Config\Services::codeigniter();
+$app->initialize();
+$app->setContext('php-cli');
+
+// Show the console
+$console = new CodeIgniter\CLI\Console(new Config\Paths());
+$console->run();

@@ -1,0 +1,6 @@
+Contact: mailto:jdih@padang.go.id
+Expires: 2026-01-03T00:00:00.000Z
+Preferred-Languages: id, en
+Canonical: https://jdih.padang.go.id/.well-known/security.txt
+Policy: https://jdih.padang.go.id/security-policy
+Hiring: https://jdih.padang.go.id/careers 

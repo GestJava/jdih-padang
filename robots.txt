@@ -1,0 +1,46 @@
+User-agent: *
+Allow: /
+
+# Disallow admin and sensitive areas
+Disallow: /admin/
+Disallow: /jdih/admin/
+Disallow: /login
+Disallow: /logout
+Disallow: /writable/
+Disallow: /vendor/
+Disallow: /system/
+Disallow: /tmp/
+Disallow: /uploads/temp/
+Disallow: /files/temp/
+
+# Allow important content
+Allow: /dokumen/
+Allow: /berita/
+Allow: /agenda/
+Allow: /assets/
+Allow: /images/
+Allow: /uploads/peraturan/
+Allow: /uploads/berita/
+
+# Sitemap
+Sitemap: https://jdih.padang.go.id/sitemap.xml
+
+# Crawl-delay for respectful crawling
+Crawl-delay: 1
+
+# Block Google Shopping and Commerce crawlers
+User-agent: Googlebot-Shopping
+Disallow: /
+
+User-agent: Googlebot-Product
+Disallow: /
+
+User-agent: Googlebot-Commerce
+Disallow: /
+
+User-agent: Mediapartners-Google
+Disallow: /
+
+# Explicitly allow regular Googlebot
+User-agent: Googlebot
+Allow: /

@@ -1,0 +1,51 @@
+/* ========================================================
+   News Styles for JDIH Website - Lightweight Version
+   Updated: June 2025
+   ======================================================== */
+
+/* Minimal styling for cards */
+.card {
+  border: none;
+}
+
+.card-img-top {
+  border-top-left-radius: 4px;
+  border-top-right-radius: 4px;
+}
+
+/* Badge styling */
+.badge {
+  font-weight: 500;
+  padding: 0.35em 0.65em;
+}
+
+/* Card title styling */
+.card-title {
+  line-height: 1.4;
+  margin-bottom: 0.5rem;
+}
+
+.card-title a:hover {
+  color: #0056b3;
+}
+
+/* Card text styling */
+.card-text {
+  color: #6c757d;
+}
+
+/* Shadow utility */
+.shadow-sm {
+  box-shadow: 0 .125rem .25rem rgba(0,0,0,.075);
+}
+
+/* Responsive adjustments */
+@media (max-width: 767.98px) {
+  .card-title {
+    font-size: 1rem;
+  }
+  
+  .card-text {
+    font-size: 0.85rem;
+  }
+}

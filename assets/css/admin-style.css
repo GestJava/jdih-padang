@@ -1,0 +1,193 @@
+/* Admin Style CSS */
+
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: #f8f9fa;
+}
+
+.wrapper {
+    display: flex;
+    width: 100%;
+}
+
+/* Sidebar Styles */
+.sidebar {
+    min-width: 250px;
+    max-width: 250px;
+    background: #343a40;
+    color: #fff;
+    transition: all 0.3s;
+    height: 100vh;
+    position: fixed;
+    z-index: 999;
+}
+
+.sidebar.active {
+    margin-left: -250px;
+}
+
+.sidebar .sidebar-header {
+    padding: 20px;
+    background: #212529;
+}
+
+.sidebar ul.components {
+    padding: 20px 0;
+    border-bottom: 1px solid #4b545c;
+}
+
+.sidebar ul p {
+    color: #fff;
+    padding: 10px;
+}
+
+.sidebar ul li a {
+    padding: 10px 20px;
+    font-size: 1.1em;
+    display: block;
+    color: #fff;
+    text-decoration: none;
+}
+
+.sidebar ul li a:hover {
+    color: #fff;
+    background: #495057;
+}
+
+.sidebar ul li.active > a,
+a[aria-expanded="true"] {
+    color: #fff;
+    background: #495057;
+}
+
+/* Content Styles */
+#content {
+    width: 100%;
+    padding: 20px;
+    min-height: 100vh;
+    transition: all 0.3s;
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin-left: 250px;
+}
+
+#content.active {
+    margin-left: 0;
+}
+
+/* Navbar Styles */
+.navbar {
+    padding: 15px 10px;
+    background: #fff;
+    border: none;
+    border-radius: 0;
+    margin-bottom: 20px;
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+}
+
+.navbar-btn {
+    box-shadow: none;
+    outline: none !important;
+    border: none;
+}
+
+/* Card Styles */
+.card {
+    margin-bottom: 20px;
+    border: none;
+    border-radius: 5px;
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+}
+
+.card-header {
+    background-color: #fff;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.125);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.card-title {
+    margin-bottom: 0;
+    font-weight: 600;
+}
+
+/* Table Styles */
+.table {
+    margin-bottom: 0;
+}
+
+.table th {
+    border-top: none;
+    background-color: #f8f9fa;
+    font-weight: 600;
+}
+
+/* Button Styles */
+.btn-primary {
+    background-color: #0d6efd;
+    border-color: #0d6efd;
+}
+
+.btn-primary:hover {
+    background-color: #0b5ed7;
+    border-color: #0a58ca;
+}
+
+.btn-danger {
+    background-color: #dc3545;
+    border-color: #dc3545;
+}
+
+.btn-danger:hover {
+    background-color: #bb2d3b;
+    border-color: #b02a37;
+}
+
+/* Form Styles */
+.form-control:focus {
+    border-color: #86b7fe;
+    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+}
+
+.form-label {
+    font-weight: 500;
+}
+
+/* Pagination Styles */
+.pagination {
+    margin-bottom: 0;
+}
+
+.page-item.active .page-link {
+    background-color: #0d6efd;
+    border-color: #0d6efd;
+}
+
+.page-link {
+    color: #0d6efd;
+}
+
+.page-link:hover {
+    color: #0a58ca;
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+    .sidebar {
+        margin-left: -250px;
+    }
+    .sidebar.active {
+        margin-left: 0;
+    }
+    #content {
+        margin-left: 0;
+    }
+    #content.active {
+        margin-left: 250px;
+    }
+    #sidebarCollapse span {
+        display: none;
+    }
+}

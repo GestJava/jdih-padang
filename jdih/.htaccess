@@ -1,0 +1,42 @@
+# Enable URL Rewriting
+RewriteEngine On
+
+# ============================================
+# PROTECTION FOR SENSITIVE FILES
+# ============================================
+# Block access to test files
+RewriteRule ^test_.*\.php$ - [F,L]
+RewriteRule ^.*test.*\.php$ - [F,L]
+
+# Block access to SQL files
+RewriteRule ^.*\.sql$ - [F,L]
+
+# Block access to documentation files
+RewriteRule ^.*\.md$ - [F,L]
+
+# Block access to shell scripts
+RewriteRule ^.*\.sh$ - [F,L]
+
+# Block access to utility scripts (protect from web access)
+RewriteRule ^(clear_all_cache|check_server_status|cleanup_invalid_keywords)\.php$ - [F,L]
+
+# Block access to config files
+RewriteRule ^.*\.env$ - [F,L]
+RewriteRule ^.*\.ini$ - [F,L]
+RewriteRule ^.*\.conf$ - [F,L]
+
+# Block access to backup files
+RewriteRule ^.*\.bak$ - [F,L]
+RewriteRule ^.*\.backup$ - [F,L]
+RewriteRule ^.*\.old$ - [F,L]
+
+# Block access to log files
+RewriteRule ^.*\.log$ - [F,L]
+
+# ============================================
+# CODEIGNITER ROUTING
+# ============================================
+# Send all requests to CodeIgniter index.php (only if file/directory doesn't exist)
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ index.php/$1 [L] 

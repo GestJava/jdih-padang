@@ -1,0 +1,714 @@
+/**
+ * Harmonisasi Module CSS - Optimized with Namespacing
+ * Prevents conflicts with header.php and other modules
+ */
+
+/* ============================================================
+   HARMONISASI MODULE NAMESPACE
+   ============================================================ */
+.harmonisasi-module {
+    /* Container for all harmonisasi elements */
+}
+
+/* ============================================================
+   STATISTICS CARDS - NAMESPACED
+   ============================================================ */
+.harmonisasi-module .border-left-primary {
+    border-left: 4px solid #007bff !important;
+}
+
+.harmonisasi-module .border-left-warning {
+    border-left: 4px solid #ffc107 !important;
+}
+
+.harmonisasi-module .border-left-info {
+    border-left: 4px solid #17a2b8 !important;
+}
+
+.harmonisasi-module .border-left-success {
+    border-left: 4px solid #28a745 !important;
+}
+
+/* ============================================================
+   TABLE ENHANCEMENTS - NAMESPACED
+   ============================================================ */
+.harmonisasi-module .table-hover tbody tr:hover {
+    background-color: #f8f9fa;
+    transform: scale(1.01);
+    transition: all 0.2s ease;
+}
+
+.harmonisasi-module .table tbody tr {
+    border-bottom: 1px solid #dee2e6;
+}
+
+.harmonisasi-module .table tbody tr:last-child {
+    border-bottom: none;
+}
+
+/* ============================================================
+   TABLE HEADER STYLING - NAMESPACED & SAFE
+   ============================================================ */
+/* SOLUSI UTAMA: Header tabel dengan warna teks yang jelas terlihat */
+.harmonisasi-module .table thead th {
+    background-color: #e9ecef !important;
+    color: #212529 !important;
+    border-bottom: 3px solid #495057 !important;
+    font-weight: 700 !important;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    letter-spacing: 0.5px;
+    padding: 15px 10px;
+    vertical-align: middle;
+    text-shadow: none;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Override untuk semua jenis tabel dalam harmonisasi module */
+.harmonisasi-module .table.table-striped thead th,
+.harmonisasi-module .table.table-bordered thead th,
+.harmonisasi-module .table.table-hover thead th {
+    background-color: #e9ecef !important;
+    color: #212529 !important;
+    border-bottom: 3px solid #495057 !important;
+}
+
+/* DataTables override untuk harmonisasi module */
+.harmonisasi-module .dataTables_wrapper .dataTable thead th,
+.harmonisasi-module .dataTables_wrapper .dataTable thead th.sorting,
+.harmonisasi-module .dataTables_wrapper .dataTable thead th.sorting_asc,
+.harmonisasi-module .dataTables_wrapper .dataTable thead th.sorting_desc {
+    background-color: #e9ecef !important;
+    color: #212529 !important;
+    border-bottom: 3px solid #495057 !important;
+    font-weight: 700 !important;
+}
+
+/* Hover effect yang jelas */
+.harmonisasi-module .table thead th:hover {
+    background-color: #495057 !important;
+    color: #ffffff !important;
+    transition: all 0.3s ease;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* CSS untuk memastikan teks header selalu terlihat */
+.harmonisasi-module .table thead th *,
+.harmonisasi-module .table thead th span,
+.harmonisasi-module .table thead th div,
+.harmonisasi-module .table thead th strong,
+.harmonisasi-module .table thead th b {
+    color: inherit !important;
+    font-weight: inherit !important;
+}
+
+/* Table styling yang aman */
+.harmonisasi-module .table {
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.harmonisasi-module .table tbody td {
+    vertical-align: middle;
+    padding: 10px 8px;
+    border-top: 1px solid #f0f0f0;
+}
+
+/* ============================================================
+   DATATABLES STYLING - NAMESPACED & SAFE
+   ============================================================ */
+.harmonisasi-module .dataTables_wrapper .dataTables_length,
+.harmonisasi-module .dataTables_wrapper .dataTables_filter,
+.harmonisasi-module .dataTables_wrapper .dataTables_info,
+.harmonisasi-module .dataTables_wrapper .dataTables_processing,
+.harmonisasi-module .dataTables_wrapper .dataTables_paginate {
+    color: #495057;
+    margin: 10px 0;
+}
+
+.harmonisasi-module .dataTables_wrapper .dataTables_paginate .paginate_button {
+    color: #495057 !important;
+    border: 1px solid #dee2e6;
+    background: #fff;
+    padding: 5px 10px;
+    margin: 0 2px;
+    border-radius: 4px;
+}
+
+.harmonisasi-module .dataTables_wrapper .dataTables_paginate .paginate_button:hover {
+    background: #e9ecef !important;
+    color: #212529 !important;
+    border-color: #adb5bd;
+}
+
+.harmonisasi-module .dataTables_wrapper .dataTables_paginate .paginate_button.current {
+    background: #007bff !important;
+    color: #fff !important;
+    border-color: #007bff;
+}
+
+.harmonisasi-module .dataTables_wrapper .dataTables_paginate .paginate_button.disabled {
+    color: #6c757d !important;
+    background: #f8f9fa !important;
+    border-color: #dee2e6;
+    cursor: not-allowed;
+}
+
+/* ============================================================
+   CARD ENHANCEMENTS - NAMESPACED
+   ============================================================ */
+.harmonisasi-module .card {
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    border-radius: 0.75rem;
+    overflow: hidden;
+}
+
+.harmonisasi-module .card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.12) !important;
+}
+
+.harmonisasi-module .card-body {
+    padding: 1.5rem;
+}
+
+.harmonisasi-module .card-header {
+    background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+    border-bottom: none;
+    color: white;
+    padding: 1rem 1.5rem !important;
+}
+
+/* ============================================================
+   MAIN CARD HEADER SPACING - NAMESPACED
+   ============================================================ */
+.harmonisasi-module .card-header.bg-primary {
+    padding: 1.25rem 1.5rem !important;
+}
+
+.harmonisasi-module .card-header.bg-primary .d-flex {
+    gap: 1.5rem !important;
+    align-items: center !important;
+}
+
+.harmonisasi-module .card-header.bg-primary h6 {
+    margin: 0 !important;
+    padding: 0 !important;
+    flex: 1 !important;
+}
+
+/* ============================================================
+   COLLAPSE BUTTON FIXES - NAMESPACED
+   ============================================================ */
+.harmonisasi-module .card-header .btn-outline-primary {
+    background-color: rgba(255, 255, 255, 0.9) !important;
+    border-color: rgba(255, 255, 255, 0.8) !important;
+    color: #007bff !important;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.harmonisasi-module .card-header .btn-outline-primary:hover {
+    background-color: #ffffff !important;
+    border-color: #ffffff !important;
+    color: #0056b3 !important;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.harmonisasi-module .card-header .btn-outline-primary:focus {
+    background-color: #ffffff !important;
+    border-color: #ffffff !important;
+    color: #0056b3 !important;
+    box-shadow: 0 0 0 0.2rem rgba(255, 255, 255, 0.5);
+}
+
+.harmonisasi-module .card-header .collapse-text {
+    color: #007bff !important;
+    font-weight: 600;
+}
+
+.harmonisasi-module .card-header .btn-outline-primary i {
+    color: #007bff !important;
+}
+
+/* ============================================================
+   BUTTON ENHANCEMENTS - NAMESPACED
+   ============================================================ */
+.harmonisasi-module .btn-group .btn {
+    transition: all 0.2s ease;
+}
+
+.harmonisasi-module .btn-group .btn:hover {
+    transform: translateY(-1px);
+    z-index: 1;
+}
+
+.harmonisasi-module .btn:active {
+    transform: scale(0.98);
+}
+
+.harmonisasi-module .btn-action {
+    border-radius: 0.375rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    letter-spacing: 0.5px;
+}
+
+/* ============================================================
+   BADGE ENHANCEMENTS - NAMESPACED
+   ============================================================ */
+.harmonisasi-module .badge {
+    padding: 0.5em 0.75em;
+    font-size: 0.75rem;
+}
+
+.harmonisasi-module .badge-status {
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* ============================================================
+   DATATABLE ENHANCEMENTS - NAMESPACED
+   ============================================================ */
+.harmonisasi-module .dt-buttons {
+    margin-bottom: 1rem;
+}
+
+.harmonisasi-module .dt-buttons .btn {
+    margin-right: 0.5rem;
+}
+
+.harmonisasi-module .dataTables_wrapper {
+    /* Prevent conflicts with global DataTables styling */
+}
+
+/* ============================================================
+   TYPOGRAPHY ENHANCEMENTS - NAMESPACED
+   ============================================================ */
+.harmonisasi-module .h5 {
+    font-size: 1.75rem;
+    font-weight: 700;
+}
+
+.harmonisasi-module .text-xs {
+    font-size: 0.7rem;
+}
+
+/* ============================================================
+   RESPONSIVE DESIGN - NAMESPACED
+   ============================================================ */
+@media (max-width: 768px) {
+    .harmonisasi-module .btn-group {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .harmonisasi-module .btn-group .btn {
+        margin-bottom: 0.25rem;
+        font-size: 0.75rem;
+    }
+
+    .harmonisasi-module .table-responsive .btn-group {
+        min-width: 100px;
+    }
+}
+
+/* ============================================================
+   PAGE-SPECIFIC ENHANCEMENTS - NAMESPACED
+   ============================================================ */
+.harmonisasi-module .harmonisasi-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.harmonisasi-module .statistics-card {
+    border-radius: 0.75rem;
+    overflow: hidden;
+}
+
+.harmonisasi-module .main-content-card {
+    border-radius: 0.75rem;
+    overflow: hidden;
+}
+
+.harmonisasi-module .table-dark {
+    background: linear-gradient(135deg, #343a40 0%, #495057 100%);
+}
+
+/* ============================================================
+   EMPTY STATE STYLING - NAMESPACED
+   ============================================================ */
+.harmonisasi-module .empty-state {
+    text-align: center;
+    padding: 3rem 1rem;
+}
+
+.harmonisasi-module .empty-state i {
+    font-size: 4rem;
+    color: #6c757d;
+    margin-bottom: 1rem;
+}
+
+.harmonisasi-module .empty-state h5 {
+    color: #6c757d;
+    margin-bottom: 0.5rem;
+}
+
+.harmonisasi-module .empty-state p {
+    color: #6c757d;
+    margin-bottom: 1.5rem;
+}
+
+/* ============================================================
+   BREADCRUMB ENHANCEMENTS - NAMESPACED
+   ============================================================ */
+.harmonisasi-module .breadcrumb {
+    background: transparent;
+    padding: 0;
+    margin: 0;
+}
+
+.harmonisasi-module .breadcrumb-item + .breadcrumb-item::before {
+    content: ">";
+    color: #6c757d;
+}
+
+/* ============================================================
+   ALERT ENHANCEMENTS - NAMESPACED
+   ============================================================ */
+.harmonisasi-module .alert {
+    border-radius: 0.5rem;
+    border: none;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.harmonisasi-module .alert-success {
+    background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+    color: #155724;
+}
+
+.harmonisasi-module .alert-danger {
+    background: linear-gradient(135deg, #f8d7da 0%, #f5c6cb 100%);
+    color: #721c24;
+}
+
+/* ============================================================
+   LOADING STATES - NAMESPACED
+   ============================================================ */
+.harmonisasi-module .loading {
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+.harmonisasi-module .loading::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 20px;
+    height: 20px;
+    margin: -10px 0 0 -10px;
+    border: 2px solid #f3f3f3;
+    border-top: 2px solid #007bff;
+    border-radius: 50%;
+    animation: harmonisasi-spin 1s linear infinite;
+}
+
+@keyframes harmonisasi-spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* ============================================================
+   MODULE-SPECIFIC COLOR SCHEMES - NAMESPACED
+   ============================================================ */
+.harmonisasi-module .harmonisasi-theme .card-header {
+    background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+}
+
+.harmonisasi-module .verifikasi-theme .card-header {
+    background: linear-gradient(135deg, #17a2b8 0%, #138496 100%);
+}
+
+.harmonisasi-module .validasi-theme .card-header {
+    background: linear-gradient(135deg, #28a745 0%, #1e7e34 100%);
+}
+
+.harmonisasi-module .finalisasi-theme .card-header {
+    background: linear-gradient(135deg, #6f42c1 0%, #5a2d91 100%);
+}
+
+.harmonisasi-module .penugasan-theme .card-header {
+    background: linear-gradient(135deg, #fd7e14 0%, #e55a00 100%);
+}
+
+/* ============================================================
+   ICON COLORS - NAMESPACED
+   ============================================================ */
+.harmonisasi-module .harmonisasi-theme .fas {
+    color: #007bff;
+}
+
+.harmonisasi-module .verifikasi-theme .fas {
+    color: #17a2b8;
+}
+
+.harmonisasi-module .validasi-theme .fas {
+    color: #28a745;
+}
+
+.harmonisasi-module .finalisasi-theme .fas {
+    color: #6f42c1;
+}
+
+.harmonisasi-module .penugasan-theme .fas {
+    color: #fd7e14;
+}
+
+/* ============================================================
+   CARD HEADER TEXT CONTRAST FIXES - NAMESPACED
+   ============================================================ */
+.harmonisasi-module .card-header h6 {
+    color: #ffffff !important;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.harmonisasi-module .card-header .badge {
+    background-color: rgba(255, 255, 255, 0.9) !important;
+    color: #007bff !important;
+    font-weight: 600;
+    border: 1px solid rgba(255, 255, 255, 0.8);
+}
+
+.harmonisasi-module .card-header .btn-light {
+    background-color: rgba(255, 255, 255, 0.9) !important;
+    border-color: rgba(255, 255, 255, 0.8) !important;
+    color: #007bff !important;
+    font-weight: 600;
+}
+
+.harmonisasi-module .card-header .btn-light:hover {
+    background-color: #ffffff !important;
+    border-color: #ffffff !important;
+    color: #0056b3 !important;
+}
+
+/* ============================================================
+   DATATABLES BUTTONS CONTRAST FIXES - NAMESPACED
+   ============================================================ */
+.harmonisasi-module .dt-buttons .btn {
+    background-color: #ffffff !important;
+    border: 1px solid #dee2e6 !important;
+    color: #495057 !important;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.harmonisasi-module .dt-buttons .btn:hover {
+    background-color: #f8f9fa !important;
+    border-color: #adb5bd !important;
+    color: #212529 !important;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.harmonisasi-module .dt-buttons .btn-secondary {
+    background-color: #6c757d !important;
+    border-color: #6c757d !important;
+    color: #ffffff !important;
+}
+
+.harmonisasi-module .dt-buttons .btn-secondary:hover {
+    background-color: #5a6268 !important;
+    border-color: #545b62 !important;
+    color: #ffffff !important;
+}
+
+.harmonisasi-module .dt-buttons .btn-success {
+    background-color: #28a745 !important;
+    border-color: #28a745 !important;
+    color: #ffffff !important;
+}
+
+.harmonisasi-module .dt-buttons .btn-success:hover {
+    background-color: #218838 !important;
+    border-color: #1e7e34 !important;
+    color: #ffffff !important;
+}
+
+.harmonisasi-module .dt-buttons .btn-danger {
+    background-color: #dc3545 !important;
+    border-color: #dc3545 !important;
+    color: #ffffff !important;
+}
+
+.harmonisasi-module .dt-buttons .btn-danger:hover {
+    background-color: #c82333 !important;
+    border-color: #bd2130 !important;
+    color: #ffffff !important;
+}
+
+.harmonisasi-module .dt-buttons .btn-info {
+    background-color: #17a2b8 !important;
+    border-color: #17a2b8 !important;
+    color: #ffffff !important;
+}
+
+.harmonisasi-module .dt-buttons .btn-info:hover {
+    background-color: #138496 !important;
+    border-color: #117a8b !important;
+    color: #ffffff !important;
+}
+
+/* ============================================================
+   DATATABLES SELECT ALL BUTTON FIXES - NAMESPACED
+   ============================================================ */
+.harmonisasi-module .dt-button-collection .dt-button {
+    background-color: #ffffff !important;
+    border: 1px solid #dee2e6 !important;
+    color: #495057 !important;
+    font-weight: 500;
+    padding: 8px 16px !important;
+    margin: 2px !important;
+    border-radius: 4px !important;
+    transition: all 0.3s ease;
+}
+
+.harmonisasi-module .dt-button-collection .dt-button:hover {
+    background-color: #f8f9fa !important;
+    border-color: #adb5bd !important;
+    color: #212529 !important;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.harmonisasi-module .dt-button-collection .dt-button.active {
+    background-color: #007bff !important;
+    border-color: #007bff !important;
+    color: #ffffff !important;
+}
+
+/* ============================================================
+   CHECKBOX AND SELECT ALL CONTRAST FIXES - NAMESPACED
+   ============================================================ */
+.harmonisasi-module .form-check-input {
+    border: 2px solid #dee2e6 !important;
+    background-color: #ffffff !important;
+}
+
+.harmonisasi-module .form-check-input:checked {
+    background-color: #007bff !important;
+    border-color: #007bff !important;
+}
+
+.harmonisasi-module .form-check-input:focus {
+    border-color: #007bff !important;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25) !important;
+}
+
+.harmonisasi-module .form-check-label {
+    color: #495057 !important;
+    font-weight: 500;
+}
+
+.harmonisasi-module .select-all-label {
+    color: #495057 !important;
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+.harmonisasi-module .card-header.bg-primary .btn {
+    margin: 0 !important;
+    padding: 0.5rem 1rem !important;
+    min-width: 140px !important;
+    font-size: 0.875rem !important;
+}
+
+/* ============================================================
+   LIGHT CARD HEADER SPACING - NAMESPACED
+   ============================================================ */
+.harmonisasi-module .card-header.bg-light {
+    padding: 1rem 1.5rem !important;
+    background-color: #f8f9fa !important;
+    border-bottom: 1px solid #dee2e6 !important;
+}
+
+.harmonisasi-module .card-header.bg-light .d-flex {
+    gap: 1rem !important;
+    align-items: center !important;
+}
+
+.harmonisasi-module .card-header.bg-light h6 {
+    margin: 0 !important;
+    padding: 0 !important;
+    color: #495057 !important;
+    font-weight: 600 !important;
+}
+
+.harmonisasi-module .card-header.bg-light .btn-outline-primary {
+    margin: 0 !important;
+    padding: 0.5rem 1rem !important;
+    min-width: 120px !important;
+    font-size: 0.875rem !important;
+    background-color: #ffffff !important;
+    border-color: #007bff !important;
+    color: #007bff !important;
+}
+
+.harmonisasi-module .card-header.bg-light .btn-outline-primary:hover {
+    background-color: #007bff !important;
+    border-color: #007bff !important;
+    color: #ffffff !important;
+}
+
+        @keyframes pulse-draft {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        /* Draft Row Highlighting */
+        .harmonisasi-module .draft-highlight {
+            background-color: rgba(255, 193, 7, 0.1) !important;
+            border-left: 4px solid #ffc107 !important;
+        }
+
+        .harmonisasi-module .draft-highlight:hover {
+            background-color: rgba(255, 193, 7, 0.2) !important;
+        }
+
+        /* Tooltip Enhancement */
+        .harmonisasi-module .tooltip {
+            font-size: 0.875rem;
+        }
+
+        .harmonisasi-module .tooltip-inner {
+            background-color: #ffc107;
+            color: #212529;
+            font-weight: 600;
+            border: 1px solid #e0a800;
+        }
+
+        .harmonisasi-module .tooltip.bs-tooltip-top .tooltip-arrow::before {
+            border-top-color: #ffc107;
+        }
+
+        .harmonisasi-module .tooltip.bs-tooltip-bottom .tooltip-arrow::before {
+            border-bottom-color: #ffc107;
+        }
+
+        .harmonisasi-module .tooltip.bs-tooltip-start .tooltip-arrow::before {
+            border-left-color: #ffc107;
+        }
+
+        .harmonisasi-module .tooltip.bs-tooltip-end .tooltip-arrow::before {
+            border-right-color: #ffc107;
+        }

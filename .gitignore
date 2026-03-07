@@ -1,0 +1,58 @@
+# ============================================
+# JDIH Padang - .gitignore
+# ============================================
+
+# --- Environment & Secrets ---
+.env
+.env.*
+!.env.example
+
+# --- PHP Dependencies ---
+jdih/vendor/
+composer.lock
+
+# --- Writable (logs, cache, sessions, debugbar) ---
+jdih/writable/
+
+# --- Uploads (user-generated content) ---
+jdih/uploads/
+uploads
+
+# --- Server backup & database dumps ---
+*.sql
+*.tar.gz
+*.zip
+backup/
+
+# --- OS generated files ---
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# --- IDE / Editor ---
+.idea/
+.vscode/
+*.swp
+*.swo
+*.sublime-project
+*.sublime-workspace
+.project
+.settings/
+
+# --- Temporary files ---
+tmp/
+cache/
+*.log
+*.bak
+*.orig
+
+# --- Node (if ever used) ---
+node_modules/
+
+# --- Misc ---
+.agent/

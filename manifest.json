@@ -1,0 +1,34 @@
+{
+  "name": "JDIH Kota Padang - Jaringan Dokumentasi dan Informasi Hukum",
+  "short_name": "JDIH Padang",
+  "description": "Akses cepat dokumen hukum Kota Padang dalam satu platform terintegrasi",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#0d6efd",
+  "orientation": "portrait-primary",
+  "scope": "/",
+  "lang": "id",
+  "dir": "ltr",
+  "categories": ["government", "productivity", "education"],
+  "icons": [
+    {
+      "src": "/favicon.ico",
+      "sizes": "16x16 32x32 48x48",
+      "type": "image/x-icon",
+      "purpose": "any"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "/assets/img/hero-image.webp",
+      "sizes": "900x600",
+      "type": "image/webp",
+      "form_factor": "wide",
+      "label": "JDIH Kota Padang - Homepage"
+    }
+  ],
+  "shortcuts": [],
+  "related_applications": [],
+  "prefer_related_applications": false
+} 

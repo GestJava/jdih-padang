@@ -1,0 +1,1439 @@
+/* Dashboard Modern Style for JDIH */
+
+/* Welcome Section */
+.welcome-card {
+    background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%) !important;
+    border: none;
+    border-radius: 15px;
+    position: relative;
+    overflow: hidden;
+    color: #ffffff !important;
+}
+
+/* Force override Bootstrap classes */
+.welcome-card.bg-gradient-primary {
+    background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%) !important;
+}
+
+/* Emergency fallback - ensure text is ALWAYS visible */
+div[class*="welcome-card"] * {
+    color: #ffffff !important;
+}
+
+div[class*="welcome-card"] h2 {
+    color: #ffffff !important;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7) !important;
+}
+
+div[class*="welcome-card"] p {
+    color: #ffffff !important;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5) !important;
+}
+
+div[class*="welcome-card"] small {
+    color: rgba(255, 255, 255, 0.95) !important;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5) !important;
+}
+
+.welcome-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.05' fill-rule='evenodd'%3E%3Cpath d='m0 40l40-40h-40z'/%3E%3C/g%3E%3C/svg%3E");
+    z-index: 1;
+}
+
+.welcome-card .row {
+    position: relative;
+    z-index: 2;
+}
+
+/* Welcome card text styling for better contrast */
+.welcome-card h2,
+.welcome-card.bg-gradient-primary h2 {
+    color: #ffffff !important;
+    font-weight: 700;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+    margin-bottom: 0.75rem;
+}
+
+.welcome-card p,
+.welcome-card.bg-gradient-primary p {
+    color: #ffffff !important;
+    font-weight: 500;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+    margin-bottom: 0.5rem;
+}
+
+.welcome-card small,
+.welcome-card.bg-gradient-primary small {
+    color: rgba(255, 255, 255, 0.9) !important;
+    font-weight: 400;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.welcome-card .material-icons,
+.welcome-card.bg-gradient-primary .material-icons {
+    color: rgba(255, 255, 255, 0.4) !important;
+    text-shadow: none;
+}
+
+/* Statistics Cards */
+.card-stats {
+    padding: 1.5rem;
+    padding-top: 2rem; /* Give space for top icon */
+    position: relative;
+    overflow: hidden;
+}
+
+.card-stats::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 100px;
+    height: 100px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    transform: translate(30px, -30px);
+}
+
+/* Enhanced Icon Circle Styling - Top Right Position */
+.icon-circle {
+    width: 50px !important;
+    height: 50px !important;
+    background: rgba(255, 255, 255, 0.2) !important;
+    border-radius: 50% !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    position: absolute !important;
+    top: 15px !important;
+    right: 15px !important;
+    z-index: 10 !important;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.icon-circle:hover {
+    background: rgba(255, 255, 255, 0.3) !important;
+    transform: scale(1.1);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.icon-circle .material-icons {
+    font-size: 24px !important;
+    color: white !important;
+}
+
+/* Card positioning for icons */
+.card.position-relative {
+    position: relative !important;
+    overflow: visible;
+}
+
+/* Ensure proper text layout without icon interference */
+.card-stats .d-flex.flex-column {
+    height: 100%;
+    justify-content: center;
+}
+
+/* Consistent card text styling */
+.card-stats .card-title {
+    font-size: 2.2rem;
+    font-weight: 700;
+    line-height: 1.1;
+    margin-bottom: 0.5rem;
+    color: white !important;
+}
+
+.card-stats .card-text {
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+    color: white !important;
+}
+
+.card-stats small {
+    font-size: 0.875rem;
+    font-weight: 400;
+    color: rgba(255, 255, 255, 0.7) !important;
+}
+
+/* Add subtle animation for the icon on card hover */
+.card:hover .icon-circle {
+    transform: scale(1.05) rotate(5deg);
+    background: rgba(255, 255, 255, 0.35) !important;
+}
+
+/* Card Color Overrides for Consistency */
+.bg-primary * {
+    color: white !important;
+}
+
+.bg-success * {
+    color: white !important;
+}
+
+.bg-warning * {
+    color: white !important;
+}
+
+.bg-info * {
+    color: white !important;
+}
+
+/* Card Hover Effects */
+.card {
+    transition: all 0.3s ease-in-out;
+    border: none;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+/* Chart Containers */
+.chart-container {
+    position: relative;
+    padding: 20px;
+}
+
+.chart-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #2c3e50;
+    margin-bottom: 0.5rem;
+}
+
+.chart-subtitle {
+    font-size: 0.85rem;
+    color: #6c757d;
+}
+
+/* Table Styling */
+.table-hover tbody tr:hover {
+    background-color: rgba(0, 0, 0, 0.02);
+    transform: scale(1.01);
+    transition: all 0.2s ease;
+}
+
+.table th {
+    border-top: none;
+    font-weight: 600;
+    color: #495057;
+    background-color: #f8f9fa;
+    padding: 12px 15px;
+}
+
+.table td {
+    padding: 12px 15px;
+    vertical-align: middle;
+    border-color: #e9ecef;
+}
+
+/* Status Indicators */
+.status-indicator {
+    flex-shrink: 0;
+    box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.8);
+}
+
+.status-list {
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+/* Fix untuk Status Harmonisasi - Kontras Warna */
+.status-list .d-flex {
+    padding: 8px 0;
+    border-radius: 4px;
+    transition: background-color 0.2s ease;
+}
+
+.status-list .d-flex:hover {
+    background-color: rgba(0, 0, 0, 0.02);
+}
+
+.status-list small {
+    color: #495057 !important;
+    font-weight: 500 !important;
+    font-size: 0.875rem !important;
+}
+
+.status-list .badge {
+    background-color: #6c757d !important;
+    color: #ffffff !important;
+    font-size: 0.75rem !important;
+    font-weight: 600 !important;
+}
+
+/* Ensure proper text colors in all states */
+.card-body .status-list small {
+    color: #2c3e50 !important;
+}
+
+.card .status-list small {
+    color: #343a40 !important;
+}
+
+.status-list::-webkit-scrollbar {
+    width: 4px;
+}
+
+.status-list::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 2px;
+}
+
+.status-list::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 2px;
+}
+
+/* Dropdown Styling */
+.dropdown-menu {
+    border: none;
+    box-shadow: 0 4px 25px rgba(0, 0, 0, 0.15);
+    border-radius: 8px;
+    padding: 8px 0;
+}
+
+.dropdown-item {
+    padding: 8px 16px;
+    transition: all 0.2s ease;
+}
+
+.dropdown-item:hover {
+    background-color: #f8f9fa;
+    color: #495057;
+}
+
+/* Badge Styling */
+.badge {
+    font-size: 0.75rem;
+    font-weight: 500;
+    border-radius: 6px;
+    padding: 4px 8px;
+}
+
+/* Button Styling */
+.btn {
+    border-radius: 8px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.btn-sm {
+    padding: 6px 12px;
+    font-size: 0.875rem;
+}
+
+/* Card Header Styling */
+.card-header {
+    background-color: transparent;
+    border-bottom: 1px solid #e9ecef;
+    padding: 1.25rem;
+}
+
+.card-header.bg-white {
+    background-color: #ffffff !important;
+}
+
+/* Loading Animation */
+@keyframes pulse {
+    0% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.5;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+.loading {
+    animation: pulse 1.5s ease-in-out infinite;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .welcome-card h2 {
+        font-size: 1.5rem;
+        color: #ffffff !important;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+    }
+    
+    .welcome-card p {
+        color: #ffffff !important;
+        font-size: 0.95rem;
+    }
+    
+    .welcome-card small {
+        color: rgba(255, 255, 255, 0.9) !important;
+        font-size: 0.85rem;
+    }
+    
+    .card-stats {
+        padding-top: 1.5rem;
+    }
+    
+    .card-stats h3 {
+        font-size: 1.25rem;
+    }
+    
+    .table-responsive {
+        border: none;
+    }
+    
+    .chart-container {
+        padding: 10px;
+    }
+    
+    .icon-circle {
+        width: 40px !important;
+        height: 40px !important;
+        top: 10px !important;
+        right: 10px !important;
+    }
+    
+    .icon-circle .material-icons {
+        font-size: 20px !important;
+    }
+}
+
+@media (max-width: 576px) {
+    .welcome-card {
+        text-align: center;
+    }
+    
+    .welcome-card .col-lg-4 {
+        margin-top: 1rem;
+    }
+    
+    .d-flex.justify-content-between {
+        flex-direction: column;
+        align-items: flex-start !important;
+    }
+    
+    .card-footer .d-flex {
+        justify-content: space-between !important;
+    }
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+    .card {
+        background-color: #2d3748;
+        color: #e2e8f0;
+    }
+    
+    .table th {
+        background-color: #4a5568;
+        color: #e2e8f0;
+    }
+    
+    .table td {
+        border-color: #4a5568;
+        color: #e2e8f0;
+    }
+    
+    .dropdown-menu {
+        background-color: #2d3748;
+        border-color: #4a5568;
+    }
+    
+    .dropdown-item {
+        color: #e2e8f0;
+    }
+    
+    .dropdown-item:hover {
+        background-color: #4a5568;
+        color: #ffffff;
+    }
+    
+    /* Dark mode untuk status harmonisasi */
+    .status-list small {
+        color: #e2e8f0 !important;
+    }
+    
+    .status-list .badge {
+        background-color: #4a5568 !important;
+        color: #e2e8f0 !important;
+    }
+}
+
+/* Print Styles */
+@media print {
+    .card {
+        box-shadow: none !important;
+        border: 1px solid #dee2e6 !important;
+    }
+    
+    .btn, .dropdown {
+        display: none !important;
+    }
+    
+    .card:hover {
+        transform: none !important;
+    }
+}
+
+/* Accessibility */
+.card:focus-within {
+    outline: 2px solid #007bff;
+    outline-offset: 2px;
+}
+
+.btn:focus {
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+/* Custom Scrollbar */
+.card-body::-webkit-scrollbar {
+    width: 6px;
+}
+
+.card-body::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 3px;
+}
+
+.card-body::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 3px;
+}
+
+.card-body::-webkit-scrollbar-thumb:hover {
+    background: #a1a1a1;
+}
+
+/* Material Icons Enhancement */
+.material-icons {
+    font-family: 'Material Icons' !important;
+    font-weight: normal !important;
+    font-style: normal !important;
+    font-size: 24px !important;
+    line-height: 1 !important;
+    letter-spacing: normal !important;
+    text-transform: none !important;
+    display: inline-block !important;
+    white-space: nowrap !important;
+    word-wrap: normal !important;
+    direction: ltr !important;
+    -webkit-font-feature-settings: 'liga' !important;
+    -webkit-font-smoothing: antialiased !important;
+    text-rendering: optimizeLegibility !important;
+    -moz-osx-font-smoothing: grayscale !important;
+    font-feature-settings: 'liga' !important;
+    user-select: none !important;
+}
+
+/* Force icon styling for dashboard cards */
+.icon-circle .material-icons {
+    color: #ffffff !important;
+    font-size: 28px !important;
+    width: 28px !important;
+    height: 28px !important;
+    line-height: 28px !important;
+    text-align: center !important;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3) !important;
+    background: transparent !important;
+}
+
+/* Fix Bootstrap conflicts for card icons */
+.card-stats .icon-circle,
+.card .icon-circle {
+    background-color: transparent !important;
+    border-radius: 50% !important;
+    width: 60px !important;
+    height: 60px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    flex-shrink: 0 !important;
+    position: relative !important;
+    z-index: 2 !important;
+}
+
+/* Consistent text colors for all card icons */
+.bg-primary .material-icons,
+.bg-success .material-icons,
+.bg-warning .material-icons,
+.bg-info .material-icons,
+.bg-danger .material-icons {
+    color: #ffffff !important;
+}
+
+/* FontAwesome arrows consistency */
+.fas.fa-arrow-trend-up,
+.fas.fa-arrow-trend-down {
+    font-size: 12px !important;
+    color: inherit !important;
+    margin-right: 0.25rem !important;
+    vertical-align: middle !important;
+    line-height: 1 !important;
+}
+
+/* Emergency fix for white boxes (missing font fallback) */
+.material-icons:before {
+    content: attr(data-icon) !important;
+}
+
+/* Force display for potentially invisible icons */
+.card-stats .material-icons,
+.welcome-card .material-icons {
+    opacity: 1 !important;
+    visibility: visible !important;
+    display: inline-block !important;
+}
+
+/* Bootstrap override - prevent conflicts */
+.card .material-icons {
+    font-family: 'Material Icons' !important;
+    -webkit-font-feature-settings: 'liga' !important;
+    -moz-font-feature-settings: 'liga' !important;
+    font-feature-settings: 'liga' !important;
+}
+
+/* Fix positioning issues */
+.card-stats .d-flex {
+    align-items: center !important;
+    justify-content: space-between !important;
+}
+
+.card-stats .flex-grow-1 {
+    flex: 1 1 auto !important;
+    margin-right: 1rem !important;
+}
+
+.card-stats .flex-shrink-0 {
+    flex: 0 0 auto !important;
+}
+
+/* Ensure icon containers are transparent */
+.icon-circle {
+    background: transparent !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+}
+
+/* Override any Bootstrap background classes */
+.icon-circle.bg-white,
+.icon-circle.bg-opacity-20,
+.bg-white.bg-opacity-20 {
+    background-color: transparent !important;
+    background: transparent !important;
+}
+
+/* Add subtle glow effect instead of white background */
+.card-stats .icon-circle {
+    position: relative;
+}
+
+.card-stats .icon-circle:before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 40px;
+    height: 40px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    z-index: -1;
+    opacity: 0.6;
+}
+
+/* Force transparency for all states */
+.icon-circle,
+div[class*="icon-circle"] {
+    background-color: transparent !important;
+    background-image: none !important;
+    border: none !important;
+    box-shadow: none !important;
+}
+
+/* Gradient backgrounds for cards */
+.bg-gradient-primary {
+    background: linear-gradient(135deg, #4a5568 0%, #2d3748 100%);
+    color: #ffffff !important;
+}
+
+.bg-gradient-success {
+    background: linear-gradient(135deg, #56ab2f 0%, #a8e6cf 100%);
+}
+
+.bg-gradient-warning {
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+}
+
+.bg-gradient-info {
+    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+}
+
+/* EMERGENCY ICON FIXES - ABSOLUTE FALLBACK */
+/* If Material Icons fail to load, show text alternatives */
+.material-icons[style*="font-size: 28px"]:empty:after {
+    content: '📄';
+    font-size: 24px;
+    color: inherit;
+}
+
+.material-icons:empty:after {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
+}
+
+/* Specific icon fallbacks */
+.material-icons:empty[aria-label*="description"]:after,
+.material-icons:empty:contains("description"):after { content: '📄'; }
+
+.material-icons:empty[aria-label*="balance"]:after,
+.material-icons:empty:contains("balance"):after { content: '⚖️'; }
+
+.material-icons:empty[aria-label*="visibility"]:after,
+.material-icons:empty:contains("visibility"):after { content: '👁️'; }
+
+.material-icons:empty[aria-label*="people"]:after,
+.material-icons:empty:contains("people"):after { content: '👥'; }
+
+.material-icons:empty[aria-label*="gavel"]:after,
+.material-icons:empty:contains("gavel"):after { content: '⚖️'; }
+
+/* Force icon display without debugging borders */
+@media screen {
+    .material-icons {
+        border: none !important;
+        min-width: 1em !important;
+        min-height: 1em !important;
+    }
+}
+
+/* EMERGENCY OVERRIDES - Status Harmonisasi Text Visibility */
+/* Force text colors regardless of any Bootstrap override */
+div[class*="status-list"] small,
+.status-list small,
+.card .status-list small {
+    color: #212529 !important;
+    font-weight: 500 !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    text-shadow: none !important;
+}
+
+/* Force badge visibility */
+.status-list .badge,
+.status-list span.badge {
+    background-color: #6c757d !important;
+    color: #ffffff !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+
+/* Override any potential white text classes */
+.status-list .text-white,
+.status-list .text-light {
+    color: #212529 !important;
+}
+
+/* Specific selector for harmonisasi status section */
+.card .status-list .d-flex small {
+    color: #495057 !important;
+    font-size: 0.875rem !important;
+    line-height: 1.4 !important;
+}
+
+/* Ensure parent containers don't interfere */
+.card-body {
+    color: inherit !important;
+}
+
+.card-body .status-list {
+    color: #212529 !important;
+}
+
+/* Chart Header Layout Improvements */
+.card-header .d-flex {
+    gap: 1rem;
+}
+
+.card-header .flex-grow-1 {
+    min-width: 0; /* Allows text to truncate if needed */
+    flex: 1 1 auto;
+}
+
+.card-header .flex-shrink-0 {
+    flex: 0 0 auto;
+}
+
+/* Dropdown positioning and styling */
+.dropdown {
+    position: relative;
+    z-index: 1000;
+}
+
+.dropdown-menu {
+    border: none;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    padding: 0.5rem 0;
+    min-width: 120px;
+}
+
+.dropdown-menu-end {
+    right: 0 !important;
+    left: auto !important;
+}
+
+.dropdown-item {
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+    color: #495057;
+    transition: all 0.2s ease;
+    border: none;
+    background: none;
+}
+
+.dropdown-item:hover {
+    background-color: #f8f9fa;
+    color: #007bff;
+    transform: translateX(3px);
+}
+
+.dropdown-item:active {
+    background-color: #007bff;
+    color: white;
+}
+
+/* Button styling for year dropdown */
+.btn-outline-secondary {
+    border-color: #dee2e6;
+    color: #6c757d;
+    font-size: 0.875rem;
+    font-weight: 500;
+    padding: 0.375rem 0.75rem;
+    transition: all 0.2s ease;
+}
+
+.btn-outline-secondary:hover {
+    background-color: #6c757d;
+    border-color: #6c757d;
+    color: white;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.btn-outline-secondary:focus {
+    box-shadow: 0 0 0 0.2rem rgba(108, 117, 125, 0.25);
+}
+
+/* Ensure proper spacing in card headers */
+.card-header {
+    padding: 1.25rem 1.5rem 0.75rem;
+}
+
+.card-header .card-title {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: #2c3e50;
+    margin-bottom: 0.25rem;
+    line-height: 1.3;
+}
+
+.card-header .text-muted {
+    font-size: 0.875rem;
+    color: #6c757d !important;
+    line-height: 1.4;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .card-header .d-flex {
+        flex-direction: column;
+        align-items: flex-start !important;
+        gap: 0.75rem;
+    }
+    
+    .card-header .dropdown {
+        align-self: flex-end;
+    }
+    
+    .card-header .flex-grow-1 {
+        margin-right: 0 !important;
+        margin-bottom: 0.5rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .card-header {
+        padding: 1rem 1rem 0.5rem;
+    }
+    
+    .card-header .card-title {
+        font-size: 1rem;
+    }
+    
+    .card-header .text-muted {
+        font-size: 0.8rem;
+    }
+    
+    .btn-outline-secondary {
+        font-size: 0.8rem;
+        padding: 0.25rem 0.5rem;
+    }
+}
+
+/* DROPDOWN FIX - HIGH SPECIFICITY TO OVERRIDE BOOTSTRAP CONFLICTS */
+.dashboard .card-header .dropdown {
+    position: relative !important;
+    z-index: 1050 !important;
+    margin-left: auto !important;
+}
+
+.dashboard .card-header .dropdown .btn-outline-secondary {
+    border-color: #dee2e6 !important;
+    color: #6c757d !important;
+    background-color: #ffffff !important;
+    font-size: 0.875rem !important;
+    padding: 0.375rem 0.75rem !important;
+    border-radius: 0.375rem !important;
+    transition: all 0.2s ease !important;
+    white-space: nowrap !important;
+}
+
+.dashboard .card-header .dropdown .btn-outline-secondary:hover {
+    background-color: #6c757d !important;
+    border-color: #6c757d !important;
+    color: #ffffff !important;
+    transform: translateY(-1px) !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15) !important;
+}
+
+.dashboard .card-header .dropdown .btn-outline-secondary:focus {
+    box-shadow: 0 0 0 0.2rem rgba(108, 117, 125, 0.25) !important;
+    outline: 0 !important;
+}
+
+.dashboard .card-header .dropdown .dropdown-menu {
+    position: absolute !important;
+    top: 100% !important;
+    right: 0 !important;
+    left: auto !important;
+    z-index: 1060 !important;
+    min-width: 8rem !important;
+    padding: 0.5rem 0 !important;
+    margin: 0.125rem 0 0 !important;
+    font-size: 0.875rem !important;
+    color: #212529 !important;
+    text-align: left !important;
+    background-color: #ffffff !important;
+    background-clip: padding-box !important;
+    border: 1px solid rgba(0, 0, 0, 0.15) !important;
+    border-radius: 0.375rem !important;
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+}
+
+.dashboard .card-header .dropdown .dropdown-menu[data-bs-popper] {
+    top: 100% !important;
+    left: auto !important;
+    right: 0 !important;
+    margin-top: 0.125rem !important;
+}
+
+.dashboard .card-header .dropdown .dropdown-item {
+    display: block !important;
+    width: 100% !important;
+    padding: 0.375rem 1rem !important;
+    clear: both !important;
+    font-weight: 400 !important;
+    color: #212529 !important;
+    text-align: inherit !important;
+    text-decoration: none !important;
+    white-space: nowrap !important;
+    background-color: transparent !important;
+    border: 0 !important;
+    transition: all 0.15s ease-in-out !important;
+}
+
+.dashboard .card-header .dropdown .dropdown-item:hover,
+.dashboard .card-header .dropdown .dropdown-item:focus {
+    color: #1e2125 !important;
+    background-color: #f8f9fa !important;
+    text-decoration: none !important;
+}
+
+.dashboard .card-header .dropdown .dropdown-item:active {
+    color: #ffffff !important;
+    text-decoration: none !important;
+    background-color: #0d6efd !important;
+}
+
+/* CARD HEADER LAYOUT FIX */
+.dashboard .card-header {
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    background-color: #ffffff !important;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.125) !important;
+    padding: 1.25rem 1.5rem !important;
+}
+
+.dashboard .card-header .card-title {
+    margin-bottom: 0.25rem !important;
+    font-weight: 600 !important;
+    font-size: 1.125rem !important;
+    color: #2c3e50 !important;
+    line-height: 1.3 !important;
+    flex-grow: 1 !important;
+}
+
+.dashboard .card-header .text-muted {
+    font-size: 0.875rem !important;
+    color: #6c757d !important;
+    line-height: 1.4 !important;
+}
+
+/* RESPONSIVE DROPDOWN */
+@media (max-width: 768px) {
+    .dashboard .card-header {
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        gap: 0.75rem !important;
+    }
+    
+    .dashboard .card-header .dropdown {
+        align-self: flex-end !important;
+        margin-left: 0 !important;
+    }
+}
+
+@media (max-width: 576px) {
+    .dashboard .card-header {
+        padding: 1rem !important;
+    }
+    
+    .dashboard .card-header .card-title {
+        font-size: 1rem !important;
+    }
+    
+    .dashboard .card-header .text-muted {
+        font-size: 0.8rem !important;
+    }
+    
+    .dashboard .card-header .dropdown .btn-outline-secondary {
+        font-size: 0.8rem !important;
+        padding: 0.25rem 0.5rem !important;
+    }
+}
+
+/* ===================================================================
+   ULTIMATE CSS CONFLICT RESOLUTION - MEGA SPECIFICITY OVERRIDE
+   ================================================================= */
+
+/* === CARD HEADER FLEX LAYOUT - NUCLEAR OPTION === */
+body .dashboard .card .card-header,
+html body .dashboard .card .card-header,
+.dashboard .card .card-header.card-header,
+div.dashboard div.card div.card-header {
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: nowrap !important;
+    justify-content: space-between !important;
+    align-items: flex-start !important;
+    align-content: initial !important;
+    place-content: initial !important;
+    place-items: initial !important;
+    gap: 1rem !important;
+    
+    /* Reset Bootstrap Grid Conflicts */
+    grid-template-columns: none !important;
+    grid-template-rows: none !important;
+    grid-auto-columns: initial !important;
+    grid-auto-rows: initial !important;
+    grid-column: initial !important;
+    grid-row: initial !important;
+}
+
+/* === TITLE CONTAINER - ULTIMATE FLEX === */
+body .dashboard .card .card-header .card-title,
+html body .dashboard .card .card-header .card-title,
+.dashboard .card .card-header.card-header .card-title,
+div.dashboard div.card div.card-header h5.card-title,
+div.dashboard div.card div.card-header .card-title.card-title {
+    flex: 1 1 auto !important;
+    flex-grow: 1 !important;
+    flex-shrink: 1 !important;
+    flex-basis: auto !important;
+    min-width: 0 !important;
+    max-width: none !important;
+    width: auto !important;
+    
+    /* Text Properties */
+    font-size: 1.25rem !important;
+    font-weight: 500 !important;
+    line-height: 1.2 !important;
+    color: #495057 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    
+    /* Position Reset */
+    position: static !important;
+    top: auto !important;
+    right: auto !important;
+    bottom: auto !important;
+    left: auto !important;
+    transform: none !important;
+}
+
+/* === DROPDOWN CONTAINER - NUCLEAR POSITIONING === */
+body .dashboard .card .card-header .dropdown,
+html body .dashboard .card .card-header .dropdown,
+.dashboard .card .card-header.card-header .dropdown,
+div.dashboard div.card div.card-header div.dropdown,
+div.dashboard div.card div.card-header .dropdown.dropdown {
+    flex: 0 0 auto !important;
+    flex-grow: 0 !important;
+    flex-shrink: 0 !important;
+    flex-basis: auto !important;
+    min-width: auto !important;
+    max-width: none !important;
+    width: auto !important;
+    
+    /* Positioning - Absolute Reset */
+    position: relative !important;
+    top: 0 !important;
+    right: 0 !important;
+    left: auto !important;
+    bottom: auto !important;
+    z-index: 1050 !important;
+    
+    /* Display Properties */
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    
+    /* Spacing Reset */
+    margin: 0 !important;
+    padding: 0 !important;
+    
+    /* Transform Reset */
+    transform: none !important;
+    transform-origin: initial !important;
+}
+
+/* === DROPDOWN BUTTON - BOOTSTRAP WARS === */
+body .dashboard .card .card-header .dropdown .btn,
+html body .dashboard .card .card-header .dropdown .btn,
+.dashboard .card .card-header.card-header .dropdown .btn,
+div.dashboard div.card div.card-header div.dropdown button.btn,
+div.dashboard div.card div.card-header .dropdown.dropdown .btn.btn {
+    /* Button Core Properties */
+    position: relative !important;
+    display: inline-block !important;
+    font-weight: 400 !important;
+    line-height: 1.5 !important;
+    color: #6c757d !important;
+    text-align: center !important;
+    text-decoration: none !important;
+    vertical-align: middle !important;
+    cursor: pointer !important;
+    user-select: none !important;
+    background-color: transparent !important;
+    border: 1px solid #ced4da !important;
+    padding: 0.375rem 0.75rem !important;
+    font-size: 1rem !important;
+    border-radius: 0.375rem !important;
+    transition: all 0.15s ease-in-out !important;
+    
+    /* Flex Properties Reset */
+    flex: none !important;
+    align-self: auto !important;
+    
+    /* Sizing */
+    margin: 0 !important;
+    min-width: 80px !important;
+    max-width: none !important;
+    width: auto !important;
+    height: auto !important;
+    
+    /* Layering */
+    z-index: 1051 !important;
+    
+    /* Transform Reset */
+    transform: none !important;
+    transform-origin: initial !important;
+}
+
+/* === DROPDOWN MENU - MEGA POSITIONING === */
+body .dashboard .card .card-header .dropdown .dropdown-menu,
+html body .dashboard .card .card-header .dropdown .dropdown-menu,
+.dashboard .card .card-header.card-header .dropdown .dropdown-menu,
+div.dashboard div.card div.card-header div.dropdown ul.dropdown-menu,
+div.dashboard div.card div.card-header .dropdown.dropdown .dropdown-menu.dropdown-menu {
+    /* Positioning - Ultimate Override */
+    position: absolute !important;
+    top: 100% !important;
+    left: auto !important;
+    right: 0 !important;
+    bottom: auto !important;
+    z-index: 1060 !important;
+    
+    /* Display Control */
+    display: none !important;
+    min-width: 10rem !important;
+    max-width: 250px !important;
+    width: auto !important;
+    
+    /* Styling Override */
+    padding: 0.5rem 0 !important;
+    margin: 0.125rem 0 0 !important;
+    font-size: 1rem !important;
+    color: #212529 !important;
+    text-align: left !important;
+    list-style: none !important;
+    background-color: #fff !important;
+    background-clip: padding-box !important;
+    border: 1px solid rgba(0, 0, 0, 0.15) !important;
+    border-radius: 0.375rem !important;
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.175) !important;
+    
+    /* Transform Complete Reset */
+    transform: none !important;
+    transform-origin: initial !important;
+    will-change: auto !important;
+    
+    /* Flex Reset */
+    flex-direction: column !important;
+    flex-wrap: nowrap !important;
+    justify-content: flex-start !important;
+    align-items: stretch !important;
+    gap: 0 !important;
+    
+    /* Grid Reset */
+    grid-template-columns: none !important;
+    grid-template-rows: none !important;
+}
+
+/* === DROPDOWN MENU SHOW STATE === */
+body .dashboard .card .card-header .dropdown .dropdown-menu.show,
+html body .dashboard .card .card-header .dropdown .dropdown-menu.show,
+.dashboard .card .card-header.card-header .dropdown .dropdown-menu.show,
+div.dashboard div.card div.card-header div.dropdown ul.dropdown-menu.show,
+div.dashboard div.card div.card-header .dropdown.dropdown .dropdown-menu.dropdown-menu.show {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+}
+
+/* === POPPER.JS POSITIONING OVERRIDE === */
+.dashboard .card-header .dropdown .dropdown-menu[data-bs-popper] {
+    top: 100% !important;
+    left: auto !important;
+    right: 0 !important;
+    margin-top: 0.125rem !important;
+    transform: none !important;
+}
+
+/* === DROPDOWN ITEMS - FINAL OVERRIDE === */
+body .dashboard .card .card-header .dropdown .dropdown-item,
+html body .dashboard .card .card-header .dropdown .dropdown-item,
+.dashboard .card .card-header.card-header .dropdown .dropdown-item,
+div.dashboard div.card div.card-header div.dropdown a.dropdown-item,
+div.dashboard div.card div.card-header .dropdown.dropdown .dropdown-item.dropdown-item {
+    display: block !important;
+    width: 100% !important;
+    padding: 0.25rem 1rem !important;
+    clear: both !important;
+    font-weight: 400 !important;
+    color: #212529 !important;
+    text-align: inherit !important;
+    text-decoration: none !important;
+    white-space: nowrap !important;
+    background-color: transparent !important;
+    border: 0 !important;
+    cursor: pointer !important;
+    transition: all 0.15s ease-in-out !important;
+}
+
+/* === HOVER STATES === */
+body .dashboard .card .card-header .dropdown .dropdown-item:hover,
+body .dashboard .card .card-header .dropdown .dropdown-item:focus,
+html body .dashboard .card .card-header .dropdown .dropdown-item:hover,
+html body .dashboard .card .card-header .dropdown .dropdown-item:focus {
+    color: #1e2125 !important;
+    background-color: #e9ecef !important;
+    text-decoration: none !important;
+}
+
+/* === RESPONSIVE MOBILE OVERRIDE === */
+@media (max-width: 768px) {
+    body .dashboard .card .card-header,
+    html body .dashboard .card .card-header,
+    .dashboard .card .card-header.card-header {
+        flex-direction: column !important;
+        align-items: stretch !important;
+        gap: 0.75rem !important;
+    }
+    
+    body .dashboard .card .card-header .card-title,
+    html body .dashboard .card .card-header .card-title {
+        flex: none !important;
+        margin-bottom: 0.5rem !important;
+        width: 100% !important;
+    }
+    
+    body .dashboard .card .card-header .dropdown,
+    html body .dashboard .card .card-header .dropdown {
+        flex: none !important;
+        align-self: flex-end !important;
+        width: auto !important;
+    }
+    
+    body .dashboard .card .card-header .dropdown .dropdown-menu,
+    html body .dashboard .card .card-header .dropdown .dropdown-menu {
+        right: 0 !important;
+        left: auto !important;
+        min-width: 8rem !important;
+    }
+}
+
+/* Dashboard CSS - Simple Solution */
+.dashboard .card-header {
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    padding: 1rem 1.25rem !important;
+}
+
+.dashboard .card-header .card-title {
+    margin: 0 !important;
+    flex: 1 !important;
+}
+
+.dashboard .card-header .dropdown {
+    margin-left: auto !important;
+}
+
+.dashboard .card-header .dropdown-menu {
+    right: 0 !important;
+    left: auto !important;
+}
+
+/* Icon positioning - Improved */
+.dashboard .card .card-icon,
+.dashboard .card .icon-circle {
+    position: absolute !important;
+    top: 20px !important;
+    right: 20px !important;
+    width: 60px !important;
+    height: 60px !important;
+    border-radius: 50% !important;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    z-index: 5 !important;
+    backdrop-filter: blur(10px) !important;
+    transition: all 0.3s ease !important;
+    background: rgba(255, 255, 255, 0.15) !important;
+    border: 2px solid rgba(255, 255, 255, 0.2) !important;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1) !important;
+}
+
+.dashboard .card .card-icon:hover,
+.dashboard .card .icon-circle:hover {
+    transform: scale(1.05) !important;
+    background: rgba(255, 255, 255, 0.25) !important;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15) !important;
+}
+
+.dashboard .card .card-icon i,
+.dashboard .card .icon-circle i,
+.dashboard .card .icon-circle .material-icons {
+    font-size: 28px !important;
+    color: white !important;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.3) !important;
+}
+
+/* Adjust card body padding to avoid icon overlap */
+.dashboard .card .card-body.card-stats {
+    padding: 1.5rem 1.25rem 1.25rem 1.25rem !important;
+    padding-right: 90px !important; /* Give space for icon */
+}
+
+/* Card colors with better gradients */
+.dashboard .card.bg-primary .card-icon,
+.dashboard .card.bg-primary .icon-circle {
+    background: linear-gradient(135deg, rgba(0, 123, 255, 0.3), rgba(0, 86, 179, 0.3)) !important;
+    border-color: rgba(0, 123, 255, 0.4) !important;
+}
+
+.dashboard .card.bg-success .card-icon,
+.dashboard .card.bg-success .icon-circle {
+    background: linear-gradient(135deg, rgba(40, 167, 69, 0.3), rgba(30, 126, 52, 0.3)) !important;
+    border-color: rgba(40, 167, 69, 0.4) !important;
+}
+
+.dashboard .card.bg-warning .card-icon,
+.dashboard .card.bg-warning .icon-circle {
+    background: linear-gradient(135deg, rgba(255, 193, 7, 0.3), rgba(224, 168, 0, 0.3)) !important;
+    border-color: rgba(255, 193, 7, 0.4) !important;
+}
+
+.dashboard .card.bg-info .card-icon,
+.dashboard .card.bg-info .icon-circle {
+    background: linear-gradient(135deg, rgba(23, 162, 184, 0.3), rgba(19, 132, 150, 0.3)) !important;
+    border-color: rgba(23, 162, 184, 0.4) !important;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .dashboard .card .card-icon,
+    .dashboard .card .icon-circle {
+        top: 15px !important;
+        right: 15px !important;
+        width: 50px !important;
+        height: 50px !important;
+    }
+    
+    .dashboard .card .card-icon i,
+    .dashboard .card .icon-circle i,
+    .dashboard .card .icon-circle .material-icons {
+        font-size: 24px !important;
+    }
+    
+    .dashboard .card .card-body.card-stats {
+        padding-right: 75px !important;
+    }
+}
+
+@media (max-width: 576px) {
+    .dashboard .card .card-icon,
+    .dashboard .card .icon-circle {
+        top: 10px !important;
+        right: 10px !important;
+        width: 45px !important;
+        height: 45px !important;
+    }
+    
+    .dashboard .card .card-icon i,
+    .dashboard .card .icon-circle i,
+    .dashboard .card .icon-circle .material-icons {
+        font-size: 20px !important;
+    }
+    
+    .dashboard .card .card-body.card-stats {
+        padding-right: 65px !important;
+    }
+}

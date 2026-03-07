@@ -1,0 +1,18 @@
+RewriteEngine On
+
+# Allow direct access to .php files
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+
+# Route integrasipadang.php to the CodeIgniter controller
+RewriteRule ^integrasipadang\.php$ ../../index.php/integrasiJDIH/integrasipadang.php [L,QSA]
+
+# Set proper content type for JSON responses
+<Files "*.php">
+    Header set Content-Type "application/json"
+</Files>
+
+# Enable CORS for API access
+Header always set Access-Control-Allow-Origin "*"
+Header always set Access-Control-Allow-Methods "GET, POST, OPTIONS"
+Header always set Access-Control-Allow-Headers "Content-Type, Authorization, X-Requested-With" 

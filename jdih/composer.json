@@ -1,0 +1,8 @@
+{
+    "require": {
+        "endroid/qr-code": "^5.1",
+        "sastrawi/sastrawi": "^1.2",
+        "nesbot/carbon": "^3.9",
+        "google-gemini-php/client": "^2.3"
+    }
+}

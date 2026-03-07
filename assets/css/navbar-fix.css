@@ -1,0 +1,148 @@
+/* Fix untuk navbar fixed-top agar tidak menutupi konten */
+html {
+    scroll-padding-top: 80px; /* Untuk smooth scrolling di bawah navbar */
+}
+
+body {
+    padding-top: 76px; /* Memberikan ruang untuk fixed navbar */
+    min-height: auto; /* Tidak memaksa tinggi minimum body */
+}
+
+/* Styling untuk card di halaman peraturan-jenis */
+.card-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    font-size: 0.875rem;
+    margin-top: 1rem;
+}
+
+.card-info-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--gray-600);
+}
+
+.card-info-item i {
+    width: 16px;
+    text-align: center;
+    color: var(--primary-color);
+}
+
+/* Hapus jdih-navbar-spacer karena kita sudah menambahkan padding pada body */
+.jdih-navbar-spacer {
+    display: none;
+}
+
+/* Fix loading overlay agar tidak mengganggu layout */
+.jdih-loading {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(255, 255, 255, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    opacity: 1;
+    transition: opacity 0.3s ease-out;
+    pointer-events: none; /* Masih bisa klik elemen di bawah loading */
+}
+
+#loading.loaded {
+    opacity: 0;
+}
+
+/* Versi responsif untuk berbagai ukuran layar */
+@media (max-width: 991.98px) {
+    body {
+        padding-top: 68px;
+    }
+    html {
+        scroll-padding-top: 72px;
+    }
+}
+
+@media (max-width: 767.98px) {
+    body {
+        padding-top: 60px;
+    }
+    html {
+        scroll-padding-top: 64px;
+    }
+}
+
+/* Back to Top Button */
+.back-to-top {
+    position: fixed;
+    bottom: 2rem;
+    left: 2rem;
+    width: 3rem;
+    height: 3rem;
+    background-color: var(--primary-color);
+    color: white;
+    border: 2px solid white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease-in-out;
+    z-index: 999;
+    box-shadow: 0 4px 12px rgba(13, 110, 253, 0.2);
+    font-size: var(--icon-md);
+}
+
+.back-to-top:hover {
+    background-color: var(--primary-dark);
+    color: white;
+    transform: translateY(-0.25rem) scale(1.05);
+    box-shadow: 0 6px 16px rgba(13, 110, 253, 0.3);
+}
+
+.back-to-top:active {
+    transform: translateY(0) scale(0.98);
+}
+
+.back-to-top.show {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Responsive adjustments */
+@media (max-width: 991.98px) {
+    .back-to-top {
+        bottom: 1.5rem;
+        left: 1.5rem;
+        width: 2.75rem;
+        height: 2.75rem;
+        font-size: 1.25rem;
+    }
+}
+
+@media (max-width: 767.98px) {
+    .back-to-top {
+        bottom: 1.25rem;
+        left: 1.25rem;
+        width: 2.5rem;
+        height: 2.5rem;
+        font-size: 1.1rem;
+    }
+}
+
+/* Dark mode support */
+[data-bs-theme="dark"] .back-to-top {
+    background-color: var(--primary-dark);
+    border-color: rgba(255, 255, 255, 0.1);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+[data-bs-theme="dark"] .back-to-top:hover {
+    background-color: var(--primary-color);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+}

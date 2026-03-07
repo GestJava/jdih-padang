@@ -1,0 +1,167 @@
+/**
+ * LOGIN CSS - Fixed Version
+ * Mengatasi konflik antara login.css dan register.css
+ * Author: AI Assistant
+ * Date: 2025
+ */
+
+/* Override konflik login-container dengan register layout */
+.login-container {
+    max-width: 450px !important;
+    width: 100% !important;
+    z-index: 1;
+    position: relative !important; /* Override absolute positioning */
+    left: auto !important;
+    top: auto !important;
+    bottom: auto !important;
+    margin: 0 auto !important; /* Center container */
+    padding: 20px;
+}
+
+/* Fix card header untuk login */
+.login-container .card-header.transparent-header {
+    padding: 25px;
+    padding-bottom: 20px;
+    background: transparent !important;
+    border: 0 !important;
+}
+
+.login-container .card-header.transparent-header .logo {
+    text-align: center;
+}
+
+.login-container .card-header.transparent-header img {
+    max-width: 150px !important;
+    height: auto;
+}
+
+/* Fix card body spacing */
+.login-container .card-body {
+    padding: 25px !important;
+    background: #FFFFFF;
+}
+
+/* Fix card footer */
+.login-container .card-footer {
+    background: #f1f1f1 !important;
+    text-align: center !important;
+    padding: 20px 25px !important;
+    font-size: 95%;
+}
+
+.login-container .card-footer p {
+    margin-bottom: 8px;
+}
+
+.login-container .card-footer p:last-child {
+    margin-bottom: 0;
+}
+
+/* Fix input styling */
+.login-container .login-input, 
+.login-container .login-input:focus {
+    border: 0;
+    border-bottom: 1px solid #CCCCCC;
+    outline: none;
+    box-shadow: none;
+}
+
+.login-container .input-group-text {
+    background: none !important;
+    border: 0 !important;
+}
+
+/* Fix button styling */
+.login-container .btn {
+    height: calc(2.75rem + 2px);
+    border-radius: 0;
+}
+
+/* Fix form spacing */
+.login-container .form-login {
+    margin: 0;
+}
+
+/* Fix alert styling */
+.login-container .alert {
+    border-radius: 0;
+    margin-bottom: 1rem;
+}
+
+/* Fix checkbox styling */
+.login-container .form-check {
+    margin-bottom: 1rem;
+}
+
+.login-container .form-check-label {
+    font-weight: normal;
+    cursor: pointer;
+}
+
+/* Fix responsive untuk mobile */
+@media screen and (max-width: 500px) {
+    .login-container {
+        margin: 20px auto !important;
+        padding: 10px;
+        max-width: 100% !important;
+    }
+    
+    .login-container .card-body {
+        padding: 20px !important;
+    }
+    
+    .login-container .card-header.transparent-header {
+        padding: 20px !important;
+        padding-bottom: 15px !important;
+    }
+    
+    .login-container .card-footer {
+        padding: 20px !important;
+    }
+    
+    .login-container .card-header.transparent-header img {
+        max-width: 120px !important;
+    }
+}
+
+/* Override background positioning conflicts */
+body.login-page {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    padding: 0;
+}
+
+/* Fix z-index untuk card */
+.login-container .card {
+    z-index: 10;
+    position: relative;
+}
+
+/* Fix text colors */
+.login-container h4 {
+    color: #007bff !important;
+}
+
+.login-container .text-muted {
+    color: #6c757d !important;
+}
+
+/* Fix icon colors */
+.login-container .fa-user,
+.login-container .fa-lock {
+    color: #6c757d;
+}
+
+/* Fix link colors */
+.login-container .card-footer a {
+    color: #007bff;
+    text-decoration: none;
+}
+
+.login-container .card-footer a:hover {
+    color: #0056b3;
+    text-decoration: underline;
+} 
