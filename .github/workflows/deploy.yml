@@ -1,0 +1,48 @@
+name: Deploy JDIH to Production
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Deploying application via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.DEPLOY_SSH_KEY }}
+          port: ${{ secrets.SERVER_PORT }}
+          script: |
+             # Navigate to web root
+             cd /var/www/jdih
+             
+             # Undo any local changes on the server
+             echo "${{ secrets.SUDO_PASSWORD }}" | sudo -S git reset --hard
+             
+             # Pull latest code
+             echo "${{ secrets.SUDO_PASSWORD }}" | sudo -S git pull origin main
+             
+             # Navigate to CodeIgniter root
+             cd jdih
+             
+             # Install dependencies (Optimize for production)
+             export COMPOSER_ALLOW_SUPERUSER=1
+             echo "${{ secrets.SUDO_PASSWORD }}" | sudo -S composer install --no-dev --optimize-autoloader
+             
+             # Run database migrations
+             echo "${{ secrets.SUDO_PASSWORD }}" | sudo -S php spark migrate --all
+             
+             # Clear caches
+             echo "${{ secrets.SUDO_PASSWORD }}" | sudo -S php spark cache:clear
+             
+             # Restore secure web server ownership for writable
+             echo "${{ secrets.SUDO_PASSWORD }}" | sudo -S chown -R www-data:www-data /var/www/jdih
+             echo "${{ secrets.SUDO_PASSWORD }}" | sudo -S chmod -R 775 /var/www/jdih/jdih/writable
