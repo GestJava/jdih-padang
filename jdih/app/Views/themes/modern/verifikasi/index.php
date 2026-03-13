@@ -292,10 +292,6 @@
         </div>
     </div>
 </div>
-</div>
-
-<script>
-
 
 <style>
     /* Premium Design System for Verifikasi Page */
