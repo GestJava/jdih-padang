@@ -1042,7 +1042,10 @@ class TTEController extends BaseController
             log_message('debug', 'TTE API Response - Body length: ' . strlen($responseBody) . ' bytes');
 
             if ($statusCode !== 200) {
-                $errorMessage = $responseData['message'] ?? $response->getReasonPhrase();
+                // Handle non-JSON error response from firewall/proxy (e.g. FortiGuard block)
+                $errorMessage = (is_array($responseData) && isset($responseData['message'])) 
+                    ? $responseData['message'] 
+                    : $response->getReasonPhrase();
                 log_message('error', 'TTE API Request Failed - Status: ' . $statusCode . ', Message: ' . $errorMessage);
                 log_message('error', 'TTE API Response: ' . $responseBody);
                 
