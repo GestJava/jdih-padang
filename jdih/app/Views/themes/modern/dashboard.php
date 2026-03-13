@@ -1,272 +1,194 @@
 <?php helper('html') ?>
-<div class="card-body dashboard">
-	<?php
-	if ($message['status'] == 'error') {
-		show_message($message);
-	}
-	?>
+<!-- Modern Google Fonts & Icons -->
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons|Material+Icons+Outlined" rel="stylesheet">
 
-	<!-- Welcome Section -->
-	<div class="row mb-4">
-		<div class="col-12">
-			<div class="welcome-card text-white rounded-3 p-4" style="background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%) !important;">
-				<div class="row align-items-center">
-					<div class="col-lg-8">
-						<h2 class="mb-2">Selamat Datang di Dashboard JDIH</h2>
-						<p class="mb-0">Jaringan Dokumentasi dan Informasi Hukum Kota Padang</p>
-						<small class="opacity-75">Kelola dan pantau dokumen hukum dengan mudah</small>
-					</div>
-					<div class="col-lg-4 text-end">
-						<i class="material-icons" style="font-size: 80px; opacity: 0.3;">gavel</i>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
+<div class="card-body main-dashboard-premium">
+    <?php
+    if ($message['status'] == 'error') {
+        show_message($message);
+    }
+    ?>
 
-	<!-- Filter Tahun -->
-	<div class="row mb-4">
-		<div class="col-12">
-			<div class="card shadow-sm">
-				<div class="card-body">
-					<form method="GET" action="<?= base_url('dashboard') ?>" class="d-flex align-items-center gap-3">
-						<label for="tahun" class="form-label mb-0 fw-bold">
-							<i class="fas fa-calendar-alt me-2"></i>Filter Tahun:
-						</label>
-						<select name="tahun" id="tahun" class="form-select" style="width: auto; min-width: 150px;" onchange="this.form.submit()">
-							<?php
-							$tahun_sekarang = date('Y');
-							// Generate list tahun dari tahun sekarang sampai 5 tahun ke belakang
-							$tahun_options = [];
-							for ($i = 0; $i <= 10; $i++) {
-								$tahun_option = $tahun_sekarang - $i;
-								$tahun_options[] = $tahun_option;
-							}
-							
-							// Tambahkan tahun dari database jika ada
-							foreach ($list_tahun as $tahun_db) {
-								if (!in_array($tahun_db, $tahun_options)) {
-									$tahun_options[] = $tahun_db;
-								}
-							}
-							
-							// Sort descending
-							rsort($tahun_options);
-							
-							foreach ($tahun_options as $tahun_option):
-								$selected = ($tahun == $tahun_option) ? 'selected' : '';
-								$label = $tahun_option == $tahun_sekarang ? $tahun_option . ' (Tahun Ini)' : $tahun_option;
-							?>
-								<option value="<?= $tahun_option ?>" <?= $selected ?>><?= $label ?></option>
-							<?php endforeach; ?>
-						</select>
-						<button type="submit" class="btn btn-primary">
-							<i class="fas fa-filter me-1"></i>Filter
-						</button>
-					</form>
-				</div>
-			</div>
-		</div>
-	</div>
+    <!-- Premium Welcome Section -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <div class="welcome-banner card border-0 overflow-hidden shadow-premium">
+                <div class="card-body p-0">
+                    <div class="row g-0 align-items-center">
+                        <div class="col-lg-8 p-5 welcome-text">
+                            <h6 class="text-uppercase ls-2 text-white-50 fw-bold mb-2">Portal Administrasi</h6>
+                            <h1 class="display-5 fw-800 text-white mb-3">Selamat Datang, <?= esc(strtoupper($session->get('user')['nama'])) ?></h1>
+                            <p class="lead text-white-50 mb-4">Kelola dan pantau seluruh ekosistem hukum Kota Padang dalam satu dashboard cerdas.</p>
+                            <div class="d-flex gap-2">
+                                <span class="badge bg-white bg-opacity-10 text-white px-3 py-2 rounded-pill border border-white border-opacity-10">
+                                    <i class="material-icons align-middle fs-6 me-1">update</i> Last login: Today
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 d-none d-lg-block text-center p-4">
+                            <div class="banner-visual-shell">
+                                <i class="material-icons banner-icon">gavel</i>
+                                <div class="orbit-1"></div>
+                                <div class="orbit-2"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="banner-gradient"></div>
+            </div>
+        </div>
+    </div>
 
-	<!-- Statistics Cards -->
-	<div class="row mb-4">
-		<div class="col-lg-4 col-md-6 col-sm-12 mb-3">
-			<div class="card text-white bg-primary shadow-lg border-0 h-100 position-relative">
-				<div class="icon-circle">
-					<i class="material-icons">description</i>
-				</div>
-				<div class="card-body card-stats">
-					<div class="d-flex flex-column justify-content-center">
-						<div class="flex-grow-1">
-							<h3 class="card-title mb-1 text-white fw-bold"><?= !empty($total_dokumen['jml']) ? number_format($total_dokumen['jml']) : 0 ?></h3>
-							<p class="card-text mb-0 text-white">Total Dokumen</p>
-							<small class="text-white-50">Dokumen Hukum</small>
-						</div>
-					</div>
-				</div>
-				<div class="card-footer bg-white bg-opacity-10 border-0">
-					<div class="d-flex justify-content-between align-items-center">
-						<div class="d-flex align-items-center">
-							<?php
-							if (!empty($total_dokumen['growth'])) {
-								$class = $total_dokumen['growth'] > 0 ? 'fa-arrow-trend-up text-white' : 'fa-arrow-trend-down text-white';
-								echo '<i class="fas ' . $class . ' me-1"></i>';
-							} else {
-								$total_dokumen['growth'] = 0;
-							}
-							?>
-							<small class="text-white"><?= round($total_dokumen['growth']) ?>%</small>
-						</div>
-						<small class="text-white-50">Tahun <?= $tahun ?></small>
-					</div>
-				</div>
-			</div>
-		</div>
+    <!-- Dynamic Filters -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <div class="glass-filter-card card border-0 shadow-sm rounded-4 text-white">
+                <div class="card-body px-4 py-3 d-flex flex-wrap align-items-center justify-content-between gap-3">
+                    <div class="d-flex align-items-center">
+                        <div class="filter-icon-shell me-3">
+                            <i class="material-icons">filter_list</i>
+                        </div>
+                        <div>
+                            <h6 class="mb-0 fw-bold">Konfigurasi Data</h6>
+                            <small class="text-white-50">Filter statistik berdasarkan parameter cakupan</small>
+                        </div>
+                    </div>
+                    <form method="GET" action="<?= base_url('dashboard') ?>" class="d-flex align-items-center gap-3 filter-form">
+                        <div class="select-wrapper">
+                            <i class="material-icons select-icon">calendar_today</i>
+                            <select name="tahun" id="tahun" class="form-select-premium" onchange="this.form.submit()">
+                                <?php
+                                $tahun_sekarang = date('Y');
+                                $tahun_options = [];
+                                for ($i = 0; $i <= 10; $i++) { $tahun_options[] = $tahun_sekarang - $i; }
+                                foreach ($list_tahun as $tahun_db) { if (!in_array($tahun_db, $tahun_options)) $tahun_options[] = $tahun_db; }
+                                rsort($tahun_options);
+                                foreach ($tahun_options as $tahun_option):
+                                    $selected = ($tahun == $tahun_option) ? 'selected' : '';
+                                    $label = $tahun_option == $tahun_sekarang ? $tahun_option . ' (Aktual)' : $tahun_option;
+                                ?>
+                                    <option value="<?= $tahun_option ?>" <?= $selected ?>><?= $label ?></option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-premium-action">
+                             Sinkronisasi Data
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 
-		<div class="col-lg-4 col-md-6 col-sm-12 mb-3">
-			<div class="card text-white bg-secondary shadow-lg border-0 h-100 position-relative">
-				<div class="icon-circle">
-					<i class="material-icons">new_releases</i>
-				</div>
-				<div class="card-body card-stats">
-					<div class="d-flex flex-column justify-content-center">
-						<div class="flex-grow-1">
-							<h3 class="card-title mb-1 text-white fw-bold"><?= !empty($dokumen_bulan_ini ?? 0) ? number_format($dokumen_bulan_ini) : 0 ?></h3>
-							<p class="card-text mb-0 text-white">Dokumen Terbaru</p>
-							<small class="text-white-50">Bulan Ini</small>
-						</div>
-					</div>
-				</div>
-				<div class="card-footer bg-white bg-opacity-10 border-0">
-					<div class="d-flex justify-content-between align-items-center">
-						<div class="d-flex align-items-center">
-							<i class="fas fa-calendar-alt text-white me-1"></i>
-							<small class="text-white">Bulan Ini</small>
-						</div>
-						<small class="text-white-50"><?= date('M Y') ?></small>
-					</div>
-				</div>
-			</div>
-		</div>
+    <!-- Primary Statistics Cards (Glassmorphism) -->
+    <div class="row mb-4">
+        <div class="col-xl-4 col-md-6 mb-4">
+            <div class="stat-card card border-0 shadow-sm glass-bg-blue overflow-hidden">
+                <div class="card-body p-4">
+                    <div class="d-flex justify-content-between align-items-start mb-4">
+                        <div class="stat-icon bg-white bg-opacity-20 rounded-3 p-3">
+                            <i class="material-icons text-white">description</i>
+                        </div>
+                        <div class="growth-badge <?= ($total_dokumen['growth'] ?? 0) >= 0 ? 'bg-emerald-soft' : 'bg-rose-soft' ?>">
+                            <i class="material-icons fs-6 me-1"><?= ($total_dokumen['growth'] ?? 0) >= 0 ? 'trending_up' : 'trending_down' ?></i> 
+                            <?= abs(round($total_dokumen['growth'] ?? 0)) ?>%
+                        </div>
+                    </div>
+                    <div class="stat-content">
+                        <h2 class="display-6 fw-800 text-white mb-1"><?= !empty($total_dokumen['jml']) ? number_format($total_dokumen['jml']) : 0 ?></h2>
+                        <h6 class="text-white-50 text-uppercase ls-1 fw-bold">Total Dokumen Hukum</h6>
+                    </div>
+                    <div class="stat-footer-text mt-3 text-white-50 small border-top border-white border-opacity-10 pt-3">
+                        Total akumulasi peraturan & berita tahun <?= $tahun ?>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-		<div class="col-lg-4 col-md-6 col-sm-12 mb-3">
-			<div class="card text-white bg-info shadow-lg border-0 h-100 position-relative">
-				<div class="icon-circle">
-					<i class="material-icons">people</i>
-				</div>
-				<div class="card-body card-stats">
-					<div class="d-flex flex-column justify-content-center">
-						<div class="flex-grow-1">
-							<h3 class="card-title mb-1 text-white fw-bold"><?= !empty($total_user['jml']) ? number_format($total_user['jml']) : 0 ?></h3>
-							<p class="card-text mb-0 text-white">Pengguna Aktif</p>
-							<small class="text-white-50">User Terdaftar</small>
-						</div>
-					</div>
-				</div>
-				<div class="card-footer bg-white bg-opacity-10 border-0">
-					<div class="d-flex justify-content-between align-items-center">
-						<div class="d-flex align-items-center">
-							<?php
-							$class = $total_user['growth'] > 0 ? 'fa-arrow-trend-up text-white' : 'fa-arrow-trend-down text-white';
-							echo '<i class="fas ' . $class . ' me-1"></i>';
-							?>
-							<small class="text-white"><?= round($total_user['growth']) ?>%</small>
-						</div>
-						<small class="text-white-50">Tahun <?= $tahun ?></small>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
+        <div class="col-xl-4 col-md-6 mb-4">
+            <div class="stat-card card border-0 shadow-sm glass-bg-purple overflow-hidden">
+                <div class="card-body p-4">
+                    <div class="d-flex justify-content-between align-items-start mb-4">
+                        <div class="stat-icon bg-white bg-opacity-20 rounded-3 p-3">
+                            <i class="material-icons text-white">new_releases</i>
+                        </div>
+                        <div class="badge bg-white bg-opacity-20 text-white px-3 py-1 rounded-pill small">Aktual</div>
+                    </div>
+                    <div class="stat-content">
+                        <h2 class="display-6 fw-800 text-white mb-1"><?= !empty($dokumen_bulan_ini ?? 0) ? number_format($dokumen_bulan_ini) : 0 ?></h2>
+                        <h6 class="text-white-50 text-uppercase ls-1 fw-bold">Publikasi Terbaru</h6>
+                    </div>
+                    <div class="stat-footer-text mt-3 text-white-50 small border-top border-white border-opacity-10 pt-3">
+                        Total dokumen yang dirilis pada <?= date('F Y') ?>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-	<!-- Statistik Layanan Section -->
-	<h5 class="mb-3 fw-bold text-dark border-bottom pb-2 mt-4"><i class="material-icons align-middle fs-5 me-1">balance</i> Statistik Layanan</h5>
-	<div class="row mb-4">
-		<div class="col-lg-3 col-md-6 col-sm-12 mb-3">
-			<div class="card text-white bg-success shadow-lg border-0 h-100 position-relative">
-				<div class="icon-circle">
-					<i class="material-icons">balance</i>
-				</div>
-				<div class="card-body card-stats">
-					<div class="d-flex flex-column justify-content-center">
-						<div class="flex-grow-1">
-							<h3 class="card-title mb-1 text-white fw-bold"><?= number_format($harm_total_ajuan ?? 0) ?></h3>
-							<p class="card-text mb-0 text-white">Total Harmonisasi</p>
-							<small class="text-white-50">Tahun <?= $tahun ?></small>
-						</div>
-					</div>
-				</div>
-				<div class="card-footer bg-white bg-opacity-10 border-0">
-					<div class="d-flex justify-content-between align-items-center">
-						<div class="d-flex align-items-center">
-							<i class="fas fa-chart-line text-white me-1"></i>
-							<small class="text-white">Harmonisasi</small>
-						</div>
-						<small class="text-white-50">Tahun <?= $tahun ?></small>
-					</div>
-				</div>
-			</div>
-		</div>
+        <div class="col-xl-4 col-md-6 mb-4">
+            <div class="stat-card card border-0 shadow-sm glass-bg-teal overflow-hidden">
+                <div class="card-body p-4">
+                    <div class="d-flex justify-content-between align-items-start mb-4">
+                        <div class="stat-icon bg-white bg-opacity-20 rounded-3 p-3">
+                            <i class="material-icons text-white">people</i>
+                        </div>
+                        <div class="growth-badge <?= ($total_user['growth'] ?? 0) >= 0 ? 'bg-emerald-soft' : 'bg-rose-soft' ?>">
+                            <i class="material-icons fs-6 me-1"><?= ($total_user['growth'] ?? 0) >= 0 ? 'trending_up' : 'trending_down' ?></i> 
+                            <?= abs(round($total_user['growth'] ?? 0)) ?>%
+                        </div>
+                    </div>
+                    <div class="stat-content">
+                        <h2 class="display-6 fw-800 text-white mb-1"><?= !empty($total_user['jml']) ? number_format($total_user['jml']) : 0 ?></h2>
+                        <h6 class="text-white-50 text-uppercase ls-1 fw-bold">Pengguna Terverifikasi</h6>
+                    </div>
+                    <div class="stat-footer-text mt-3 text-white-50 small border-top border-white border-opacity-10 pt-3">
+                        Basis pengguna aktif dalam ekosistem sistem
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
-		<div class="col-lg-3 col-md-6 col-sm-12 mb-3">
-			<div class="card text-white bg-primary shadow-lg border-0 h-100 position-relative">
-				<div class="icon-circle">
-					<i class="material-icons">check_circle</i>
-				</div>
-				<div class="card-body card-stats">
-					<div class="d-flex flex-column justify-content-center">
-						<div class="flex-grow-1">
-							<h3 class="card-title mb-1 text-white fw-bold"><?= number_format($harm_selesai ?? 0) ?></h3>
-							<p class="card-text mb-0 text-white">Harmonisasi Selesai</p>
-							<small class="text-white-50">Tahun <?= $tahun ?></small>
-						</div>
-					</div>
-				</div>
-				<div class="card-footer bg-white bg-opacity-10 border-0">
-					<div class="d-flex justify-content-between align-items-center">
-						<div class="d-flex align-items-center">
-							<i class="fas fa-check-circle text-white me-1"></i>
-							<small class="text-white">Selesai</small>
-						</div>
-						<small class="text-white-50">Tahun <?= $tahun ?></small>
-					</div>
-				</div>
-			</div>
-		</div>
+    <!-- Service Statistics (Modern Profiles) -->
+    <div class="row g-4 mb-5">
+        <div class="col-12">
+            <h5 class="section-title mb-4 fw-800 text-dark">
+                <i class="material-icons align-middle me-2 text-primary">analytics</i> Statistik Layanan Digital
+            </h5>
+        </div>
+        
+        <?php 
+            $service_stats = [
+                ['label' => 'Total Harmonisasi', 'value' => $harm_total_ajuan, 'icon' => 'balance', 'color' => 'indigo'],
+                ['label' => 'Harmonisasi Selesai', 'value' => $harm_selesai, 'icon' => 'verified', 'color' => 'emerald'],
+                ['label' => 'Total Legalisasi', 'value' => $leg_total_ajuan, 'icon' => 'gavel', 'color' => 'amber'],
+                ['label' => 'Legalisasi Selesai', 'value' => $leg_selesai, 'icon' => 'task_alt', 'color' => 'cyan'],
+            ];
+        ?>
 
-		<div class="col-lg-3 col-md-6 col-sm-12 mb-3">
-			<div class="card text-white bg-warning shadow-lg border-0 h-100 position-relative">
-				<div class="icon-circle">
-					<i class="material-icons">gavel</i>
-				</div>
-				<div class="card-body card-stats">
-					<div class="d-flex flex-column justify-content-center">
-						<div class="flex-grow-1">
-							<h3 class="card-title mb-1 text-white fw-bold"><?= number_format($leg_total_ajuan ?? 0) ?></h3>
-							<p class="card-text mb-0 text-white">Total Legalisasi</p>
-							<small class="text-white-50">Tahun <?= $tahun ?></small>
-						</div>
-					</div>
-				</div>
-				<div class="card-footer bg-white bg-opacity-10 border-0">
-					<div class="d-flex justify-content-between align-items-center">
-						<div class="d-flex align-items-center">
-							<i class="fas fa-chart-line text-white me-1"></i>
-							<small class="text-white">Legalisasi</small>
-						</div>
-						<small class="text-white-50">Tahun <?= $tahun ?></small>
-					</div>
-				</div>
-			</div>
-		</div>
-
-		<div class="col-lg-3 col-md-6 col-sm-12 mb-3">
-			<div class="card text-white bg-info shadow-lg border-0 h-100 position-relative">
-				<div class="icon-circle">
-					<i class="material-icons">check_circle</i>
-				</div>
-				<div class="card-body card-stats">
-					<div class="d-flex flex-column justify-content-center">
-						<div class="flex-grow-1">
-							<h3 class="card-title mb-1 text-white fw-bold"><?= number_format($leg_selesai ?? 0) ?></h3>
-							<p class="card-text mb-0 text-white">Legalisasi Selesai</p>
-							<small class="text-white-50">Tahun <?= $tahun ?></small>
-						</div>
-					</div>
-				</div>
-				<div class="card-footer bg-white bg-opacity-10 border-0">
-					<div class="d-flex justify-content-between align-items-center">
-						<div class="d-flex align-items-center">
-							<i class="fas fa-check-circle text-white me-1"></i>
-							<small class="text-white">Selesai</small>
-						</div>
-						<small class="text-white-50">Tahun <?= $tahun ?></small>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
+        <?php foreach ($service_stats as $service): ?>
+        <div class="col-xl-3 col-md-6">
+            <div class="service-card card border-0 shadow-sm rounded-4 overflow-hidden h-100">
+                <div class="card-body p-4">
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="service-icon-box bg-<?= $service['color'] ?>-soft text-<?= $service['color'] ?> me-3">
+                            <i class="material-icons"><?= $service['icon'] ?></i>
+                        </div>
+                        <h6 class="text-muted fw-bold mb-0 text-uppercase small ls-1"><?= $service['label'] ?></h6>
+                    </div>
+                    <div class="d-flex align-items-end justify-content-between">
+                        <h3 class="fw-800 text-dark mb-0"><?= number_format($service['value'] ?? 0) ?></h3>
+                        <div class="mini-graph bg-<?= $service['color'] ?>-soft rounded-pill px-2 py-1">
+                            <i class="material-icons fs-6 align-middle text-<?= $service['color'] ?>">insights</i>
+                        </div>
+                    </div>
+                </div>
+                <div class="service-progress bg-<?= $service['color'] ?>"></div>
+            </div>
+        </div>
+        <?php endforeach; ?>
+    </div>
 
 	<!-- Progress Bar Status Harmonisasi -->
 	<div class="row mb-4">
@@ -420,206 +342,191 @@
 <!-- Dashboard specific styles are loaded from external CSS file -->
 
 <style>
-	/* Additional dashboard card improvements */
-	.card-stats {
-		padding: 1.5rem !important;
-		padding-top: 2rem !important;
-		position: relative !important;
-		overflow: hidden !important;
-	}
+    /* Premium Dashboard Overhaul styles */
+    :root {
+        --primary-font: 'Inter', sans-serif;
+        --heading-font: 'Outfit', sans-serif;
+        --glow-primary: rgba(30, 58, 138, 0.4);
+    }
 
-	/* Fix text color consistency */
-	.dashboard .card-body .text-dark {
-		color: #212529 !important;
-	}
+    .main-dashboard-premium {
+        font-family: var(--primary-font);
+        background-color: #f1f5f9;
+        padding: 2rem;
+        min-height: 100vh;
+    }
 
-	.dashboard .progress-bar {
-		color: white !important;
-		font-weight: 600 !important;
-	}
+    .fw-800 { font-weight: 800; }
+    .ls-1 { letter-spacing: 1px; }
+    .ls-2 { letter-spacing: 2px; }
 
-	.dashboard .card-header .card-title {
-		color: #212529 !important;
-	}
+    /* Welcome Banner */
+    .welcome-banner {
+        border-radius: 2rem !important;
+        background: #1e293b;
+        position: relative;
+    }
 
-	.dashboard .card-header small {
-		color: #6c757d !important;
-	}
+    .banner-gradient {
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        background: linear-gradient(135deg, #1e3a8a 0%, #172554 100%);
+        z-index: 1;
+    }
 
-	.dashboard .table th {
-		color: #212529 !important;
-	}
+    .welcome-text { position: relative; z-index: 5; }
+    .welcome-text h1 { font-family: var(--heading-font); }
 
-	.dashboard .table td {
-		color: #212529 !important;
-	}
+    .banner-visual-shell {
+        position: relative;
+        z-index: 5;
+        height: 180px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
 
-	.dashboard .badge {
-		color: inherit !important;
-	}
+    .banner-icon {
+        font-size: 100px !important;
+        color: rgba(255, 255, 255, 0.15);
+        animation: float 4s ease-in-out infinite;
+    }
 
-	/* Ensure consistent text colors for all dashboard elements */
-	.dashboard .text-muted {
-		color: #6c757d !important;
-	}
+    @keyframes float {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-20px); }
+    }
 
-	.dashboard .text-white-50 {
-		color: rgba(255, 255, 255, 0.5) !important;
-	}
+    .orbit-1, .orbit-2 {
+        position: absolute;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 50%;
+    }
 
-	.dashboard .text-white {
-		color: #ffffff !important;
-	}
+    .orbit-1 { width: 140px; height: 140px; animation: rotate 20s linear infinite; }
+    .orbit-2 { width: 220px; height: 220px; animation: rotate 30s linear infinite reverse; }
 
-	.dashboard .text-dark {
-		color: #212529 !important;
-	}
+    @keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 
-	.dashboard .fw-medium {
-		font-weight: 500 !important;
-	}
+    /* Filters */
+    .glass-filter-card {
+        background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+        box-shadow: 0 10px 15px -3px rgba(59, 130, 246, 0.4) !important;
+    }
 
-	.dashboard .fw-semibold {
-		font-weight: 600 !important;
-	}
+    .filter-icon-shell {
+        width: 45px;
+        height: 45px;
+        background: rgba(255, 255, 255, 0.2);
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
 
-	.dashboard .fw-bold {
-		font-weight: 700 !important;
-	}
+    .form-select-premium {
+        background: rgba(255, 255, 255, 0.15);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        color: white;
+        padding: 0.5rem 2.5rem 0.5rem 1rem;
+        border-radius: 12px;
+        font-weight: 600;
+        cursor: pointer;
+        outline: none;
+    }
 
-	/* Fix any potential color conflicts */
-	.dashboard .card * {
-		color: inherit;
-	}
+    .form-select-premium option { color: #1e293b; }
 
-	.dashboard .card.text-white * {
-		color: white !important;
-	}
+    .btn-premium-action {
+        background: white;
+        color: #2563eb;
+        border: none;
+        padding: 0.6rem 1.5rem;
+        border-radius: 12px;
+        font-weight: 700;
+        transition: all 0.3s ease;
+    }
 
-	.dashboard .card.text-white .text-dark {
-		color: #212529 !important;
-	}
+    .btn-premium-action:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        color: #1d4ed8;
+    }
 
-	.icon-circle {
-		width: 50px !important;
-		height: 50px !important;
-		background: rgba(255, 255, 255, 0.2) !important;
-		border-radius: 50% !important;
-		display: flex !important;
-		align-items: center !important;
-		justify-content: center !important;
-		position: absolute !important;
-		top: 15px !important;
-		right: 15px !important;
-		z-index: 10 !important;
-		transition: all 0.3s ease !important;
-		backdrop-filter: blur(10px) !important;
-		border: 1px solid rgba(255, 255, 255, 0.1) !important;
-	}
+    /* Glass Cards */
+    .stat-card { border-radius: 1.5rem !important; transition: all 0.4s ease; }
+    .stat-card:hover { transform: translateY(-10px); }
 
-	.icon-circle:hover {
-		background: rgba(255, 255, 255, 0.3) !important;
-		transform: scale(1.1) !important;
-		box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2) !important;
-	}
+    .glass-bg-blue { background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%); }
+    .glass-bg-purple { background: linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%); }
+    .glass-bg-teal { background: linear-gradient(135deg, #0d9488 0%, #0f766e 100%); }
 
-	.icon-circle .material-icons {
-		font-size: 24px !important;
-		color: white !important;
-	}
+    .stat-content h2 { font-family: var(--heading-font); letter-spacing: -1px; }
 
-	.card-stats .card-title {
-		font-size: 2.2rem !important;
-		font-weight: 700 !important;
-		line-height: 1.1 !important;
-		margin-bottom: 0.5rem !important;
-		color: white !important;
-	}
+    .bg-emerald-soft { background-color: rgba(16, 185, 129, 0.2); color: #4ade80; }
+    .bg-rose-soft { background-color: rgba(244, 63, 94, 0.2); color: #fb7185; }
+    .growth-badge {
+        padding: 4px 10px;
+        border-radius: 10px;
+        font-size: 0.75rem;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+    }
 
-	.card-stats .card-text {
-		font-size: 1rem !important;
-		font-weight: 600 !important;
-		margin-bottom: 0.25rem !important;
-		color: white !important;
-	}
+    /* Service Stats */
+    .service-card { transition: all 0.3s ease; border-radius: 1.25rem !important; }
+    .service-card:hover { transform: scale(1.02); }
 
-	.card-stats small {
-		font-size: 0.875rem !important;
-		font-weight: 400 !important;
-		color: rgba(255, 255, 255, 0.7) !important;
-	}
+    .service-icon-box {
+        width: 48px;
+        height: 48px;
+        border-radius: 14px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
 
-	/* Card hover effects */
-	.card {
-		transition: all 0.3s ease-in-out !important;
-		border: none !important;
-		box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important;
-	}
+    .bg-indigo-soft { background: #eef2ff; } .text-indigo { color: #4f46e5; } .bg-indigo { background: #4f46e5; }
+    .bg-emerald-soft-alt { background: #ecfdf5; } .text-emerald { color: #10b981; } .bg-emerald { background: #10b981; }
+    .bg-amber-soft { background: #fffbeb; } .text-amber { color: #f59e0b; } .bg-amber { background: #f59e0b; }
+    .bg-cyan-soft { background: #ecfeff; } .text-cyan { color: #0891b2; } .bg-cyan { background: #0891b2; }
 
-	.card:hover {
-		transform: translateY(-4px) !important;
-		box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15) !important;
-	}
+    .service-progress {
+        height: 4px;
+        width: 0;
+        transition: width 1s ease-in-out;
+    }
+    .service-card:hover .service-progress { width: 100%; }
 
-	/* Ensure proper text colors */
-	.bg-primary * {
-		color: white !important;
-	}
+    /* Progress & Charts */
+    .progress { border-radius: 10px; background-color: #e2e8f0; overflow: hidden; }
+    .progress-bar { border-radius: 10px; }
 
-	.bg-success * {
-		color: white !important;
-	}
+    .section-title { font-family: var(--heading-font); }
 
-	.bg-warning * {
-		color: white !important;
-	}
+    .card-header { background: transparent !important; padding: 1.5rem !important; }
 
-	.bg-info * {
-		color: white !important;
-	}
+    /* Animation Entry */
+    .main-dashboard-premium > .row {
+        animation: slideUp 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+        opacity: 0;
+    }
 
-	/* Responsive improvements */
-	@media (max-width: 768px) {
-		.card-stats {
-			padding: 1rem !important;
-			padding-top: 1.5rem !important;
-		}
+    .main-dashboard-premium > .row:nth-child(1) { animation-delay: 0.1s; }
+    .main-dashboard-premium > .row:nth-child(2) { animation-delay: 0.2s; }
+    .main-dashboard-premium > .row:nth-child(3) { animation-delay: 0.3s; }
 
-		.card-stats h3 {
-			font-size: 1.8rem !important;
-		}
+    @keyframes slideUp {
+        from { opacity: 0; transform: translateY(30px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
 
-		.icon-circle {
-			width: 40px !important;
-			height: 40px !important;
-			top: 10px !important;
-			right: 10px !important;
-		}
-
-		.icon-circle .material-icons {
-			font-size: 20px !important;
-		}
-	}
-
-	@media (max-width: 576px) {
-		.card-stats {
-			padding: 0.75rem !important;
-			padding-top: 1.25rem !important;
-		}
-
-		.card-stats h3 {
-			font-size: 1.5rem !important;
-		}
-
-		.icon-circle {
-			width: 35px !important;
-			height: 35px !important;
-			top: 8px !important;
-			right: 8px !important;
-		}
-
-		.icon-circle .material-icons {
-			font-size: 18px !important;
-		}
-	}
+    @media (max-width: 992px) {
+        .welcome- banner { text-align: center; }
+        .welcome-text { padding: 3rem !important; }
+    }
 </style>

@@ -1,803 +1,96 @@
-/* Dashboard Modern Style for JDIH */
+/* Dashboard Modern Style for JDIH - Premium Edition */
 
-/* Welcome Section */
-.welcome-card {
+/* Welcome Section - Legacy Cleanup */
+.welcome-card-legacy {
     background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%) !important;
-    border: none;
     border-radius: 15px;
+    color: #ffffff !important;
+}
+
+/* Charts & Containers */
+.chart-responsive-wrapper {
     position: relative;
-    overflow: hidden;
-    color: #ffffff !important;
+    width: 100%;
+    margin-bottom: 1.5rem;
 }
 
-/* Force override Bootstrap classes */
-.welcome-card.bg-gradient-primary {
-    background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%) !important;
-}
-
-/* Emergency fallback - ensure text is ALWAYS visible */
-div[class*="welcome-card"] * {
-    color: #ffffff !important;
-}
-
-div[class*="welcome-card"] h2 {
-    color: #ffffff !important;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7) !important;
-}
-
-div[class*="welcome-card"] p {
-    color: #ffffff !important;
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5) !important;
-}
-
-div[class*="welcome-card"] small {
-    color: rgba(255, 255, 255, 0.95) !important;
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5) !important;
-}
-
-.welcome-card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.05' fill-rule='evenodd'%3E%3Cpath d='m0 40l40-40h-40z'/%3E%3C/g%3E%3C/svg%3E");
-    z-index: 1;
-}
-
-.welcome-card .row {
-    position: relative;
-    z-index: 2;
-}
-
-/* Welcome card text styling for better contrast */
-.welcome-card h2,
-.welcome-card.bg-gradient-primary h2 {
-    color: #ffffff !important;
-    font-weight: 700;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
-    margin-bottom: 0.75rem;
-}
-
-.welcome-card p,
-.welcome-card.bg-gradient-primary p {
-    color: #ffffff !important;
-    font-weight: 500;
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
-    margin-bottom: 0.5rem;
-}
-
-.welcome-card small,
-.welcome-card.bg-gradient-primary small {
-    color: rgba(255, 255, 255, 0.9) !important;
-    font-weight: 400;
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
-}
-
-.welcome-card .material-icons,
-.welcome-card.bg-gradient-primary .material-icons {
-    color: rgba(255, 255, 255, 0.4) !important;
-    text-shadow: none;
-}
-
-/* Statistics Cards */
-.card-stats {
-    padding: 1.5rem;
-    padding-top: 2rem; /* Give space for top icon */
-    position: relative;
-    overflow: hidden;
-}
-
-.card-stats::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    right: 0;
-    width: 100px;
-    height: 100px;
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 50%;
-    transform: translate(30px, -30px);
-}
-
-/* Enhanced Icon Circle Styling - Top Right Position */
-.icon-circle {
-    width: 50px !important;
-    height: 50px !important;
-    background: rgba(255, 255, 255, 0.2) !important;
-    border-radius: 50% !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    position: absolute !important;
-    top: 15px !important;
-    right: 15px !important;
-    z-index: 10 !important;
-    transition: all 0.3s ease;
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.icon-circle:hover {
-    background: rgba(255, 255, 255, 0.3) !important;
-    transform: scale(1.1);
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-}
-
-.icon-circle .material-icons {
-    font-size: 24px !important;
-    color: white !important;
-}
-
-/* Card positioning for icons */
-.card.position-relative {
-    position: relative !important;
-    overflow: visible;
-}
-
-/* Ensure proper text layout without icon interference */
-.card-stats .d-flex.flex-column {
-    height: 100%;
-    justify-content: center;
-}
-
-/* Consistent card text styling */
-.card-stats .card-title {
-    font-size: 2.2rem;
-    font-weight: 700;
-    line-height: 1.1;
-    margin-bottom: 0.5rem;
-    color: white !important;
-}
-
-.card-stats .card-text {
-    font-size: 1rem;
-    font-weight: 600;
-    margin-bottom: 0.25rem;
-    color: white !important;
-}
-
-.card-stats small {
-    font-size: 0.875rem;
-    font-weight: 400;
-    color: rgba(255, 255, 255, 0.7) !important;
-}
-
-/* Add subtle animation for the icon on card hover */
-.card:hover .icon-circle {
-    transform: scale(1.05) rotate(5deg);
-    background: rgba(255, 255, 255, 0.35) !important;
-}
-
-/* Card Color Overrides for Consistency */
-.bg-primary * {
-    color: white !important;
-}
-
-.bg-success * {
-    color: white !important;
-}
-
-.bg-warning * {
-    color: white !important;
-}
-
-.bg-info * {
-    color: white !important;
-}
-
-/* Card Hover Effects */
-.card {
-    transition: all 0.3s ease-in-out;
-    border: none;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-}
-
-.card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-}
-
-/* Chart Containers */
 .chart-container {
     position: relative;
     padding: 20px;
 }
 
-.chart-title {
-    font-size: 1.1rem;
-    font-weight: 600;
-    color: #2c3e50;
-    margin-bottom: 0.5rem;
+/* Table Styling - Maintaining for Data Integrity */
+.main-dashboard-premium .table {
+    border-collapse: separate;
+    border-spacing: 0 8px;
 }
 
-.chart-subtitle {
-    font-size: 0.85rem;
-    color: #6c757d;
+.main-dashboard-premium .table tr {
+    transition: all 0.3s ease;
+    background: white;
 }
 
-/* Table Styling */
-.table-hover tbody tr:hover {
-    background-color: rgba(0, 0, 0, 0.02);
-    transform: scale(1.01);
-    transition: all 0.2s ease;
-}
-
-.table th {
-    border-top: none;
-    font-weight: 600;
-    color: #495057;
-    background-color: #f8f9fa;
-    padding: 12px 15px;
-}
-
-.table td {
-    padding: 12px 15px;
+.main-dashboard-premium .table td {
+    padding: 1.25rem 1rem;
     vertical-align: middle;
-    border-color: #e9ecef;
+    border-top: none;
+    border-bottom: 1px solid #f1f5f9;
 }
 
-/* Status Indicators */
-.status-indicator {
-    flex-shrink: 0;
-    box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.8);
-}
-
-.status-list {
-    max-height: 300px;
-    overflow-y: auto;
-}
-
-/* Fix untuk Status Harmonisasi - Kontras Warna */
-.status-list .d-flex {
-    padding: 8px 0;
-    border-radius: 4px;
-    transition: background-color 0.2s ease;
-}
-
-.status-list .d-flex:hover {
-    background-color: rgba(0, 0, 0, 0.02);
-}
-
-.status-list small {
-    color: #495057 !important;
-    font-weight: 500 !important;
-    font-size: 0.875rem !important;
-}
-
-.status-list .badge {
-    background-color: #6c757d !important;
-    color: #ffffff !important;
-    font-size: 0.75rem !important;
-    font-weight: 600 !important;
-}
-
-/* Ensure proper text colors in all states */
-.card-body .status-list small {
-    color: #2c3e50 !important;
-}
-
-.card .status-list small {
-    color: #343a40 !important;
-}
-
-.status-list::-webkit-scrollbar {
-    width: 4px;
-}
-
-.status-list::-webkit-scrollbar-track {
-    background: #f1f1f1;
-    border-radius: 2px;
-}
-
-.status-list::-webkit-scrollbar-thumb {
-    background: #c1c1c1;
-    border-radius: 2px;
-}
-
-/* Dropdown Styling */
-.dropdown-menu {
-    border: none;
-    box-shadow: 0 4px 25px rgba(0, 0, 0, 0.15);
-    border-radius: 8px;
-    padding: 8px 0;
-}
-
-.dropdown-item {
-    padding: 8px 16px;
-    transition: all 0.2s ease;
-}
-
-.dropdown-item:hover {
-    background-color: #f8f9fa;
-    color: #495057;
-}
-
-/* Badge Styling */
-.badge {
+.main-dashboard-premium .table th {
+    font-family: 'Outfit', sans-serif;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
     font-size: 0.75rem;
-    font-weight: 500;
-    border-radius: 6px;
-    padding: 4px 8px;
-}
-
-/* Button Styling */
-.btn {
-    border-radius: 8px;
-    font-weight: 500;
-    transition: all 0.2s ease;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.btn:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-}
-
-.btn-sm {
-    padding: 6px 12px;
-    font-size: 0.875rem;
-}
-
-/* Card Header Styling */
-.card-header {
-    background-color: transparent;
-    border-bottom: 1px solid #e9ecef;
-    padding: 1.25rem;
-}
-
-.card-header.bg-white {
-    background-color: #ffffff !important;
-}
-
-/* Loading Animation */
-@keyframes pulse {
-    0% {
-        opacity: 1;
-    }
-    50% {
-        opacity: 0.5;
-    }
-    100% {
-        opacity: 1;
-    }
-}
-
-.loading {
-    animation: pulse 1.5s ease-in-out infinite;
-}
-
-/* Responsive Design */
-@media (max-width: 768px) {
-    .welcome-card h2 {
-        font-size: 1.5rem;
-        color: #ffffff !important;
-        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
-    }
-    
-    .welcome-card p {
-        color: #ffffff !important;
-        font-size: 0.95rem;
-    }
-    
-    .welcome-card small {
-        color: rgba(255, 255, 255, 0.9) !important;
-        font-size: 0.85rem;
-    }
-    
-    .card-stats {
-        padding-top: 1.5rem;
-    }
-    
-    .card-stats h3 {
-        font-size: 1.25rem;
-    }
-    
-    .table-responsive {
-        border: none;
-    }
-    
-    .chart-container {
-        padding: 10px;
-    }
-    
-    .icon-circle {
-        width: 40px !important;
-        height: 40px !important;
-        top: 10px !important;
-        right: 10px !important;
-    }
-    
-    .icon-circle .material-icons {
-        font-size: 20px !important;
-    }
-}
-
-@media (max-width: 576px) {
-    .welcome-card {
-        text-align: center;
-    }
-    
-    .welcome-card .col-lg-4 {
-        margin-top: 1rem;
-    }
-    
-    .d-flex.justify-content-between {
-        flex-direction: column;
-        align-items: flex-start !important;
-    }
-    
-    .card-footer .d-flex {
-        justify-content: space-between !important;
-    }
-}
-
-/* Dark mode support */
-@media (prefers-color-scheme: dark) {
-    .card {
-        background-color: #2d3748;
-        color: #e2e8f0;
-    }
-    
-    .table th {
-        background-color: #4a5568;
-        color: #e2e8f0;
-    }
-    
-    .table td {
-        border-color: #4a5568;
-        color: #e2e8f0;
-    }
-    
-    .dropdown-menu {
-        background-color: #2d3748;
-        border-color: #4a5568;
-    }
-    
-    .dropdown-item {
-        color: #e2e8f0;
-    }
-    
-    .dropdown-item:hover {
-        background-color: #4a5568;
-        color: #ffffff;
-    }
-    
-    /* Dark mode untuk status harmonisasi */
-    .status-list small {
-        color: #e2e8f0 !important;
-    }
-    
-    .status-list .badge {
-        background-color: #4a5568 !important;
-        color: #e2e8f0 !important;
-    }
-}
-
-/* Print Styles */
-@media print {
-    .card {
-        box-shadow: none !important;
-        border: 1px solid #dee2e6 !important;
-    }
-    
-    .btn, .dropdown {
-        display: none !important;
-    }
-    
-    .card:hover {
-        transform: none !important;
-    }
-}
-
-/* Accessibility */
-.card:focus-within {
-    outline: 2px solid #007bff;
-    outline-offset: 2px;
-}
-
-.btn:focus {
-    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
-}
-
-/* Custom Scrollbar */
-.card-body::-webkit-scrollbar {
-    width: 6px;
-}
-
-.card-body::-webkit-scrollbar-track {
-    background: #f1f1f1;
-    border-radius: 3px;
-}
-
-.card-body::-webkit-scrollbar-thumb {
-    background: #c1c1c1;
-    border-radius: 3px;
-}
-
-.card-body::-webkit-scrollbar-thumb:hover {
-    background: #a1a1a1;
-}
-
-/* Material Icons Enhancement */
-.material-icons {
-    font-family: 'Material Icons' !important;
-    font-weight: normal !important;
-    font-style: normal !important;
-    font-size: 24px !important;
-    line-height: 1 !important;
-    letter-spacing: normal !important;
-    text-transform: none !important;
-    display: inline-block !important;
-    white-space: nowrap !important;
-    word-wrap: normal !important;
-    direction: ltr !important;
-    -webkit-font-feature-settings: 'liga' !important;
-    -webkit-font-smoothing: antialiased !important;
-    text-rendering: optimizeLegibility !important;
-    -moz-osx-font-smoothing: grayscale !important;
-    font-feature-settings: 'liga' !important;
-    user-select: none !important;
-}
-
-/* Force icon styling for dashboard cards */
-.icon-circle .material-icons {
-    color: #ffffff !important;
-    font-size: 28px !important;
-    width: 28px !important;
-    height: 28px !important;
-    line-height: 28px !important;
-    text-align: center !important;
-    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3) !important;
-    background: transparent !important;
-}
-
-/* Fix Bootstrap conflicts for card icons */
-.card-stats .icon-circle,
-.card .icon-circle {
-    background-color: transparent !important;
-    border-radius: 50% !important;
-    width: 60px !important;
-    height: 60px !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    flex-shrink: 0 !important;
-    position: relative !important;
-    z-index: 2 !important;
-}
-
-/* Consistent text colors for all card icons */
-.bg-primary .material-icons,
-.bg-success .material-icons,
-.bg-warning .material-icons,
-.bg-info .material-icons,
-.bg-danger .material-icons {
-    color: #ffffff !important;
-}
-
-/* FontAwesome arrows consistency */
-.fas.fa-arrow-trend-up,
-.fas.fa-arrow-trend-down {
-    font-size: 12px !important;
-    color: inherit !important;
-    margin-right: 0.25rem !important;
-    vertical-align: middle !important;
-    line-height: 1 !important;
-}
-
-/* Emergency fix for white boxes (missing font fallback) */
-.material-icons:before {
-    content: attr(data-icon) !important;
-}
-
-/* Force display for potentially invisible icons */
-.card-stats .material-icons,
-.welcome-card .material-icons {
-    opacity: 1 !important;
-    visibility: visible !important;
-    display: inline-block !important;
-}
-
-/* Bootstrap override - prevent conflicts */
-.card .material-icons {
-    font-family: 'Material Icons' !important;
-    -webkit-font-feature-settings: 'liga' !important;
-    -moz-font-feature-settings: 'liga' !important;
-    font-feature-settings: 'liga' !important;
-}
-
-/* Fix positioning issues */
-.card-stats .d-flex {
-    align-items: center !important;
-    justify-content: space-between !important;
-}
-
-.card-stats .flex-grow-1 {
-    flex: 1 1 auto !important;
-    margin-right: 1rem !important;
-}
-
-.card-stats .flex-shrink-0 {
-    flex: 0 0 auto !important;
-}
-
-/* Ensure icon containers are transparent */
-.icon-circle {
-    background: transparent !important;
-    backdrop-filter: none !important;
-    -webkit-backdrop-filter: none !important;
-}
-
-/* Override any Bootstrap background classes */
-.icon-circle.bg-white,
-.icon-circle.bg-opacity-20,
-.bg-white.bg-opacity-20 {
-    background-color: transparent !important;
-    background: transparent !important;
-}
-
-/* Add subtle glow effect instead of white background */
-.card-stats .icon-circle {
-    position: relative;
-}
-
-.card-stats .icon-circle:before {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 40px;
-    height: 40px;
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 50%;
-    transform: translate(-50%, -50%);
-    z-index: -1;
-    opacity: 0.6;
-}
-
-/* Force transparency for all states */
-.icon-circle,
-div[class*="icon-circle"] {
-    background-color: transparent !important;
-    background-image: none !important;
-    border: none !important;
-    box-shadow: none !important;
-}
-
-/* Gradient backgrounds for cards */
-.bg-gradient-primary {
-    background: linear-gradient(135deg, #4a5568 0%, #2d3748 100%);
-    color: #ffffff !important;
-}
-
-.bg-gradient-success {
-    background: linear-gradient(135deg, #56ab2f 0%, #a8e6cf 100%);
-}
-
-.bg-gradient-warning {
-    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-}
-
-.bg-gradient-info {
-    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-}
-
-/* EMERGENCY ICON FIXES - ABSOLUTE FALLBACK */
-/* If Material Icons fail to load, show text alternatives */
-.material-icons[style*="font-size: 28px"]:empty:after {
-    content: '📄';
-    font-size: 24px;
-    color: inherit;
-}
-
-.material-icons:empty:after {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
-}
-
-/* Specific icon fallbacks */
-.material-icons:empty[aria-label*="description"]:after,
-.material-icons:empty:contains("description"):after { content: '📄'; }
-
-.material-icons:empty[aria-label*="balance"]:after,
-.material-icons:empty:contains("balance"):after { content: '⚖️'; }
-
-.material-icons:empty[aria-label*="visibility"]:after,
-.material-icons:empty:contains("visibility"):after { content: '👁️'; }
-
-.material-icons:empty[aria-label*="people"]:after,
-.material-icons:empty:contains("people"):after { content: '👥'; }
-
-.material-icons:empty[aria-label*="gavel"]:after,
-.material-icons:empty:contains("gavel"):after { content: '⚖️'; }
-
-/* Force icon display without debugging borders */
-@media screen {
-    .material-icons {
-        border: none !important;
-        min-width: 1em !important;
-        min-height: 1em !important;
-    }
-}
-
-/* EMERGENCY OVERRIDES - Status Harmonisasi Text Visibility */
-/* Force text colors regardless of any Bootstrap override */
-div[class*="status-list"] small,
-.status-list small,
-.card .status-list small {
-    color: #212529 !important;
-    font-weight: 500 !important;
-    opacity: 1 !important;
-    visibility: visible !important;
-    text-shadow: none !important;
-}
-
-/* Force badge visibility */
-.status-list .badge,
-.status-list span.badge {
-    background-color: #6c757d !important;
-    color: #ffffff !important;
-    opacity: 1 !important;
-    visibility: visible !important;
-}
-
-/* Override any potential white text classes */
-.status-list .text-white,
-.status-list .text-light {
-    color: #212529 !important;
-}
-
-/* Specific selector for harmonisasi status section */
-.card .status-list .d-flex small {
-    color: #495057 !important;
-    font-size: 0.875rem !important;
-    line-height: 1.4 !important;
-}
-
-/* Ensure parent containers don't interfere */
-.card-body {
-    color: inherit !important;
-}
-
-.card-body .status-list {
-    color: #212529 !important;
-}
-
-/* Chart Header Layout Improvements */
-.card-header .d-flex {
-    gap: 1rem;
-}
-
-.card-header .flex-grow-1 {
-    min-width: 0; /* Allows text to truncate if needed */
-    flex: 1 1 auto;
-}
-
-.card-header .flex-shrink-0 {
-    flex: 0 0 auto;
-}
-
-/* Dropdown positioning and styling */
-.dropdown {
-    position: relative;
-    z-index: 1000;
-}
-
-.dropdown-menu {
+    color: #64748b;
     border: none;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    padding: 1rem;
+}
+
+/* Dropdown Premium Styling */
+.main-dashboard-premium .dropdown-menu {
+    border: none;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    border-radius: 12px;
+    padding: 0.5rem;
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.main-dashboard-premium .dropdown-item {
     border-radius: 8px;
-    padding: 0.5rem 0;
-    min-width: 120px;
+    padding: 0.6rem 1rem;
+    font-weight: 500;
+    font-size: 0.9rem;
+    color: #475569;
+    transition: all 0.2s ease;
 }
 
-.dropdown-menu-end {
-    right: 0 !important;
-    left: auto !important;
+.main-dashboard-premium .dropdown-item:hover {
+    background: #f1f5f9;
+    color: #2563eb;
+    transform: translateX(5px);
 }
 
-.dropdown-item {
+/* Scrollbar styling */
+.main-dashboard-premium .card-body::-webkit-scrollbar { width: 6px; }
+.main-dashboard-premium .card-body::-webkit-scrollbar-track { background: #f1f5f9; }
+.main-dashboard-premium .card-body::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
+
+/* Custom Badge Styling */
+.main-dashboard-premium .badge-premium {
+    padding: 0.5rem 1rem;
+    border-radius: 10px;
+    font-weight: 700;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
     padding: 0.5rem 1rem;
     font-size: 0.9rem;
     color: #495057;
