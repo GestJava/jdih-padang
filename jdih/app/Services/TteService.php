@@ -60,7 +60,8 @@ class TteService
         }
 
         try {
-            $response = $this->client->get("/api/user/status/{$nik}");
+            $endpoint = rtrim($this->config->host, '/') . '/user/status/' . $nik;
+            $response = $this->client->get($endpoint);
 
             if ($response->getStatusCode() !== 200) {
                 $this->lastError = [
@@ -141,6 +142,10 @@ class TteService
             // Coba decode JSON, jika gagal gunakan response asli
             $result = json_decode($bodyContent, true);
             if (json_last_error() !== JSON_ERROR_NONE) {
+                // If it's HTML (likely FortiGuard block), log it clearly
+                if (stripos($bodyContent, '<!DOCTYPE html>') !== false || stripos($bodyContent, '<html>') !== false) {
+                    log_message('error', 'TTE API returned HTML instead of JSON. Likely network block/firewall.');
+                }
                 $result = $bodyContent;
             }
 
@@ -170,7 +175,7 @@ class TteService
      */
     public function checkStatus($nik)
     {
-        return $this->sendRequest('GET', '/api/user/status/' . urlencode($nik));
+        return $this->sendRequest('GET', '/user/status/' . urlencode($nik));
     }
 
     /**
@@ -187,7 +192,7 @@ class TteService
             $files['surat_rekomendasi'] = $recommendationLetter;
         }
 
-        return $this->sendRequest('POST', '/api/user/registrasi', $data, $files);
+        return $this->sendRequest('POST', '/user/registrasi', $data, $files);
     }
 
     /**
@@ -214,7 +219,7 @@ class TteService
             'file' => $documentPath
         ];
 
-        return $this->sendRequest('POST', '/api/document/sign', $data, $files);
+        return $this->sendRequest('POST', '/document/sign', $data, $files);
     }
 
     /**
@@ -307,7 +312,7 @@ class TteService
             }
 
             // Mode production - validasi dengan BSrE
-            $response = $this->client->post($this->config->host . '/api/validate-certificate', [
+            $response = $this->client->post($this->config->host . '/validate-certificate', [
                 'json' => [
                     'nik' => $nik,
                     'password' => $password,

@@ -71,15 +71,25 @@ class TTEController extends BaseController
             $apiUrl = $this->getTteApiUrl() . '/user/check/status';
             $payload = ['nik' => $nik];
             
-            // Make API request
-            $response = $this->makeTteApiRequest('POST', $apiUrl, $payload);
+            // DEVELOPMENT MODE: Gunakan mock service jika di environment development
+            if (ENVIRONMENT === 'development' || (defined('ENVIRONMENT') && ENVIRONMENT === 'development')) {
+                log_message('info', 'TTE [DEVELOPMENT]: Using mock service for user status check.');
+                $testingService = new \App\Services\TteTestingService();
+                $response = $testingService->mockCheckUserStatus($nik);
+            } else {
+                // Make API request ke real server
+                $response = $this->makeTteApiRequest('POST', $apiUrl, $payload);
+            }
 
             if ($response === false) {
                 $error = $this->getLastError();
                 if ($userId) {
                     $this->logTteActivity(null, $userId, 'TTE_REQUEST', 'FAILED', null, null, $error['message'] ?? 'Unknown error');
                 }
-                return $this->fail($error['message'] ?? 'Failed to check user status', $error['status'] ?? 500);
+                return $this->respond([
+                    'status' => 'error',
+                    'message' => 'Gagal terhubung ke server BSrE: ' . ($error['message'] ?? 'Network Error')
+                ], $error['status'] ?? 500);
             }
 
             // Normalize response format sesuai requirement
@@ -158,15 +168,33 @@ class TTEController extends BaseController
             $apiUrl = $this->getTteApiUrl() . '/verify/pdf';
             $payload = ['file' => $fileBase64];
             
-            // Make API request
-            $response = $this->makeTteApiRequest('POST', $apiUrl, $payload);
+            // DEVELOPMENT MODE: Gunakan mock response jika di environment development
+            if (ENVIRONMENT === 'development' || (defined('ENVIRONMENT') && ENVIRONMENT === 'development')) {
+                log_message('info', 'TTE [DEVELOPMENT]: Using mock response for document verification.');
+                $response = [
+                    'status_code' => 200,
+                    'message' => 'Document verified successfully (MOCK)',
+                    'result' => 'VALID',
+                    'details' => [
+                        'signer' => 'User JDIH Mock',
+                        'timestamp' => date('Y-m-d H:i:s'),
+                        'is_valid' => true
+                    ]
+                ];
+            } else {
+                // Make API request ke real server
+                $response = $this->makeTteApiRequest('POST', $apiUrl, $payload);
+            }
 
             if ($response === false) {
                 $error = $this->getLastError();
                 if ($userId) {
                     $this->logTteActivity(null, $userId, 'TTE_REQUEST', 'FAILED', null, null, $error['message'] ?? 'Unknown error');
                 }
-                return $this->fail($error['message'] ?? 'Failed to verify document', $error['status'] ?? 500);
+                return $this->respond([
+                    'status' => 'error',
+                    'message' => 'Gagal verifikasi dokumen: ' . ($error['message'] ?? 'Network Error')
+                ], $error['status'] ?? 500);
             }
 
             // Log success
@@ -513,7 +541,10 @@ class TTEController extends BaseController
                     $errorMessage .= '3) Google Charts API tidak dapat diakses (404). ';
                     $errorMessage .= 'Silakan hubungi administrator untuk menginstall Python dan library QR code yang diperlukan, atau pastikan koneksi internet tersedia untuk Google Charts API.';
                     
-                    return $this->fail($errorMessage, 500);
+                    return $this->respond([
+                        'status' => 'error',
+                        'message' => $errorMessage
+                    ], 500);
                 }
                 
                 // Verify enhanced PDF is valid
@@ -523,7 +554,10 @@ class TTEController extends BaseController
                     if ($enhancedPdfPath && file_exists($enhancedPdfPath)) {
                         @unlink($enhancedPdfPath);
                     }
-                    return $this->fail('Enhanced PDF tidak valid. Proses enhancement gagal.', 500);
+                    return $this->respond([
+                        'status' => 'error',
+                        'message' => 'Enhanced PDF tidak valid. Proses enhancement gagal.'
+                    ], 500);
                 }
                 
                 log_message('info', 'TTE SignDocument - PDF enhanced successfully: ' . $enhancedPdfPath);
@@ -563,7 +597,10 @@ class TTEController extends BaseController
                     $errorMessage .= ' Pastikan Python dan PyMuPDF sudah terinstall dengan benar. Silakan jalankan setup script: bash jdih/app/PdfTools/setup_python_dependencies.sh';
                 }
                 
-                return $this->fail($errorMessage, 500);
+                return $this->respond([
+                    'status' => 'error',
+                    'message' => $errorMessage
+                ], 500);
             }
 
             log_message('debug', 'TTE SignDocument - Starting base64 encoding for: ' . $documentPath);
@@ -577,7 +614,10 @@ class TTEController extends BaseController
                     @unlink($enhancedPdfPath);
                 }
                 log_message('error', 'TTE SignDocument - Failed to encode PDF to base64: ' . $documentPath);
-                return $this->fail('Failed to encode PDF file to base64', 500);
+                return $this->respond([
+                    'status' => 'error',
+                    'message' => 'Failed to encode PDF file to base64'
+                ], 500);
             }
 
             $base64Length = strlen($fileBase64);
@@ -589,7 +629,10 @@ class TTEController extends BaseController
                     @unlink($enhancedPdfPath);
                 }
                 log_message('error', 'TTE SignDocument - Base64 string is empty');
-                return $this->fail('Base64 encoded string is empty', 500);
+                return $this->respond([
+                    'status' => 'error',
+                    'message' => 'Base64 encoded string is empty'
+                ], 500);
             }
 
             // Log request (signed_path akan diisi setelah file diupload)
@@ -626,8 +669,15 @@ class TTEController extends BaseController
             log_message('debug', 'TTE SignDocument - File base64 length in payload: ' . strlen($payload['file'][0]) . ' characters');
             // CATATAN KEAMANAN: Password/passphrase TIDAK PERNAH di-log
 
-            // Make API request
-            $response = $this->makeTteApiRequest('POST', $apiUrl, $payload);
+            // DEVELOPMENT MODE: Gunakan mock service jika di environment development
+            if (ENVIRONMENT === 'development' || (defined('ENVIRONMENT') && ENVIRONMENT === 'development')) {
+                log_message('info', 'TTE [DEVELOPMENT]: Using mock service for document signing.');
+                $testingService = new \App\Services\TteTestingService();
+                $response = $testingService->mockSignDocument($nik, $password, $documentPath);
+            } else {
+                // Make API request ke real server
+                $response = $this->makeTteApiRequest('POST', $apiUrl, $payload);
+            }
 
             if ($response === false) {
                 // Cleanup enhanced PDF jika ada sebelum return error
@@ -637,7 +687,10 @@ class TTEController extends BaseController
                 }
                 $error = $this->getLastError();
                 $this->logTteActivity($idAjuan, $userId, 'TTE_FAILED', 'FAILED', $documentNumber, null, $error['message'] ?? 'Unknown error', null, $logId);
-                return $this->fail($error['message'] ?? 'Failed to sign document', $error['status'] ?? 500);
+                return $this->respond([
+                    'status' => 'error',
+                    'message' => 'Gagal proses TTE: ' . ($error['message'] ?? 'Failed to sign document')
+                ], $error['status'] ?? 500);
             }
 
             // Check response status
