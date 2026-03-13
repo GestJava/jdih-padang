@@ -243,10 +243,10 @@ class Legalisasi extends BaseController
                 ->countAllResults();
             
             $tteTahunIni = $this->db->table('harmonisasi_ajuan ha')
-                ->join('harmonisasi_jenis_peraturan j', 'ha.id_jenis_peraturan = j.id', 'left')
+                ->join('harmonisasi_nomor_peraturan np', 'ha.id = np.id_ajuan', 'inner')
                 ->where('ha.id_status_ajuan', HarmonisasiStatus::SELESAI)
                 ->where('YEAR(ha.updated_at)', $currentYear)
-                ->where('ha.tte_signed_at IS NOT NULL')
+                ->where('np.tte_file_path IS NOT NULL')
                 ->countAllResults();
             
             // 4. Selesai (status 14, 15) di tahun ini - global
@@ -846,7 +846,12 @@ class Legalisasi extends BaseController
 
             if ($new_status) {
                 // Update status ajuan
-                $updateData = ['id_status_ajuan' => $new_status];
+                $updateData = [
+                    'id_status_ajuan' => $new_status,
+                    'tte_signed_at' => date('Y-m-d H:i:s'),
+                    'tte_file_path' => $signedPath // Local path of the signed document
+                ];
+
                 if ($new_status == HarmonisasiStatus::SELESAI) {
                     $updateData['tanggal_selesai'] = date('Y-m-d H:i:s');
                 }

@@ -23,6 +23,8 @@ class HarmonisasiAjuanModel extends Model
         'tanggal_pengajuan',
         'tanggal_selesai',
         'keterangan',
+        'tte_signed_at',
+        'tte_file_path',
         'created_at',
         'updated_at'
     ];
