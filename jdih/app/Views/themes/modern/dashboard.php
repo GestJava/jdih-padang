@@ -379,22 +379,7 @@
 		</div>
 	</div>
 
-	<!-- Grafik Dokumen Peraturan Berdasarkan Jenis -->
-	<div class="row mb-4">
-		<div class="col-12 mb-4">
-			<div class="card shadow-sm border-0 h-100">
-				<div class="card-header bg-white border-0 pb-0">
-					<h5 class="card-title mb-1">Dokumen Peraturan Berdasarkan Jenis</h5>
-					<small class="text-muted">Distribusi dokumen hukum berdasarkan jenis peraturan tahun <?= $tahun ?></small>
-				</div>
-				<div class="card-body">
-					<div class="chart-responsive-wrapper">
-						<canvas id="dokumen-jenis-chart" style="width:100%;height:300px;"></canvas>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
+
 </div>
 
 <script>
