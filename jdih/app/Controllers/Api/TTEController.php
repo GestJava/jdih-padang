@@ -45,18 +45,18 @@ class TTEController extends BaseController
             $data = $this->request->getJSON(true);
             
             if (!$data) {
-                return $this->fail('Invalid JSON data', 400);
+                return $this->respond(['status' => 'error', 'message' => 'Invalid JSON data'], 400);
             }
 
             $nik = $data['nik'] ?? null;
 
             // Manual validation
             if (empty($nik)) {
-                return $this->fail('NIK is required', 400);
+                return $this->respond(['status' => 'error', 'message' => 'NIK is required'], 400);
             }
 
             if (!is_numeric($nik) || strlen($nik) !== 16) {
-                return $this->fail('NIK must be 16 digits', 400);
+                return $this->respond(['status' => 'error', 'message' => 'NIK must be 16 digits'], 400);
             }
 
             // Log request
@@ -129,7 +129,7 @@ class TTEController extends BaseController
 
         } catch (\Exception $e) {
             log_message('error', 'Error in cekStatusUser: ' . $e->getMessage());
-            return $this->failServerError('Internal server error: ' . $e->getMessage());
+            return $this->respond(['status' => 'error', 'message' => 'Internal server error: ' . $e->getMessage()], 500);
         }
     }
 
@@ -148,14 +148,15 @@ class TTEController extends BaseController
             ];
 
             if (!$this->validate($rules)) {
-                return $this->failValidationErrors($this->validator->getErrors());
+                $errors = $this->validator->getErrors();
+                return $this->respond(['status' => 'error', 'message' => implode(', ', $errors)], 400);
             }
 
             $data = $this->request->getJSON(true);
             $fileBase64 = $data['file'] ?? null;
 
             if (!$fileBase64) {
-                return $this->fail('File is required', 400);
+                return $this->respond(['status' => 'error', 'message' => 'File is required'], 400);
             }
 
             // Log request
@@ -242,7 +243,7 @@ class TTEController extends BaseController
             $data = $this->request->getJSON(true);
             
             if (!$data) {
-                return $this->fail('Invalid JSON data', 400);
+                return $this->respond(['status' => 'error', 'message' => 'Invalid JSON data'], 400);
             }
 
             $idAjuan = $data['id_ajuan'] ?? null;
@@ -253,19 +254,19 @@ class TTEController extends BaseController
 
             // Manual validation
             if (empty($idAjuan) || !is_numeric($idAjuan)) {
-                return $this->fail('id_ajuan is required and must be numeric', 400);
+                return $this->respond(['status' => 'error', 'message' => 'id_ajuan is required and must be numeric'], 400);
             }
 
             if (empty($nik) || !is_numeric($nik) || strlen($nik) !== 16) {
-                return $this->fail('NIK is required and must be 16 digits', 400);
+                return $this->respond(['status' => 'error', 'message' => 'NIK is required and must be 16 digits'], 400);
             }
 
             if (empty($password) || strlen($password) < 8) {
-                return $this->fail('Password is required and must be at least 8 characters', 400);
+                return $this->respond(['status' => 'error', 'message' => 'Password is required and must be at least 8 characters'], 400);
             }
 
             if (empty($idDokumen) || !is_numeric($idDokumen)) {
-                return $this->fail('id_dokumen is required and must be numeric', 400);
+                return $this->respond(['status' => 'error', 'message' => 'id_dokumen is required and must be numeric'], 400);
             }
 
             // Get dokumen dari database berdasarkan id_dokumen
@@ -276,7 +277,7 @@ class TTEController extends BaseController
 
             if (!$dokumen) {
                 log_message('error', 'TTE SignDocument - Dokumen not found: id_dokumen=' . $idDokumen);
-                return $this->fail('Dokumen not found with id_dokumen: ' . $idDokumen, 404);
+                return $this->respond(['status' => 'error', 'message' => 'Dokumen not found with id_dokumen: ' . $idDokumen'], 404);
             }
 
             log_message('debug', 'TTE SignDocument - Dokumen data: ' . json_encode([
@@ -289,13 +290,13 @@ class TTEController extends BaseController
             // Validasi dokumen adalah FINAL_PARAF
             if ($dokumen['tipe_dokumen'] !== 'FINAL_PARAF') {
                 log_message('error', 'TTE SignDocument - Invalid document type: ' . ($dokumen['tipe_dokumen'] ?? 'null') . ', expected: FINAL_PARAF');
-                return $this->fail('Dokumen harus berjenis FINAL_PARAF, found: ' . ($dokumen['tipe_dokumen'] ?? 'null'), 400);
+                return $this->respond(['status' => 'error', 'message' => 'Dokumen harus berjenis FINAL_PARAF, found: ' . ($dokumen['tipe_dokumen'] ?? 'null')], 400);
             }
 
             // Validasi dokumen milik ajuan yang benar
             if ($dokumen['id_ajuan'] != $idAjuan) {
                 log_message('error', 'TTE SignDocument - Document ajuan mismatch: dokumen_id_ajuan=' . ($dokumen['id_ajuan'] ?? 'null') . ', request_id_ajuan=' . $idAjuan);
-                return $this->fail('Dokumen tidak sesuai dengan ajuan. Dokumen id_ajuan: ' . ($dokumen['id_ajuan'] ?? 'null') . ', Request id_ajuan: ' . $idAjuan, 400);
+                return $this->respond(['status' => 'error', 'message' => 'Dokumen tidak sesuai dengan ajuan. Dokumen id_ajuan: ' . ($dokumen['id_ajuan'] ?? 'null') . ', Request id_ajuan: ' . $idAjuan], 400);
             }
 
             // Get file path dan construct full path
@@ -303,7 +304,7 @@ class TTEController extends BaseController
             
             if (empty($filePath)) {
                 log_message('error', 'TTE SignDocument - path_file_storage is empty for dokumen id: ' . $idDokumen);
-                return $this->fail('File path tidak ditemukan di database', 404);
+                return $this->respond(['status' => 'error', 'message' => 'File path tidak ditemukan di database'], 404);
             }
 
             log_message('debug', 'TTE SignDocument - Original path_file_storage: ' . $filePath);
@@ -329,7 +330,7 @@ class TTEController extends BaseController
                 log_message('error', 'TTE SignDocument - File not found: ' . $documentPath);
                 log_message('error', 'TTE SignDocument - WRITEPATH: ' . WRITEPATH);
                 log_message('error', 'TTE SignDocument - Original path_file_storage: ' . $dokumen['path_file_storage']);
-                return $this->fail('File dokumen tidak ditemukan di server: ' . $documentPath, 404);
+                return $this->respond(['status' => 'error', 'message' => 'File dokumen tidak ditemukan di server: ' . $documentPath], 404);
             }
 
             // Check file size
@@ -338,14 +339,14 @@ class TTEController extends BaseController
 
             if ($fileSize === 0) {
                 log_message('error', 'TTE SignDocument - File is empty: ' . $documentPath);
-                return $this->fail('File dokumen kosong', 400);
+                return $this->respond(['status' => 'error', 'message' => 'File dokumen kosong'], 400);
             }
 
             // Validate it's a PDF file
             $fileContent = file_get_contents($documentPath, false, null, 0, 4);
             if ($fileContent !== '%PDF') {
                 log_message('error', 'TTE SignDocument - File is not a valid PDF. Header: ' . bin2hex($fileContent));
-                return $this->fail('File bukan PDF yang valid', 400);
+                return $this->respond(['status' => 'error', 'message' => 'File bukan PDF yang valid'], 400);
             }
 
             log_message('debug', 'TTE SignDocument - File is valid PDF');
@@ -353,19 +354,19 @@ class TTEController extends BaseController
             // Get current user
             $userId = $this->getCurrentUserId();
             if (!$userId) {
-                return $this->fail('User not authenticated', 401);
+                return $this->respond(['status' => 'error', 'message' => 'User not authenticated'], 401);
             }
 
             // Get ajuan data untuk mendapatkan jenis_peraturan
             $ajuan = $this->ajuanModel->getAjuanDetail($idAjuan);
             if (!$ajuan) {
-                return $this->fail('Ajuan not found', 404);
+                return $this->respond(['status' => 'error', 'message' => 'Ajuan not found'], 404);
             }
 
             // Get jenis peraturan dari ajuan
             $jenisPeraturan = $ajuan['nama_jenis'] ?? null;
             if (!$jenisPeraturan) {
-                return $this->fail('Jenis peraturan not found for this ajuan', 404);
+                return $this->respond(['status' => 'error', 'message' => 'Jenis peraturan not found for this ajuan'], 404);
             }
 
             // Get atau generate nomor peraturan
@@ -420,13 +421,13 @@ class TTEController extends BaseController
 
                 $nomorPeraturanId = $this->nomorPeraturanModel->insert($nomorPeraturanData);
                 if (!$nomorPeraturanId) {
-                    return $this->fail('Failed to create nomor peraturan', 500);
+                    return $this->respond(['status' => 'error', 'message' => 'Failed to create nomor peraturan'], 500);
                 }
 
                 // Get kembali data yang baru dibuat
                 $nomorPeraturan = $this->nomorPeraturanModel->getByAjuanAndJenis($idAjuan, $jenisPeraturan);
                 if (!$nomorPeraturan) {
-                    return $this->fail('Failed to retrieve created nomor peraturan', 500);
+                    return $this->respond(['status' => 'error', 'message' => 'Failed to retrieve created nomor peraturan'], 500);
                 }
             }
 
@@ -702,7 +703,7 @@ class TTEController extends BaseController
                 }
                 $errorMsg = 'Invalid response from TTE API: file not found in response';
                 $this->logTteActivity($idAjuan, $userId, 'TTE_FAILED', 'FAILED', $documentNumber, null, $errorMsg, null, $logId);
-                return $this->fail($errorMsg, 500);
+                return $this->respond(['status' => 'error', 'message' => $errorMsg], 500);
             }
 
             // Get signed file (base64) from response - always get first element from array
@@ -712,7 +713,7 @@ class TTEController extends BaseController
                 if (empty($fileData) || !isset($fileData[0])) {
                     $errorMsg = 'Invalid response from TTE API: file array is empty';
                     $this->logTteActivity($idAjuan, $userId, 'TTE_FAILED', 'FAILED', $documentNumber, null, $errorMsg, null, $logId);
-                    return $this->fail($errorMsg, 500);
+                    return $this->respond(['status' => 'error', 'message' => $errorMsg], 500);
                 }
                 $signedFileBase64 = $fileData[0];
             } else {
@@ -728,7 +729,7 @@ class TTEController extends BaseController
                 }
                 $errorMsg = 'Invalid response from TTE API: file content is empty or invalid';
                 $this->logTteActivity($idAjuan, $userId, 'TTE_FAILED', 'FAILED', $documentNumber, null, $errorMsg, null, $logId);
-                return $this->fail($errorMsg, 500);
+                return $this->respond(['status' => 'error', 'message' => $errorMsg], 500);
             }
 
             // Decode base64 to PDF and save
@@ -743,7 +744,7 @@ class TTEController extends BaseController
                 }
                 $errorMsg = 'Failed to save signed document';
                 $this->logTteActivity($idAjuan, $userId, 'TTE_FAILED', 'FAILED', $documentNumber, null, $errorMsg, null, $logId);
-                return $this->fail($errorMsg, 500);
+                return $this->respond(['status' => 'error', 'message' => $errorMsg], 500);
             }
 
             // Cleanup temporary enhanced PDF setelah signing berhasil
@@ -782,7 +783,7 @@ class TTEController extends BaseController
                 }
                 $errorMsg = 'Failed to update nomor peraturan';
                 $this->logTteActivity($idAjuan, $userId, 'TTE_FAILED', 'FAILED', $documentNumber, $uploadPath, $errorMsg, null, $logId);
-                return $this->fail($errorMsg, 500);
+                return $this->respond(['status' => 'error', 'message' => $errorMsg], 500);
             }
 
             // Update harmonisasi_ajuan status = 14 (SELESAI)
