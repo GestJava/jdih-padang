@@ -415,8 +415,13 @@ class WebPeraturanModel extends Model
             $dir = strtoupper($order[0]['dir']) === 'DESC' ? 'DESC' : 'ASC';
 
             // Only apply ordering if column is sortable
-            if ($columnIndex !== 0 && $columnIndex !== 7 && $columnIndex !== 8) {
-                $builder->orderBy($columnName, $dir);
+            if ($columnIndex !== 0 && $columnIndex !== 8) {
+                if ($columnIndex === 7) {
+                    // Mengurutkan berdasarkan keberadaan file di luar query Pagination PHP
+                    $builder->orderBy("(p.file_dokumen IS NOT NULL AND p.file_dokumen != '')", $dir, false);
+                } else {
+                    $builder->orderBy($columnName, $dir);
+                }
             }
         } else {
             // Default order

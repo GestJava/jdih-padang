@@ -222,7 +222,7 @@ function initHarmonisasiMainDataTable(tableId, options = {}) {
         ],
         pageLength: 10,            // tampilkan 10 baris per halaman
         deferRender: true,         // render baris saat diperlukan saja
-        dom: 'lrtip',              // length, filter, table, info, paging (tanpa Buttons)
+        dom: 'lfrtip', // simple dom: length + filter + table + info + paging
         buttons: []
     };
 
@@ -239,7 +239,7 @@ function initHarmonisasiMainDataTable(tableId, options = {}) {
 
         // Remove Buttons and dom option then retry
         var fallbackOptions = $.extend(true, {}, finalOptions);
-        fallbackOptions.dom = 'lrtip'; // simple dom: length + filter + table + info + paging
+        fallbackOptions.dom = 'lfrtip'; // simple dom: length + filter + table + info + paging
         fallbackOptions.buttons = [];
 
         try {

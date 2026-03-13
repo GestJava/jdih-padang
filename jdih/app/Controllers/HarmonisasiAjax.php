@@ -87,8 +87,8 @@ class HarmonisasiAjax extends BaseController
         // FILTER: Exclude status SELESAI (14) dan DITOLAK (15)
         $builder->whereNotIn('ha.id_status_ajuan', [14, 15]);
 
-        // Hitung total record (tanpa filter) dengan builder baru
-        $recordsTotal = $db->table('harmonisasi_ajuan')->countAllResults();
+        // Hitung total record (dengan base filter, tanpa search/limit)
+        $recordsTotal = (clone $builder)->countAllResults(false);
 
         // SEARCH
         if ($search !== '') {

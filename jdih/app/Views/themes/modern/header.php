@@ -191,7 +191,7 @@ if (!isset($current_module) || !isset($settingAplikasi) || !isset($config)) {
 
 	?>
 	<!-- Harmonisasi Admin JS -->
-	<script type="text/javascript" src="<?= $config->baseURL . 'jdih/assets/js/harmonisasi-admin.js?v=1.0.1' ?>"></script>
+	<script type="text/javascript" src="<?= $config->baseURL . 'jdih/assets/js/harmonisasi-admin.js?v=' . time() ?>"></script>
 
 	<!-- JDIH Asset Manager -->
 	<script type="text/javascript" src="<?= $config->baseURL . 'jdih/assets/js/jdih-asset-manager.js?v=1.0.1' ?>"></script>

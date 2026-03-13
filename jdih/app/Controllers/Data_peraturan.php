@@ -180,18 +180,7 @@ class Data_peraturan extends \App\Controllers\BaseController
 				$peraturanList[] = $peraturan;
 			}
 			
-			// Jika kolom File (index 7) yang di-sort, lakukan sorting berdasarkan file_exists
-			if ($orderColumnIndex === 7) {
-				usort($peraturanList, function($a, $b) use ($orderDirection) {
-					if ($orderDirection === 'desc') {
-						// Descending: file hilang (0) di atas, file ada (1) di bawah
-						return $a->file_exists - $b->file_exists;
-					} else {
-						// Ascending: file ada (1) di atas, file hilang (0) di bawah
-						return $b->file_exists - $a->file_exists;
-					}
-				});
-			}
+			// Sorting kolom File (index 7) kini sudah diproses di Model menggunakan query database.
 			
 			$data = [];
 			$no = $start;

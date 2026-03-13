@@ -174,7 +174,7 @@
                     }
                 ],
                 pageLength: 25,
-                dom: 'Bfrtip',
+                dom: 'lBfrtip',
                 buttons: [
                     { extend: 'copy', text: '<i class="fas fa-copy me-1"></i>Copy', className: 'btn btn-secondary btn-sm' },
                     { extend: 'excel', text: '<i class="fas fa-file-excel me-1"></i>Excel', className: 'btn btn-success btn-sm' },
@@ -194,7 +194,7 @@
                 language: { url: 'https://cdn.datatables.net/plug-ins/1.13.7/i18n/id.json' },
                 order: [[4, 'desc']],
                 pageLength: 25,
-                dom: 'Bfrtip',
+                dom: 'lBfrtip',
                 buttons: [
                     { extend: 'copy', text: '<i class="fas fa-copy me-1"></i>Copy', className: 'btn btn-secondary btn-sm' },
                     { extend: 'excel', text: '<i class="fas fa-file-excel me-1"></i>Excel', className: 'btn btn-success btn-sm' },
@@ -217,7 +217,7 @@
                     { className: 'text-center', targets: [0, 5, 6] }
                 ],
                 pageLength: 25,
-                dom: 'Bfrtip',
+                dom: 'lBfrtip',
                 buttons: [
                     { extend: 'copy', text: '<i class="fas fa-copy me-1"></i>Copy', className: 'btn btn-secondary btn-sm' },
                     { extend: 'excel', text: '<i class="fas fa-file-excel me-1"></i>Excel', className: 'btn btn-success btn-sm' },
@@ -450,7 +450,7 @@
                 ],
                 pageLength: 10,
                 deferRender: true,
-                dom: 'lrtip',
+                dom: 'lfrtip', // Added 'f' to enable search box
                 buttons: []
             };
 
@@ -785,7 +785,7 @@
                     }
                 ],
                 pageLength: 25,
-                dom: 'Bfrtip',
+                dom: 'lBfrtip',
                 buttons: [
                     { extend: 'copy', text: '<i class="fas fa-copy me-1"></i>Copy', className: 'btn btn-secondary btn-sm' },
                     { extend: 'excel', text: '<i class="fas fa-file-excel me-1"></i>Excel', className: 'btn btn-success btn-sm' },
