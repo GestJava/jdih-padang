@@ -81,16 +81,13 @@ class Dashboard extends BaseController
                     // Get JDIH relevant statistics - GLOBAL DATA untuk semua role
                     $statsData['total_dokumen'] = $this->model->getTotalDokumen($tahun);
                     $statsData['total_harmonisasi'] = $this->model->getTotalHarmonisasi($tahun);
-                    $statsData['total_pengunjung'] = $this->model->getTotalPengunjung($tahun);
                     $statsData['total_user'] = $this->model->getTotalUser($tahun);
                     $statsData['dokumen_bulan_ini'] = $this->model->getDokumenBulanIni();
 
                     // Get chart data - GLOBAL DATA untuk semua role
                     $statsData['dokumen_per_bulan'] = $this->model->getDokumenPerBulan($tahun);
                     $statsData['dokumen_by_type'] = $this->model->getDokumenByType($tahun);
-                    $statsData['dokumen_peraturan_by_jenis'] = $this->model->getDokumenPeraturanByJenis($tahun);
                     $statsData['harmonisasi_status'] = $this->model->getHarmonisasiStatus($tahun);
-                    $statsData['visitor_stats'] = $this->model->getVisitorStats($tahun);
 
                     // Get recent documents - GLOBAL DATA untuk semua role
                     $dokumen_terbaru = $this->model->getDokumenTerbaru(10);
@@ -109,17 +106,10 @@ class Dashboard extends BaseController
                     // $statsData['harm_per_status'] used for graph, keep it
                     $statsData['harm_per_status'] = $this->model->getHarmonisasiPerStatus($tahun);
                     $statsData['harm_per_bulan'] = $this->model->getHarmonisasiPerBulan($tahun);
-                    $statsData['harm_by_jenis'] = $this->model->getHarmonisasiByJenis($tahun);
-                    $statsData['harm_top_instansi'] = $this->model->getTopInstansiHarmonisasi($tahun);
-                    $statsData['harm_avg_proses'] = $this->model->getAvgProsesHarmonisasi($tahun);
-                    $statsData['harm_over_sla'] = $this->model->getHarmonisasiOverSLA($tahun, 14);
-                    $statsData['harm_per_verifikator'] = $this->model->getHarmonisasiPerVerifikator($tahun);
 
                     // Statistik Legalisasi - GLOBAL DATA (NEW)
                     $statsData['leg_total_ajuan'] = $this->model->getTotalAjuanLegalisasi($tahun);
                     $statsData['leg_selesai'] = $this->model->getLegalisasiSelesai($tahun);
-                    $statsData['leg_avg_proses'] = $this->model->getAvgProsesLegalisasi($tahun);
-                    $statsData['leg_over_sla'] = $this->model->getLegalisasiOverSLA($tahun, 14);
                     
                     // Simpan ke cache selama 1 jam (3600 detik)
                     cache()->save($cacheKey, $statsData, 3600);

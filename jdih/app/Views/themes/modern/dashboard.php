@@ -71,7 +71,7 @@
 
 	<!-- Statistics Cards -->
 	<div class="row mb-4">
-		<div class="col-lg-3 col-md-6 col-sm-12 mb-3">
+		<div class="col-lg-4 col-md-6 col-sm-12 mb-3">
 			<div class="card text-white bg-primary shadow-lg border-0 h-100 position-relative">
 				<div class="icon-circle">
 					<i class="material-icons">description</i>
@@ -104,7 +104,7 @@
 			</div>
 		</div>
 
-		<div class="col-lg-3 col-md-6 col-sm-12 mb-3">
+		<div class="col-lg-4 col-md-6 col-sm-12 mb-3">
 			<div class="card text-white bg-secondary shadow-lg border-0 h-100 position-relative">
 				<div class="icon-circle">
 					<i class="material-icons">new_releases</i>
@@ -130,36 +130,7 @@
 			</div>
 		</div>
 
-		<div class="col-lg-3 col-md-6 col-sm-12 mb-3">
-			<div class="card text-white bg-warning shadow-lg border-0 h-100 position-relative">
-				<div class="icon-circle">
-					<i class="material-icons">visibility</i>
-				</div>
-				<div class="card-body card-stats">
-					<div class="d-flex flex-column justify-content-center">
-						<div class="flex-grow-1">
-							<h3 class="card-title mb-1 text-white fw-bold"><?= !empty($total_pengunjung['jml']) ? number_format($total_pengunjung['jml']) : 0 ?></h3>
-							<p class="card-text mb-0 text-white">Page Views</p>
-							<small class="text-white-50">Kunjungan Website</small>
-						</div>
-					</div>
-				</div>
-				<div class="card-footer bg-white bg-opacity-10 border-0">
-					<div class="d-flex justify-content-between align-items-center">
-						<div class="d-flex align-items-center">
-							<?php
-							$class = $total_pengunjung['growth'] > 0 ? 'fa-arrow-trend-up text-white' : 'fa-arrow-trend-down text-white';
-							echo '<i class="fas ' . $class . ' me-1"></i>';
-							?>
-							<small class="text-white"><?= round($total_pengunjung['growth']) ?>%</small>
-						</div>
-						<small class="text-white-50">Tahun <?= $tahun ?></small>
-					</div>
-				</div>
-			</div>
-		</div>
-
-		<div class="col-lg-3 col-md-6 col-sm-12 mb-3">
+		<div class="col-lg-4 col-md-6 col-sm-12 mb-3">
 			<div class="card text-white bg-info shadow-lg border-0 h-100 position-relative">
 				<div class="icon-circle">
 					<i class="material-icons">people</i>
@@ -189,225 +160,113 @@
 		</div>
 	</div>
 
-	        <!-- Statistik Harmonisasi Section -->
-        <h5 class="mb-3 fw-bold text-dark border-bottom pb-2"><i class="material-icons align-middle fs-5 me-1">balance</i> Statistik Harmonisasi</h5>
-        <div class="row mb-4">
-                <div class="col-lg-3 col-md-6 col-sm-12 mb-3">
-                        <div class="card text-white bg-success shadow-lg border-0 h-100 position-relative">
-                                <div class="icon-circle">
-                                        <i class="material-icons">balance</i>
-                                </div>
-                                <div class="card-body card-stats">
-                                        <div class="d-flex flex-column justify-content-center">
-                                                <div class="flex-grow-1">
-                                                        <h3 class="card-title mb-1 text-white fw-bold"><?= number_format($harm_total_ajuan ?? 0) ?></h3>
-                                                        <p class="card-text mb-0 text-white">Total Ajuan Harmonisasi</p>
-                                                        <small class="text-white-50">Tahun <?= $tahun ?></small>
-                                                </div>
-                                        </div>
-                                </div>
-                                <div class="card-footer bg-white bg-opacity-10 border-0">
-                                        <div class="d-flex justify-content-between align-items-center">
-                                                <div class="d-flex align-items-center">
-                                                        <i class="fas fa-chart-line text-white me-1"></i>
-                                                        <small class="text-white">Harmonisasi</small>
-                                                </div>
-                                                <small class="text-white-50">Tahun <?= $tahun ?></small>
-                                        </div>
-                                </div>
-                        </div>
-                </div>
-                <div class="col-lg-3 col-md-6 col-sm-12 mb-3">
-                        <div class="card text-white bg-info shadow-lg border-0 h-100 position-relative">
-                                <div class="icon-circle">
-                                        <i class="material-icons">timer</i>
-                                </div>
-                                <div class="card-body card-stats">
-                                        <div class="d-flex flex-column justify-content-center">
-                                                <div class="flex-grow-1">
-                                                        <h3 class="card-title mb-1 text-white fw-bold"><?= $harm_avg_proses ?? 0 ?> hari</h3>
-                                                        <p class="card-text mb-0 text-white">Rata-rata Lama Proses</p>
-                                                        <small class="text-white-50">Ajuan Selesai</small>
-                                                </div>
-                                        </div>
-                                </div>
-                                <div class="card-footer bg-white bg-opacity-10 border-0">
-                                        <div class="d-flex justify-content-between align-items-center">
-                                                <div class="d-flex align-items-center">
-                                                        <i class="fas fa-clock text-white me-1"></i>
-                                                        <small class="text-white">Rata-rata</small>
-                                                </div>
-                                                <small class="text-white-50">Tahun <?= $tahun ?></small>
-                                        </div>
-                                </div>
-                        </div>
-                </div>
-                <div class="col-lg-3 col-md-6 col-sm-12 mb-3">
-                        <div class="card text-white bg-danger shadow-lg border-0 h-100 position-relative">
-                                <div class="icon-circle">
-                                        <i class="material-icons">warning</i>
-                                </div>
-                                <div class="card-body card-stats">
-                                        <div class="d-flex flex-column justify-content-center">
-                                                <div class="flex-grow-1">
-                                                        <h3 class="card-title mb-1 text-white fw-bold"><?= $harm_over_sla ?? 0 ?></h3>
-                                                        <p class="card-text mb-0 text-white">Ajuan Over SLA</p>
-                                                        <small class="text-white-50">> 14 hari</small>
-                                                </div>
-                                        </div>
-                                </div>
-                                <div class="card-footer bg-white bg-opacity-10 border-0">
-                                        <div class="d-flex justify-content-between align-items-center">
-                                                <div class="d-flex align-items-center">
-                                                        <i class="fas fa-exclamation-triangle text-white me-1"></i>
-                                                        <small class="text-white">Over SLA</small>
-                                                </div>
-                                                <small class="text-white-50">Tahun <?= $tahun ?></small>
-                                        </div>
-                                </div>
-                        </div>
-                </div>
-                <div class="col-lg-3 col-md-6 col-sm-12 mb-3">
-                        <div class="card text-white bg-primary shadow-lg border-0 h-100 position-relative">
-                                <div class="icon-circle">
-                                        <i class="material-icons">check_circle</i>
-                                </div>
-                                <div class="card-body card-stats">
-                                        <div class="d-flex flex-column justify-content-center">
-                                                <div class="flex-grow-1">
-                                                        <h3 class="card-title mb-1 text-white fw-bold">
-								<?php
-								$selesai = 0;
-								if (!empty($harm_per_status)) {
-									foreach ($harm_per_status as $s) {
-										if ($s['id_status_ajuan'] == 14) $selesai = $s['jumlah'];
-									}
-								}
-								echo number_format($selesai);
-								?>
-							</h3>
-                                                        <p class="card-text mb-0 text-white">Ajuan Selesai</p>
-                                                        <small class="text-white-50">Tahun <?= $tahun ?></small>
-                                                </div>
-                                        </div>
-                                </div>
-                                <div class="card-footer bg-white bg-opacity-10 border-0">
-                                        <div class="d-flex justify-content-between align-items-center">
-                                                <div class="d-flex align-items-center">
-                                                        <i class="fas fa-check-circle text-white me-1"></i>
-                                                        <small class="text-white">Selesai</small>
-                                                </div>
-                                                <small class="text-white-50">Tahun <?= $tahun ?></small>
-                                        </div>
-                                </div>
-                        </div>
-                </div>
-        </div>
+	<!-- Statistik Layanan Section -->
+	<h5 class="mb-3 fw-bold text-dark border-bottom pb-2 mt-4"><i class="material-icons align-middle fs-5 me-1">balance</i> Statistik Layanan</h5>
+	<div class="row mb-4">
+		<div class="col-lg-3 col-md-6 col-sm-12 mb-3">
+			<div class="card text-white bg-success shadow-lg border-0 h-100 position-relative">
+				<div class="icon-circle">
+					<i class="material-icons">balance</i>
+				</div>
+				<div class="card-body card-stats">
+					<div class="d-flex flex-column justify-content-center">
+						<div class="flex-grow-1">
+							<h3 class="card-title mb-1 text-white fw-bold"><?= number_format($harm_total_ajuan ?? 0) ?></h3>
+							<p class="card-text mb-0 text-white">Total Harmonisasi</p>
+							<small class="text-white-50">Tahun <?= $tahun ?></small>
+						</div>
+					</div>
+				</div>
+				<div class="card-footer bg-white bg-opacity-10 border-0">
+					<div class="d-flex justify-content-between align-items-center">
+						<div class="d-flex align-items-center">
+							<i class="fas fa-chart-line text-white me-1"></i>
+							<small class="text-white">Harmonisasi</small>
+						</div>
+						<small class="text-white-50">Tahun <?= $tahun ?></small>
+					</div>
+				</div>
+			</div>
+		</div>
 
-        <!-- Statistik Legalisasi Section -->
-        <h5 class="mb-3 fw-bold text-dark border-bottom pb-2 mt-4"><i class="material-icons align-middle fs-5 me-1">gavel</i> Statistik Legalisasi</h5>
-        <div class="row mb-4">
-                <div class="col-lg-3 col-md-6 col-sm-12 mb-3">
-                        <div class="card text-white bg-success shadow-lg border-0 h-100 position-relative">
-                                <div class="icon-circle">
-                                        <i class="material-icons">balance</i>
-                                </div>
-                                <div class="card-body card-stats">
-                                        <div class="d-flex flex-column justify-content-center">
-                                                <div class="flex-grow-1">
-                                                        <h3 class="card-title mb-1 text-white fw-bold"><?= number_format($leg_total_ajuan ?? 0) ?></h3>
-                                                        <p class="card-text mb-0 text-white">Total Legalisasi</p>
-                                                        <small class="text-white-50">Tahun <?= $tahun ?></small>
-                                                </div>
-                                        </div>
-                                </div>
-                                <div class="card-footer bg-white bg-opacity-10 border-0">
-                                        <div class="d-flex justify-content-between align-items-center">
-                                                <div class="d-flex align-items-center">
-                                                        <i class="fas fa-chart-line text-white me-1"></i>
-                                                        <small class="text-white">Legalisasi</small>
-                                                </div>
-                                                <small class="text-white-50">Tahun <?= $tahun ?></small>
-                                        </div>
-                                </div>
-                        </div>
-                </div>
-                <div class="col-lg-3 col-md-6 col-sm-12 mb-3">
-                        <div class="card text-white bg-info shadow-lg border-0 h-100 position-relative">
-                                <div class="icon-circle">
-                                        <i class="material-icons">timer</i>
-                                </div>
-                                <div class="card-body card-stats">
-                                        <div class="d-flex flex-column justify-content-center">
-                                                <div class="flex-grow-1">
-                                                        <h3 class="card-title mb-1 text-white fw-bold"><?= $leg_avg_proses ?? 0 ?> hari</h3>
-                                                        <p class="card-text mb-0 text-white">Rata-rata Lama Proses</p>
-                                                        <small class="text-white-50">Legalisasi</small>
-                                                </div>
-                                        </div>
-                                </div>
-                                <div class="card-footer bg-white bg-opacity-10 border-0">
-                                        <div class="d-flex justify-content-between align-items-center">
-                                                <div class="d-flex align-items-center">
-                                                        <i class="fas fa-clock text-white me-1"></i>
-                                                        <small class="text-white">Rata-rata</small>
-                                                </div>
-                                                <small class="text-white-50">Tahun <?= $tahun ?></small>
-                                        </div>
-                                </div>
-                        </div>
-                </div>
-                <div class="col-lg-3 col-md-6 col-sm-12 mb-3">
-                        <div class="card text-white bg-danger shadow-lg border-0 h-100 position-relative">
-                                <div class="icon-circle">
-                                        <i class="material-icons">warning</i>
-                                </div>
-                                <div class="card-body card-stats">
-                                        <div class="d-flex flex-column justify-content-center">
-                                                <div class="flex-grow-1">
-                                                        <h3 class="card-title mb-1 text-white fw-bold"><?= $leg_over_sla ?? 0 ?></h3>
-                                                        <p class="card-text mb-0 text-white">Ajuan Over SLA</p>
-                                                        <small class="text-white-50">> 14 hari</small>
-                                                </div>
-                                        </div>
-                                </div>
-                                <div class="card-footer bg-white bg-opacity-10 border-0">
-                                        <div class="d-flex justify-content-between align-items-center">
-                                                <div class="d-flex align-items-center">
-                                                        <i class="fas fa-exclamation-triangle text-white me-1"></i>
-                                                        <small class="text-white">Over SLA</small>
-                                                </div>
-                                                <small class="text-white-50">Tahun <?= $tahun ?></small>
-                                        </div>
-                                </div>
-                        </div>
-                </div>
-                <div class="col-lg-3 col-md-6 col-sm-12 mb-3">
-                        <div class="card text-white bg-primary shadow-lg border-0 h-100 position-relative">
-                                <div class="icon-circle">
-                                        <i class="material-icons">check_circle</i>
-                                </div>
-                                <div class="card-body card-stats">
-                                        <div class="d-flex flex-column justify-content-center">
-                                                <div class="flex-grow-1">
-                                                        <h3 class="card-title mb-1 text-white fw-bold"><?= number_format($leg_selesai ?? 0) ?></h3>
-                                                        <p class="card-text mb-0 text-white">Legalisasi Selesai</p>
-                                                        <small class="text-white-50">Tahun <?= $tahun ?></small>
-                                                </div>
-                                        </div>
-                                </div>
-                                <div class="card-footer bg-white bg-opacity-10 border-0">
-                                        <div class="d-flex justify-content-between align-items-center">
-                                                <div class="d-flex align-items-center">
-                                                        <i class="fas fa-check-circle text-white me-1"></i>
-                                                        <small class="text-white">Selesai</small>
-                                                </div>
-                                                <small class="text-white-50">Tahun <?= $tahun ?></small>
-                                        </div>
-                                </div>
-                        </div>
-                </div>
-        </div>
+		<div class="col-lg-3 col-md-6 col-sm-12 mb-3">
+			<div class="card text-white bg-primary shadow-lg border-0 h-100 position-relative">
+				<div class="icon-circle">
+					<i class="material-icons">check_circle</i>
+				</div>
+				<div class="card-body card-stats">
+					<div class="d-flex flex-column justify-content-center">
+						<div class="flex-grow-1">
+							<h3 class="card-title mb-1 text-white fw-bold"><?= number_format($harm_selesai ?? 0) ?></h3>
+							<p class="card-text mb-0 text-white">Harmonisasi Selesai</p>
+							<small class="text-white-50">Tahun <?= $tahun ?></small>
+						</div>
+					</div>
+				</div>
+				<div class="card-footer bg-white bg-opacity-10 border-0">
+					<div class="d-flex justify-content-between align-items-center">
+						<div class="d-flex align-items-center">
+							<i class="fas fa-check-circle text-white me-1"></i>
+							<small class="text-white">Selesai</small>
+						</div>
+						<small class="text-white-50">Tahun <?= $tahun ?></small>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="col-lg-3 col-md-6 col-sm-12 mb-3">
+			<div class="card text-white bg-warning shadow-lg border-0 h-100 position-relative">
+				<div class="icon-circle">
+					<i class="material-icons">gavel</i>
+				</div>
+				<div class="card-body card-stats">
+					<div class="d-flex flex-column justify-content-center">
+						<div class="flex-grow-1">
+							<h3 class="card-title mb-1 text-white fw-bold"><?= number_format($leg_total_ajuan ?? 0) ?></h3>
+							<p class="card-text mb-0 text-white">Total Legalisasi</p>
+							<small class="text-white-50">Tahun <?= $tahun ?></small>
+						</div>
+					</div>
+				</div>
+				<div class="card-footer bg-white bg-opacity-10 border-0">
+					<div class="d-flex justify-content-between align-items-center">
+						<div class="d-flex align-items-center">
+							<i class="fas fa-chart-line text-white me-1"></i>
+							<small class="text-white">Legalisasi</small>
+						</div>
+						<small class="text-white-50">Tahun <?= $tahun ?></small>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="col-lg-3 col-md-6 col-sm-12 mb-3">
+			<div class="card text-white bg-info shadow-lg border-0 h-100 position-relative">
+				<div class="icon-circle">
+					<i class="material-icons">check_circle</i>
+				</div>
+				<div class="card-body card-stats">
+					<div class="d-flex flex-column justify-content-center">
+						<div class="flex-grow-1">
+							<h3 class="card-title mb-1 text-white fw-bold"><?= number_format($leg_selesai ?? 0) ?></h3>
+							<p class="card-text mb-0 text-white">Legalisasi Selesai</p>
+							<small class="text-white-50">Tahun <?= $tahun ?></small>
+						</div>
+					</div>
+				</div>
+				<div class="card-footer bg-white bg-opacity-10 border-0">
+					<div class="d-flex justify-content-between align-items-center">
+						<div class="d-flex align-items-center">
+							<i class="fas fa-check-circle text-white me-1"></i>
+							<small class="text-white">Selesai</small>
+						</div>
+						<small class="text-white-50">Tahun <?= $tahun ?></small>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 
 	<!-- Progress Bar Status Harmonisasi -->
 	<div class="row mb-4">
@@ -454,9 +313,9 @@
 		</div>
 	</div>
 
-	<!-- Grafik Harmonisasi Per Bulan & Pie Jenis Peraturan -->
+	<!-- Grafik Harmonisasi Per Bulan -->
 	<div class="row mb-4">
-		<div class="col-xl-8 col-lg-12 mb-4">
+		<div class="col-12 mb-4">
 			<div class="card shadow-sm border-0 h-100">
 				<div class="card-header bg-white border-0 pb-0">
 					<h5 class="card-title mb-1">Ajuan Harmonisasi Per Bulan</h5>
@@ -469,52 +328,8 @@
 				</div>
 			</div>
 		</div>
-		<div class="col-xl-4 col-lg-12 mb-4">
-			<div class="card shadow-sm border-0 h-100">
-				<div class="card-header bg-white border-0 pb-0">
-					<h5 class="card-title mb-1">Jenis Ajuan Harmonisasi</h5>
-					<small class="text-muted">Distribusi berdasarkan jenis</small>
-				</div>
-				<div class="card-body d-flex align-items-center justify-content-center">
-					<div class="chart-responsive-wrapper">
-						<canvas id="harmonisasi-jenis-chart" style="width:100%;height:250px;"></canvas>
-					</div>
-				</div>
-			</div>
-		</div>
 	</div>
 
-	<!-- Top Instansi & Per Verifikator (khusus admin) -->
-	<div class="row mb-4">
-		<div class="col-xl-6 col-lg-12 mb-4">
-			<div class="card shadow-sm border-0 h-100">
-				<div class="card-header bg-white border-0 pb-0">
-					<h5 class="card-title mb-1">Top 5 Instansi Pengusul Harmonisasi</h5>
-					<small class="text-muted">Instansi dengan ajuan terbanyak</small>
-				</div>
-				<div class="card-body">
-					<div class="chart-responsive-wrapper">
-						<canvas id="harmonisasi-instansi-chart" style="width:100%;height:250px;"></canvas>
-					</div>
-				</div>
-			</div>
-		</div>
-		<?php if (!empty($harm_per_verifikator)): ?>
-			<div class="col-xl-6 col-lg-12 mb-4">
-				<div class="card shadow-sm border-0 h-100">
-					<div class="card-header bg-white border-0 pb-0">
-						<h5 class="card-title mb-1">Top 5 Verifikator Harmonisasi</h5>
-						<small class="text-muted">Verifikator dengan ajuan terbanyak</small>
-					</div>
-					<div class="card-body">
-						<div class="chart-responsive-wrapper">
-							<canvas id="harmonisasi-verifikator-chart" style="width:100%;height:250px;"></canvas>
-						</div>
-					</div>
-				</div>
-			</div>
-		<?php endif; ?>
-	</div>
 
 	<!-- Charts Section -->
 	<div class="row mb-4">
@@ -566,7 +381,7 @@
 
 	<!-- Grafik Dokumen Peraturan Berdasarkan Jenis -->
 	<div class="row mb-4">
-		<div class="col-xl-8 col-lg-12 mb-4">
+		<div class="col-12 mb-4">
 			<div class="card shadow-sm border-0 h-100">
 				<div class="card-header bg-white border-0 pb-0">
 					<h5 class="card-title mb-1">Dokumen Peraturan Berdasarkan Jenis</h5>
@@ -579,19 +394,6 @@
 				</div>
 			</div>
 		</div>
-		<div class="col-xl-4 col-lg-12 mb-4">
-			<div class="card shadow-sm border-0 h-100">
-				<div class="card-header bg-white border-0 pb-0">
-					<h5 class="card-title mb-1">Top 5 Jenis Peraturan</h5>
-					<small class="text-muted">Jenis peraturan dengan dokumen terbanyak</small>
-				</div>
-				<div class="card-body">
-					<div class="chart-responsive-wrapper">
-						<canvas id="dokumen-top-jenis-chart" style="width:100%;height:250px;"></canvas>
-					</div>
-				</div>
-			</div>
-		</div>
 	</div>
 </div>
 
@@ -600,16 +402,8 @@
 	window.dokumenData = <?= json_encode($dokumen_per_bulan ?? []) ?>;
 	window.typeData = <?= json_encode(array_column($dokumen_by_type ?? [], 'jumlah')) ?>;
 	window.typeLabels = <?= json_encode(array_column($dokumen_by_type ?? [], 'jenis_peraturan')) ?>;
-	window.dokumenPeraturanData = <?= json_encode(array_column($dokumen_peraturan_by_jenis ?? [], 'jumlah')) ?>;
-	window.dokumenPeraturanLabels = <?= json_encode(array_column($dokumen_peraturan_by_jenis ?? [], 'jenis_peraturan')) ?>;
 
 	window.harmBulanData = <?= json_encode($harm_per_bulan ?? []) ?>;
-	window.harmJenisData = <?= json_encode(array_column($harm_by_jenis ?? [], 'jumlah')) ?>;
-	window.harmJenisLabels = <?= json_encode(array_column($harm_by_jenis ?? [], 'nama_jenis')) ?>;
-	window.harmInstansiData = <?= json_encode(array_column($harm_top_instansi ?? [], 'jumlah')) ?>;
-	window.harmInstansiLabels = <?= json_encode(array_column($harm_top_instansi ?? [], 'nama_instansi')) ?>;
-	window.harmVerifikatorData = <?= json_encode(array_column($harm_per_verifikator ?? [], 'jumlah')) ?>;
-	window.harmVerifikatorLabels = <?= json_encode(array_column($harm_per_verifikator ?? [], 'nama_verifikator')) ?>;
 
 	// Initialize dashboard when document is ready
 	$(document).ready(function() {

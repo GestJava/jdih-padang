@@ -145,21 +145,7 @@ class DashboardModel extends BaseModel
         return $builder->get()->getResultArray();
     }
 
-    // Get dokumen peraturan berdasarkan jenis (untuk grafik)
-    public function getDokumenPeraturanByJenis($tahun = null)
-    {
-        $builder = $this->db->table('web_peraturan wp');
-        $builder->select('wjp.nama_jenis as jenis_peraturan, COUNT(*) as jumlah');
-        $builder->join('web_jenis_peraturan wjp', 'wp.id_jenis_dokumen = wjp.id_jenis_peraturan', 'left');
-        $builder->where('wp.is_published', 1);
-        if ($tahun) {
-            $builder->where('YEAR(wp.tgl_penetapan)', $tahun);
-        }
-        $builder->groupBy('wp.id_jenis_dokumen, wjp.nama_jenis');
-        $builder->orderBy('jumlah', 'DESC');
 
-        return $builder->get()->getResultArray();
-    }
 
     // Get monthly document publication
     public function getDokumenPerBulan($tahun)
@@ -353,123 +339,7 @@ class DashboardModel extends BaseModel
         return $builder->get()->getResultArray();
     }
 
-    // Statistik harmonisasi: top 5 instansi pengusul
-    public function getTopInstansiHarmonisasi($tahun = null)
-    {
-        $builder = $this->db->table('harmonisasi_ajuan ha');
-        $builder->select('i.nama_instansi, COUNT(*) as jumlah');
-        $builder->join('instansi i', 'i.id = ha.id_instansi_pemohon', 'left');
-        if ($tahun) {
-            $builder->where('YEAR(ha.tanggal_pengajuan)', $tahun);
-        }
-        $builder->groupBy('ha.id_instansi_pemohon');
-        $builder->orderBy('jumlah', 'DESC');
-        $builder->limit(5);
-        return $builder->get()->getResultArray();
-    }
 
-    // Statistik harmonisasi: rata-rata lama proses (hari)
-    // REVISI: Menggunakan logic yang sama dengan SLA (Active only)
-    public function getAvgProsesHarmonisasi($tahun = null, $id_instansi = null)
-    {
-        $sql = "
-            WITH history_lead AS (
-                SELECT 
-                    hh.id_ajuan, 
-                    hh.id_status_sekarang, 
-                    hh.tanggal_aksi,
-                    LEAD(hh.tanggal_aksi, 1) OVER (PARTITION BY hh.id_ajuan ORDER BY hh.tanggal_aksi) as next_aksi
-                FROM harmonisasi_histori hh
-                JOIN harmonisasi_ajuan ha ON hh.id_ajuan = ha.id
-                WHERE ha.tanggal_selesai IS NOT NULL
-                    " . ($tahun ? "AND YEAR(ha.tanggal_pengajuan) = " . $this->db->escape($tahun) : "") . "
-                    " . ($id_instansi ? "AND ha.id_instansi_pemohon = " . $this->db->escape($id_instansi) : "") . "
-            )
-            SELECT AVG(active_seconds) / 86400 as rata_rata_hari FROM (
-                SELECT 
-                    id_ajuan,
-                    SUM(
-                        CASE 
-                            WHEN id_status_sekarang IN (2, 3, 4, 6, 10) THEN 
-                                TIMESTAMPDIFF(SECOND, tanggal_aksi, COALESCE(next_aksi, NOW()))
-                            ELSE 0 
-                        END
-                    ) as active_seconds
-                FROM history_lead
-                GROUP BY id_ajuan
-            ) as duration_data
-        ";
-
-        try {
-            $query = $this->db->query($sql);
-            $row = $query->getRowArray();
-            return round($row['rata_rata_hari'] ?? 0, 1);
-        } catch (\Exception $e) {
-            return 0;
-        }
-    }
-
-    // Statistik harmonisasi: ajuan melewati SLA (default 14 hari)
-    // REVISI: Menggunakan "Stop the Clock" mechanism.
-    // Waktu dihitung hanya saat di Status Admin (2,3,4,6,8,9,10,11,12)
-    // Waktu PAUSE saat di Status Revisi OPD (5) atau Menunggu Paraf OPD (7)
-    public function getHarmonisasiOverSLA($tahun = null, $sla_hari = 14, $id_instansi = null)
-    {
-        $sql = "
-            WITH history_lead AS (
-                SELECT 
-                    hh.id_ajuan, 
-                    hh.id_status_sekarang, 
-                    hh.tanggal_aksi,
-                    LEAD(hh.tanggal_aksi, 1) OVER (PARTITION BY hh.id_ajuan ORDER BY hh.tanggal_aksi) as next_aksi
-                FROM harmonisasi_histori hh
-                JOIN harmonisasi_ajuan ha ON hh.id_ajuan = ha.id
-                WHERE 1=1 
-                    " . ($tahun ? "AND YEAR(ha.tanggal_pengajuan) = " . $this->db->escape($tahun) : "") . "
-                    " . ($id_instansi ? "AND ha.id_instansi_pemohon = " . $this->db->escape($id_instansi) : "") . "
-            )
-            SELECT COUNT(*) as jumlah FROM (
-                SELECT 
-                    id_ajuan,
-                    SUM(
-                        CASE 
-                            WHEN id_status_sekarang IN (2, 3, 4, 6, 10) THEN 
-                                TIMESTAMPDIFF(SECOND, tanggal_aksi, COALESCE(next_aksi, NOW()))
-                            ELSE 0 
-                        END
-                    ) as active_seconds
-                FROM history_lead
-                GROUP BY id_ajuan
-                HAVING active_seconds > (" . (int)$sla_hari . " * 24 * 3600)
-            ) as over_sla_count
-        ";
-
-        try {
-            $query = $this->db->query($sql);
-            if (!$query) return 0; // Prevent boolean error
-            $row = $query->getRowArray();
-            return $row['jumlah'] ?? 0;
-        } catch (\Exception $e) {
-            log_message('error', 'SLA CTE Error: ' . $e->getMessage());
-            return 0;
-        }
-    }
-
-    // Statistik harmonisasi: ajuan per verifikator (khusus admin)
-    public function getHarmonisasiPerVerifikator($tahun = null)
-    {
-        $builder = $this->db->table('harmonisasi_ajuan ha');
-        $builder->select('u.nama as nama_verifikator, COUNT(*) as jumlah');
-        $builder->join('user u', 'u.id_user = ha.id_petugas_verifikasi', 'left');
-        if ($tahun) {
-            $builder->where('YEAR(ha.tanggal_pengajuan)', $tahun);
-        }
-        $builder->where('ha.id_petugas_verifikasi IS NOT NULL');
-        $builder->groupBy('ha.id_petugas_verifikasi');
-        $builder->orderBy('jumlah', 'DESC');
-        $builder->limit(5);
-        return $builder->get()->getResultArray();
-    }
 
     // =========================================================================
     // LEGALISASI STATISTICS
@@ -491,91 +361,7 @@ class DashboardModel extends BaseModel
         return $builder->countAllResults();
     }
 
-    public function getAvgProsesLegalisasi($tahun = null, $id_instansi = null)
-    {
-        // Active Statuses Legalisasi: 8, 9, 11, 12, 13
-        $sql = "
-            WITH history_lead AS (
-                SELECT 
-                    hh.id_ajuan, 
-                    hh.id_status_sekarang, 
-                    hh.tanggal_aksi,
-                    LEAD(hh.tanggal_aksi, 1) OVER (PARTITION BY hh.id_ajuan ORDER BY hh.tanggal_aksi) as next_aksi
-                FROM harmonisasi_histori hh
-                JOIN harmonisasi_ajuan ha ON hh.id_ajuan = ha.id
-                WHERE ha.id_status_ajuan = 14 -- Hanya hitung yang sudah SELESAI total? Atau yang >= 8?
-                -- User request: Rata-rata proses LEGALISASI. 
-                -- Bisa yang sedang berjalan (pending) atau yang sudah selesai.
-                -- Untuk keadilan, biasanya yang sudah SELESAI (status 14).
-                    AND ha.id_status_ajuan = 14
-                    " . ($tahun ? "AND YEAR(ha.tanggal_pengajuan) = " . $this->db->escape($tahun) : "") . "
-                    " . ($id_instansi ? "AND ha.id_instansi_pemohon = " . $this->db->escape($id_instansi) : "") . "
-            )
-            SELECT AVG(active_seconds) / 86400 as rata_rata_hari FROM (
-                SELECT 
-                    id_ajuan,
-                    SUM(
-                        CASE 
-                            WHEN id_status_sekarang IN (8, 9, 11, 12, 13) THEN 
-                                TIMESTAMPDIFF(SECOND, tanggal_aksi, COALESCE(next_aksi, NOW()))
-                            ELSE 0 
-                        END
-                    ) as active_seconds
-                FROM history_lead
-                GROUP BY id_ajuan
-                HAVING active_seconds > 0 -- Hanya yang pernah masuk legalisasi
-            ) as duration_data
-        ";
 
-        try {
-            $query = $this->db->query($sql);
-            $row = $query->getRowArray();
-            return round($row['rata_rata_hari'] ?? 0, 1);
-        } catch (\Exception $e) {
-            return 0;
-        }
-    }
-
-    public function getLegalisasiOverSLA($tahun = null, $sla_hari = 14, $id_instansi = null)
-    {
-        $sql = "
-            WITH history_lead AS (
-                SELECT 
-                    hh.id_ajuan, 
-                    hh.id_status_sekarang, 
-                    hh.tanggal_aksi,
-                    LEAD(hh.tanggal_aksi, 1) OVER (PARTITION BY hh.id_ajuan ORDER BY hh.tanggal_aksi) as next_aksi
-                FROM harmonisasi_histori hh
-                JOIN harmonisasi_ajuan ha ON hh.id_ajuan = ha.id
-                WHERE ha.id_status_ajuan >= 8 -- Hanya yang sudah masuk legalisasi
-                    " . ($tahun ? "AND YEAR(ha.tanggal_pengajuan) = " . $this->db->escape($tahun) : "") . "
-                    " . ($id_instansi ? "AND ha.id_instansi_pemohon = " . $this->db->escape($id_instansi) : "") . "
-            )
-            SELECT COUNT(*) as jumlah FROM (
-                SELECT 
-                    id_ajuan,
-                    SUM(
-                        CASE 
-                            WHEN id_status_sekarang IN (8, 9, 11, 12, 13) THEN 
-                                TIMESTAMPDIFF(SECOND, tanggal_aksi, COALESCE(next_aksi, NOW()))
-                            ELSE 0 
-                        END
-                    ) as active_seconds
-                FROM history_lead
-                GROUP BY id_ajuan
-                HAVING active_seconds > (" . (int)$sla_hari . " * 24 * 3600)
-            ) as over_sla_count
-        ";
-
-        try {
-            $query = $this->db->query($sql);
-            if (!$query) return 0;
-            $row = $query->getRowArray();
-            return $row['jumlah'] ?? 0;
-        } catch (\Exception $e) {
-            return 0;
-        }
-    }
 
     public function getLegalisasiSelesai($tahun = null, $id_instansi = null)
     {
