@@ -77,7 +77,7 @@ class Penugasan extends BaseController
 
         // Statistik beban verifikator (Top 5)
         // Menggunakan optimized query dari Model untuk menghindari N+1 query
-        $verifikator_stats = $this->harmonisasiAjuanModel->getVerifikatorWorkloadStats(5);
+        $verifikator_stats = $this->harmonisasiAjuanModel->getVerifikatorWorkloadStats(6);
 
         // Hitung jumlah tugas validasi
         $jumlah_validasi = $this->harmonisasiAjuanModel->where('id_status_ajuan', \App\Config\HarmonisasiStatus::VALIDASI)->countAllResults();

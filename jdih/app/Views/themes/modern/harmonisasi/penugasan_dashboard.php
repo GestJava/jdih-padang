@@ -28,10 +28,10 @@
 
     <!-- Statistics Cards -->
     <div class="row mb-4">
-        <!-- 5 Kartu: Verifikator dengan tugas terbanyak -->
+        <!-- 6 Kartu: Verifikator dengan tugas terbanyak -->
         <?php if (!empty($verifikator_stats)): ?>
-            <?php foreach (array_slice($verifikator_stats, 0, 5) as $stat): ?>
-                <div class="col-xl-2dot4 col-md-6 mb-4">
+            <?php foreach (array_slice($verifikator_stats, 0, 6) as $stat): ?>
+                <div class="col-xl-2 col-md-6 mb-4">
                     <div class="card border-left-info shadow h-100 py-2 bg-info bg-opacity-10">
                         <div class="card-body">
                             <div class="row no-gutters align-items-center">
@@ -390,11 +390,5 @@
         margin-right: 0.5rem;
     }
 
-    /* Custom column for 5 items per row */
-    @media (min-width: 1200px) {
-        .col-xl-2dot4 {
-            flex: 0 0 20%;
-            max-width: 20%;
-        }
-    }
+
 </style>
