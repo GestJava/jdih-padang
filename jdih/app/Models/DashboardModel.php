@@ -246,14 +246,23 @@ class DashboardModel extends BaseModel
         return $result ?: [];
     }
 
-    // Get visitor statistics for the year using traffic table
+    // Get visitor statistics for the year using traffic_summary table (OPTIMIZED)
     public function getVisitorStats($tahun)
     {
-        $builder = $this->db->table('traffic');
-        $builder->select('MONTH(date) as bulan, SUM(hits) as views, COUNT(DISTINCT ip) as visitors');
-        $builder->where('YEAR(date)', $tahun);
-        $builder->groupBy('MONTH(date)');
-        $builder->orderBy('bulan');
+        if ($this->db->tableExists('traffic_summary')) {
+            $builder = $this->db->table('traffic_summary');
+            $builder->select('MONTH(date) as bulan, SUM(total_hits) as views, SUM(total_visitors) as visitors');
+            $builder->where('YEAR(date)', $tahun);
+            $builder->groupBy('MONTH(date)');
+            $builder->orderBy('bulan');
+        } else {
+            // Fallback for huge overhead
+            $builder = $this->db->table('traffic');
+            $builder->select('MONTH(date) as bulan, SUM(hits) as views, COUNT(DISTINCT ip) as visitors');
+            $builder->where('YEAR(date)', $tahun);
+            $builder->groupBy('MONTH(date)');
+            $builder->orderBy('bulan');
+        }
 
         $result = $builder->get()->getResultArray();
 
