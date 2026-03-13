@@ -87,8 +87,8 @@
             <div class="stat-card card border-0 shadow-sm glass-bg-blue overflow-hidden">
                 <div class="card-body p-4">
                     <div class="d-flex justify-content-between align-items-start mb-4">
-                        <div class="stat-icon bg-white bg-opacity-20 rounded-3 p-3">
-                            <i class="material-icons text-white">description</i>
+                        <div class="stat-icon-premium">
+                            <i class="material-icons">description</i>
                         </div>
                         <div class="growth-badge <?= ($total_dokumen['growth'] ?? 0) >= 0 ? 'bg-emerald-soft' : 'bg-rose-soft' ?>">
                             <i class="material-icons fs-6 me-1"><?= ($total_dokumen['growth'] ?? 0) >= 0 ? 'trending_up' : 'trending_down' ?></i> 
@@ -110,8 +110,8 @@
             <div class="stat-card card border-0 shadow-sm glass-bg-purple overflow-hidden">
                 <div class="card-body p-4">
                     <div class="d-flex justify-content-between align-items-start mb-4">
-                        <div class="stat-icon bg-white bg-opacity-20 rounded-3 p-3">
-                            <i class="material-icons text-white">new_releases</i>
+                        <div class="stat-icon-premium">
+                            <i class="material-icons">new_releases</i>
                         </div>
                         <div class="badge bg-white bg-opacity-20 text-white px-3 py-1 rounded-pill small">Aktual</div>
                     </div>
@@ -130,8 +130,8 @@
             <div class="stat-card card border-0 shadow-sm glass-bg-teal overflow-hidden">
                 <div class="card-body p-4">
                     <div class="d-flex justify-content-between align-items-start mb-4">
-                        <div class="stat-icon bg-white bg-opacity-20 rounded-3 p-3">
-                            <i class="material-icons text-white">people</i>
+                        <div class="stat-icon-premium">
+                            <i class="material-icons">people</i>
                         </div>
                         <div class="growth-badge <?= ($total_user['growth'] ?? 0) >= 0 ? 'bg-emerald-soft' : 'bg-rose-soft' ?>">
                             <i class="material-icons fs-6 me-1"><?= ($total_user['growth'] ?? 0) >= 0 ? 'trending_up' : 'trending_down' ?></i> 
@@ -459,6 +459,23 @@
     /* Glass Cards */
     .stat-card { border-radius: 1.5rem !important; transition: all 0.4s ease; }
     .stat-card:hover { transform: translateY(-10px); }
+
+    .stat-icon-premium {
+        width: 50px;
+        height: 50px;
+        background: rgba(255, 255, 255, 0.2);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 14px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        backdrop-filter: blur(4px);
+    }
+
+    .stat-icon-premium .material-icons {
+        color: white !important;
+        font-size: 28px !important;
+    }
 
     .glass-bg-blue { background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%); }
     .glass-bg-purple { background: linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%); }
