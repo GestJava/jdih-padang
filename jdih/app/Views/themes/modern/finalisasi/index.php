@@ -1,475 +1,632 @@
-<div class="container-fluid">
-    <!-- Header Section -->
-    <div class="d-sm-flex align-items-center justify-content-between mb-4">
-        <h1 class="h3 mb-0 text-gray-800">
-            <i class="fas fa-flag-checkered text-primary me-2"></i><?= esc($title) ?>
-        </h1>
-        <nav aria-label="breadcrumb">
-            <ol class="breadcrumb">
-                <li class="breadcrumb-item active" aria-current="page">Finalisasi</li>
-            </ol>
-        </nav>
+<!-- Google Fonts & Icons -->
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
+
+<div class="container-fluid py-4">
+    <!-- Premium Welcome Banner -->
+    <div class="welcome-banner mb-5">
+        <div class="banner-content">
+            <div class="banner-text">
+                <div class="badge-premium mb-2">
+                    <span class="material-icons-round">gavel</span>
+                    <span>Portal Finalisasi JDIH</span>
+                </div>
+                <h1 class="display-5 fw-800 text-white mb-2"><?= esc($title) ?></h1>
+                <p class="lead text-white-50 mb-0">Tahap akhir tinjauan dan pengesahan dokumen hukum sebelum pengarsipan resmi.</p>
+            </div>
+            <div class="banner-visual">
+                <div class="visual-circle"></div>
+                <div class="visual-icons">
+                    <span class="material-icons-round">description</span>
+                    <span class="material-icons-round">draw</span>
+                    <span class="material-icons-round">verified</span>
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- Flash Messages -->
     <?php if (session()->getFlashdata('success')): ?>
-        <div class="alert alert-success alert-dismissible fade show" role="alert">
-            <i class="fas fa-check-circle me-2"></i><?= esc(session()->getFlashdata('success')) ?>
+        <div class="alert alert-premium alert-success mb-4 animate__animated animate__fadeInUp">
+            <div class="alert-icon">
+                <span class="material-icons-round">check_circle</span>
+            </div>
+            <div class="alert-content">
+                <div class="alert-title">Berhasil!</div>
+                <div class="alert-message"><?= esc(session()->getFlashdata('success')) ?></div>
+            </div>
             <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
         </div>
     <?php endif; ?>
 
-    <?php if (session()->getFlashdata('error')): ?>
-        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-            <i class="fas fa-exclamation-triangle me-2"></i><?= esc(session()->getFlashdata('error')) ?>
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-        </div>
-    <?php endif; ?>
-
-    <!-- Revision Notification -->
-
-
-    <!-- Statistics Cards -->
-    <div class="row mb-4">
-        <?php if (!empty($finalisator_stats)): ?>
-            <?php foreach (array_slice($finalisator_stats, 0, 4) as $stat): ?>
-                <div class="col-xl-3 col-md-6 mb-4">
-                    <div class="card border-left-success shadow h-100 py-2 bg-success bg-opacity-10">
-                        <div class="card-body">
-                            <div class="row no-gutters align-items-center">
-                                <div class="col mr-2">
-                                    <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
-                                        <?= esc($stat['nama']) ?>
-                                    </div>
-                                    <div class="h5 mb-0 font-weight-bold text-gray-800">
-                                        <?= esc($stat['jumlah']) ?> Tugas
-                                    </div>
-                                </div>
-                                <div class="col-auto">
-                                    <i class="fas fa-user-check fa-2x text-success"></i>
-                                </div>
+    <!-- Finalisator Workload Cards (Glassmorphism) -->
+    <div class="section-header mb-3">
+        <h5 class="fw-700 text-dark-blue d-flex align-items-center">
+            <span class="material-icons-round text-primary me-2">group</span>
+            Beban Kerja Finalisator
+        </h5>
+    </div>
+    
+    <div class="finalisator-grid-scroll mb-5">
+        <div class="finalisator-row">
+            <?php if (!empty($finalisator_stats)): ?>
+                <?php foreach ($finalisator_stats as $stat): ?>
+                    <div class="finalisator-col">
+                        <div class="glass-card stat-card-premium">
+                            <div class="card-glow"></div>
+                            <div class="stat-icon-wrapper bg-gradient-indigo">
+                                <span class="material-icons-round">history_edu</span>
+                            </div>
+                            <div class="stat-content">
+                                <span class="stat-label"><?= esc($stat['nama']) ?></span>
+                                <h3 class="stat-value"><?= esc($stat['jumlah']) ?></h3>
+                                <span class="stat-unit">Dokumen</span>
                             </div>
                         </div>
                     </div>
-                </div>
-            <?php endforeach; ?>
-        <?php endif; ?>
+                <?php endforeach; ?>
+            <?php endif; ?>
+        </div>
     </div>
 
-    <!-- Year Statistics Cards -->
+    <!-- Year Statistics Section -->
     <?php if (!empty($year_stats)): ?>
-        <div class="row mb-4">
-            <div class="col-12">
-                <h5 class="text-gray-800 mb-3">
-                    <i class="fas fa-chart-line text-success me-2"></i>Statistik Tahun <?= $current_year ?>
-                    <small class="text-muted">(<?= $data_scope ?? 'Data' ?>)</small>
-                </h5>
-            </div>
+        <div class="section-header mb-4">
+            <h5 class="fw-700 text-dark-blue d-flex align-items-center">
+                <span class="material-icons-round text-success me-2">query_stats</span>
+                Statistik Validasi Tahun <?= $current_year ?>
+                <span class="badge badge-soft-primary ms-3">Sistem JDIH</span>
+            </h5>
+        </div>
 
-            <!-- Total Ajuan Tahun Ini -->
+        <div class="row mb-5">
+            <!-- Total Ajuan -->
             <div class="col-xl-3 col-md-6 mb-4">
-                <div class="card border-left-info shadow h-100 py-2 bg-info bg-opacity-10">
-                    <div class="card-body">
-                        <div class="row no-gutters align-items-center">
-                            <div class="col mr-2">
-                                <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
-                                    Total Ajuan
-                                </div>
-                                <div class="h5 mb-0 font-weight-bold text-gray-800">
-                                    <?= number_format($year_stats['total_ajuan_tahun_ini']) ?>
-                                </div>
-                                <div class="text-xs text-muted">
-                                    Tahun <?= $current_year ?>
-                                </div>
-                            </div>
-                            <div class="col-auto">
-                                <i class="fas fa-file-alt fa-2x text-info"></i>
-                            </div>
+                <div class="glass-card h-100 p-4 border-0 shadow-sm relative overflow-hidden group">
+                    <div class="card-accent bg-primary"></div>
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <div class="icon-shape bg-soft-primary rounded-circle">
+                            <span class="material-icons-round text-primary">folder_shared</span>
                         </div>
+                        <span class="badge badge-soft-primary">Total</span>
+                    </div>
+                    <h3 class="fw-800 mb-1 text-dark-blue"><?= number_format($year_stats['total_ajuan_tahun_ini']) ?></h3>
+                    <p class="text-muted small mb-0">Total Ajuan Masuk</p>
+                    <div class="progress mt-3 progress-thin">
+                        <div class="progress-bar bg-primary" style="width: 100%"></div>
                     </div>
                 </div>
             </div>
 
-            <!-- Total Selesai Tahun Ini -->
+            <!-- Selesai (Paraf) -->
             <div class="col-xl-3 col-md-6 mb-4">
-                <div class="card border-left-success shadow h-100 py-2 bg-success bg-opacity-10">
-                    <div class="card-body">
-                        <div class="row no-gutters align-items-center">
-                            <div class="col mr-2">
-                                <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
-                                    Selesai
-                                </div>
-                                <div class="h5 mb-0 font-weight-bold text-gray-800">
-                                    <?= number_format($year_stats['total_selesai_tahun_ini']) ?>
-                                </div>
-                                <div class="text-xs text-muted">
-                                    <?php
-                                    $persentase_selesai = $year_stats['total_ajuan_tahun_ini'] > 0
-                                        ? round(($year_stats['total_selesai_tahun_ini'] / $year_stats['total_ajuan_tahun_ini']) * 100, 1)
-                                        : 0;
-                                    echo $persentase_selesai . '% dari total';
-                                    ?>
-                                </div>
-                            </div>
-                            <div class="col-auto">
-                                <i class="fas fa-check-circle fa-2x text-success"></i>
-                            </div>
+                <div class="glass-card h-100 p-4 border-0 shadow-sm relative overflow-hidden group">
+                    <div class="card-accent bg-success"></div>
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <div class="icon-shape bg-soft-success rounded-circle">
+                            <span class="material-icons-round text-success">task_alt</span>
                         </div>
+                        <span class="badge badge-soft-success">Selesai</span>
+                    </div>
+                    <h3 class="fw-800 mb-1 text-dark-blue"><?= number_format($year_stats['total_selesai_tahun_ini']) ?></h3>
+                    <p class="text-muted small mb-0">
+                        <?php
+                        $persentase_selesai = $year_stats['total_ajuan_tahun_ini'] > 0
+                            ? round(($year_stats['total_selesai_tahun_ini'] / $year_stats['total_ajuan_tahun_ini']) * 100, 1)
+                            : 0;
+                        echo $persentase_selesai . '% dari total';
+                        ?>
+                    </p>
+                    <div class="progress mt-3 progress-thin">
+                        <div class="progress-bar bg-success" style="width: <?= $persentase_selesai ?>%"></div>
                     </div>
                 </div>
             </div>
 
-            <!-- Total Ditolak Tahun Ini -->
+            <!-- Ditolak -->
             <div class="col-xl-3 col-md-6 mb-4">
-                <div class="card border-left-danger shadow h-100 py-2 bg-danger bg-opacity-10">
-                    <div class="card-body">
-                        <div class="row no-gutters align-items-center">
-                            <div class="col mr-2">
-                                <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">
-                                    Ditolak
-                                </div>
-                                <div class="h5 mb-0 font-weight-bold text-gray-800">
-                                    <?= number_format($year_stats['total_ditolak_tahun_ini']) ?>
-                                </div>
-                                <div class="text-xs text-muted">
-                                    <?php
-                                    $persentase_ditolak = $year_stats['total_ajuan_tahun_ini'] > 0
-                                        ? round(($year_stats['total_ditolak_tahun_ini'] / $year_stats['total_ajuan_tahun_ini']) * 100, 1)
-                                        : 0;
-                                    echo $persentase_ditolak . '% dari total';
-                                    ?>
-                                </div>
-                            </div>
-                            <div class="col-auto">
-                                <i class="fas fa-times-circle fa-2x text-danger"></i>
-                            </div>
+                <div class="glass-card h-100 p-4 border-0 shadow-sm relative overflow-hidden group">
+                    <div class="card-accent bg-danger"></div>
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <div class="icon-shape bg-soft-danger rounded-circle">
+                            <span class="material-icons-round text-danger">cancel_presentation</span>
                         </div>
+                        <span class="badge badge-soft-danger">Ditolak</span>
+                    </div>
+                    <h3 class="fw-800 mb-1 text-dark-blue"><?= number_format($year_stats['total_ditolak_tahun_ini']) ?></h3>
+                    <p class="text-muted small mb-0">
+                        <?php
+                        $persentase_ditolak = $year_stats['total_ajuan_tahun_ini'] > 0
+                            ? round(($year_stats['total_ditolak_tahun_ini'] / $year_stats['total_ajuan_tahun_ini']) * 100, 1)
+                            : 0;
+                        echo $persentase_ditolak . '% dari total';
+                        ?>
+                    </p>
+                    <div class="progress mt-3 progress-thin">
+                        <div class="progress-bar bg-danger" style="width: <?= $persentase_ditolak ?>%"></div>
                     </div>
                 </div>
             </div>
 
-            <!-- Total Proses Tahun Ini -->
+            <!-- Antrean/Proses -->
             <div class="col-xl-3 col-md-6 mb-4">
-                <div class="card border-left-warning shadow h-100 py-2 bg-warning bg-opacity-10">
-                    <div class="card-body">
-                        <div class="row no-gutters align-items-center">
-                            <div class="col mr-2">
-                                <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
-                                    Dalam Proses
-                                </div>
-                                <div class="h5 mb-0 font-weight-bold text-gray-800">
-                                    <?= number_format($year_stats['total_proses_tahun_ini']) ?>
-                                </div>
-                                <div class="text-xs text-muted">
-                                    <?php
-                                    $persentase_proses = $year_stats['total_ajuan_tahun_ini'] > 0
-                                        ? round(($year_stats['total_proses_tahun_ini'] / $year_stats['total_ajuan_tahun_ini']) * 100, 1)
-                                        : 0;
-                                    echo $persentase_proses . '% dari total';
-                                    ?>
-                                </div>
-                            </div>
-                            <div class="col-auto">
-                                <i class="fas fa-clock fa-2x text-warning"></i>
-                            </div>
+                <div class="glass-card h-100 p-4 border-0 shadow-sm relative overflow-hidden group">
+                    <div class="card-accent bg-warning"></div>
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <div class="icon-shape bg-soft-warning rounded-circle">
+                            <span class="material-icons-round text-warning">hourglass_top</span>
                         </div>
+                        <span class="badge badge-soft-warning">Antrean</span>
+                    </div>
+                    <h3 class="fw-800 mb-1 text-dark-blue"><?= number_format($year_stats['total_proses_tahun_ini']) ?></h3>
+                    <p class="text-muted small mb-0">
+                        <?php
+                        $persentase_proses = $year_stats['total_ajuan_tahun_ini'] > 0
+                            ? round(($year_stats['total_proses_tahun_ini'] / $year_stats['total_ajuan_tahun_ini']) * 100, 1)
+                            : 0;
+                        echo $persentase_proses . '% dari total';
+                        ?>
+                    </p>
+                    <div class="progress mt-3 progress-thin">
+                        <div class="progress-bar bg-warning" style="width: <?= $persentase_proses ?>%"></div>
                     </div>
                 </div>
             </div>
         </div>
     <?php endif; ?>
 
-    <!-- Main Content Card -->
-    <div class="card shadow mb-4">
-        <div class="card-header bg-success text-white py-3">
-            <h6 class="m-0 font-weight-bold">
-                <i class="fas fa-list me-2"></i>Daftar Ajuan Menunggu Finalisasi
-                <span class="badge bg-light text-dark ms-2"><?= count($ajuan_list) ?> ajuan</span>
-            </h6>
+    <!-- Main List Section -->
+    <div class="glass-card border-0 shadow-lg overflow-hidden animate__animated animate__fadeIn">
+        <div class="card-header-premium d-flex justify-content-between align-items-center p-4">
+            <div class="d-flex align-items-center">
+                <div class="header-icon bg-gradient-indigo me-3">
+                    <span class="material-icons-round">edit_document</span>
+                </div>
+                <div>
+                    <h5 class="fw-800 mb-0 text-dark-blue">Daftar Antrean Finalisasi</h5>
+                    <small class="text-muted">Kelola proses finalisasi dokumen hukum</small>
+                </div>
+            </div>
+            <div class="header-action">
+                <span class="badge bg-indigo rounded-pill px-3 py-2">
+                    <span class="me-1"><?= count($ajuan_list) ?></span> Ajuan Aktif
+                </span>
+            </div>
         </div>
-        <div class="card-body">
-            <?php if (!empty($ajuan_list) && is_array($ajuan_list) && count($ajuan_list) > 0): ?>
-                <div class="table-responsive">
-                    <table id="data-tables" class="table table-striped table-hover" style="width:100%">
-                        <thead class="table-dark">
+        
+        <div class="card-body-premium p-4">
+            <div class="table-responsive">
+                <table id="data-tables" class="table table-premium w-100">
+                    <thead>
+                        <tr>
+                            <th class="text-center">No</th>
+                            <th>Informasi Dokumen</th>
+                            <th>Jenis</th>
+                            <th>Jadwal Masuk</th>
+                            <th class="text-center">Status</th>
+                            <th class="text-center">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php
+                        $no = 1;
+                        $status_colors = [
+                            1 => ['primary', 'assignment'],
+                            2 => ['warning', 'access_time'],
+                            3 => ['info', 'find_in_page'],
+                            4 => ['danger', 'report_problem'],
+                            5 => ['primary', 'rate_review'],
+                            6 => ['info', 'fact_check'],
+                            7 => ['success', 'verified'],
+                            8 => ['dark', 'inventory_2'],
+                            9 => ['dark', 'history'],
+                            10 => ['warning', 'replay'],
+                            11 => ['danger', 'highlight_off'],
+                        ];
+
+                        foreach ($ajuan_list as $item):
+                            $status_id = $item['id_status_ajuan'] ?? 1;
+                            $status_cfg = $status_colors[$status_id] ?? ['secondary', 'help_outline'];
+                            $tanggal_tampil = !empty($item['tanggal_pengajuan']) && $item['tanggal_pengajuan'] != '0000-00-00 00:00:00'
+                                ? $item['tanggal_pengajuan']
+                                : $item['created_at'];
+                        ?>
                             <tr>
-                                <th width="5%">No</th>
-                                <th width="35%">Judul Rancangan</th>
-                                <th width="12%">Jenis</th>
-                                <th width="15%">Instansi Pemohon</th>
-                                <th width="12%">Tgl. Diterima</th>
-                                <th width="10%">Status</th>
-                                <th width="11%">Aksi</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php
-                            $no = 1;
-                            $status_colors = [
-                                1 => 'bg-secondary text-white',
-                                2 => 'bg-warning text-dark',
-                                3 => 'bg-info text-white',
-                                4 => 'bg-danger text-white',
-                                5 => 'bg-primary text-white',
-                                6 => 'bg-info text-white',
-                                7 => 'bg-success text-white',
-                                8 => 'bg-dark text-white',
-                                9 => 'bg-dark text-white',
-                                10 => 'bg-warning text-dark',
-                                11 => 'bg-danger text-white',
-                            ];
-
-                            foreach ($ajuan_list as $item) {
-                                if (!is_array($item)) continue; // Skip if not array
-
-                                $status_class = $status_colors[$item['id_status_ajuan']] ?? 'bg-secondary text-white';
-                                $ajuan_id = $item['id'] ?? '';
-                            ?>
-                                <tr>
-                                    <td><?= $no++ ?></td>
-                                    <td>
-                                        <div class="fw-bold text-primary">
-                                            <?= esc($item['judul_peraturan'] ?? 'Data tidak tersedia') ?>
+                                <td class="text-center align-middle">
+                                    <span class="text-muted fw-600"><?= $no++ ?></span>
+                                </td>
+                                <td class="align-middle">
+                                    <div class="d-flex flex-column">
+                                        <div class="fw-800 text-dark-blue mb-1"><?= esc($item['judul_peraturan']) ?></div>
+                                        <div class="d-flex align-items-center gap-2">
+                                            <span class="d-flex align-items-center text-muted small">
+                                                <span class="material-icons-round font-size-14 me-1">business</span>
+                                                <?= esc($item['nama_instansi']) ?>
+                                            </span>
+                                            <span class="text-muted">•</span>
+                                            <span class="d-flex align-items-center text-muted small">
+                                                <span class="material-icons-round font-size-14 me-1">person</span>
+                                                <?= esc($item['nama_pemohon']) ?>
+                                            </span>
                                         </div>
-                                        <?php if (!empty($item['nama_pemohon'])): ?>
-                                            <small class="text-muted">
-                                                <i class="fas fa-user me-1"></i><?= esc($item['nama_pemohon']) ?>
-                                            </small>
+                                    </div>
+                                </td>
+                                <td class="align-middle">
+                                    <span class="badge-soft-info px-3 py-2 rounded-pill fw-700">
+                                        <?= esc($item['nama_jenis']) ?>
+                                    </span>
+                                </td>
+                                <td class="align-middle">
+                                    <div class="d-flex flex-column">
+                                        <span class="fw-700 text-dark-blue"><?= date('d M Y', strtotime($tanggal_tampil)) ?></span>
+                                        <span class="text-muted small"><?= date('H:i', strtotime($tanggal_tampil)) ?> WIB</span>
+                                    </div>
+                                </td>
+                                <td class="text-center align-middle">
+                                    <span class="status-badge status-<?= $status_cfg[0] ?>">
+                                        <span class="material-icons-round"><?= $status_cfg[1] ?></span>
+                                        <?= esc($item['nama_status']) ?>
+                                        <?php if ($status_cfg[0] == 'warning'): ?>
+                                            <span class="pulse"></span>
                                         <?php endif; ?>
-                                    </td>
-                                    <td>
-                                        <span class="badge bg-info text-white">
-                                            <?= esc($item['nama_jenis'] ?? 'Data tidak tersedia') ?>
-                                        </span>
-                                    </td>
-                                    <td><?= esc($item['nama_instansi'] ?? 'Data tidak tersedia') ?></td>
-                                    <td>
-                                        <i class="fas fa-calendar me-1"></i>
-                                        <?php
-                                        $tanggal_tampil = !empty($item['tanggal_pengajuan']) && $item['tanggal_pengajuan'] != '0000-00-00 00:00:00'
-                                            ? $item['tanggal_pengajuan']
-                                            : $item['created_at'];
-                                        echo date('d/m/Y H:i', strtotime($tanggal_tampil));
-                                        ?>
-                                    </td>
-                                    <td>
-                                        <span class="badge <?= esc($status_class) ?>">
-                                            <?= esc($item['nama_status'] ?? 'N/A') ?>
-                                        </span>
-                                    </td>
-                                    <td>
-                                        <div class="btn-group" role="group">
-                                            <?php if ($ajuan_id): ?>
-                                                <a href="<?= base_url('finalisasi/proses/' . esc($ajuan_id)) ?>"
-                                                    class="btn btn-success btn-sm"
-                                                    title="Proses Finalisasi">
-                                                    <i class="fas fa-tasks"></i>
-                                                </a>
-                                            <?php endif; ?>
-                                        </div>
-                                    </td>
-                                </tr>
-                            <?php
-                            }
-                            ?>
-                        </tbody>
-                    </table>
-                </div>
-            <?php else: ?>
-                <div class="alert alert-info text-center">
-                    <i class="fas fa-info-circle me-2"></i>
-                    Tidak ada ajuan yang perlu difinalisasi saat ini.
-                </div>
-            <?php endif; ?>
+                                    </span>
+                                </td>
+                                <td class="text-center align-middle">
+                                    <a href="<?= base_url('finalisasi/proses/' . esc($item['id'])) ?>" class="btn-action">
+                                        <span class="material-icons-round">edit_note</span>
+                                        Finalisasi
+                                    </a>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 </div>
 
-<script>
-    // DataTable initialization for finalisasi dashboard
-    $(document).ready(function() {
-        // Check if table exists and has data
-        var table = $('#data-tables');
-        if (table.length && $.fn.DataTable) {
-            // Check if DataTable is already initialized
-            if ($.fn.DataTable.isDataTable('#data-tables')) {
-                console.log('Finalisasi - DataTable already initialized, skipping...');
-                return;
-            }
-
-            // Check if table has rows
-            var rowCount = table.find('tbody tr').length;
-            console.log('Finalisasi - Table row count:', rowCount);
-
-            if (rowCount > 0) {
-                try {
-                    // Destroy existing instance if any (with error handling)
-                    try {
-                        if ($.fn.DataTable.isDataTable('#data-tables')) {
-                            $('#data-tables').DataTable().destroy();
-                        }
-                    } catch (e) {
-                        console.warn('Error destroying existing DataTable:', e);
-                        // Remove any existing DataTable classes and data
-                        $('#data-tables').removeClass('dataTable').removeData();
-                    }
-
-                    $('#data-tables').DataTable({
-                        responsive: true,
-                        language: {
-                            url: 'https://cdn.datatables.net/plug-ins/1.13.7/i18n/id.json'
-                        },
-                        order: [
-                            [4, 'desc']
-                        ], // Sort by date column
-                        columnDefs: [{
-                                orderable: false,
-                                targets: [6]
-                            }, // Disable sorting for action column
-                            {
-                                className: 'text-center',
-                                targets: [0, 5, 6]
-                            } // Center align certain columns
-                        ],
-                        pageLength: 25,
-                        dom: 'Bfrtip',
-                        buttons: [{
-                                extend: 'copy',
-                                text: '<i class="fas fa-copy me-1"></i>Copy',
-                                className: 'btn btn-secondary btn-sm'
-                            },
-                            {
-                                extend: 'excel',
-                                text: '<i class="fas fa-file-excel me-1"></i>Excel',
-                                className: 'btn btn-success btn-sm'
-                            },
-                            {
-                                extend: 'pdf',
-                                text: '<i class="fas fa-file-pdf me-1"></i>PDF',
-                                className: 'btn btn-danger btn-sm'
-                            },
-                            {
-                                extend: 'print',
-                                text: '<i class="fas fa-print me-1"></i>Print',
-                                className: 'btn btn-info btn-sm'
-                            }
-                        ],
-                        drawCallback: function(settings) {
-                            // Update row numbers after sorting/filtering/pagination
-                            var api = this.api();
-                            var pageInfo = api.page.info();
-
-                            api.rows({
-                                page: 'current'
-                            }).nodes().each(function(cell, i) {
-                                if (cell.cells && cell.cells[0]) {
-                                    cell.cells[0].innerHTML = pageInfo.start + i + 1;
-                                }
-                            });
-                        }
-                    });
-                    console.log('Finalisasi - DataTable initialized successfully');
-                } catch (error) {
-                    console.error('Finalisasi - DataTable error:', error);
-                    // Hide table if DataTable fails
-                    table.hide();
-                }
-            } else {
-                // Hide table if no data
-                console.log('Finalisasi - No data, hiding table');
-                table.hide();
-            }
-        } else {
-            console.log('Finalisasi - Table not found or DataTable not available');
-        }
-    });
-</script>
-
 <style>
-    /* Enhanced styling */
-    .border-left-primary {
-        border-left: 4px solid #007bff !important;
+    /* Premium Design System for Finalisasi Page */
+    :root {
+        --primary-font: 'Inter', sans-serif;
+        --heading-font: 'Outfit', sans-serif;
+        --primary-indigo: #4f46e5;
+        --dark-blue: #0f172a;
+        --glass-bg: rgba(255, 255, 255, 0.85);
+        --premium-gradient: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
     }
 
-    .border-left-warning {
-        border-left: 4px solid #ffc107 !important;
+    body {
+        font-family: var(--primary-font);
+        background-color: #f1f5f9;
+        color: #334155;
     }
 
-    .border-left-info {
-        border-left: 4px solid #17a2b8 !important;
+    .fw-700 { font-weight: 700; }
+    .fw-800 { font-weight: 800; }
+    .text-dark-blue { color: var(--dark-blue); }
+
+    /* Welcome Banner */
+    .welcome-banner {
+        background: var(--premium-gradient);
+        border-radius: 24px;
+        padding: 60px;
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 20px 40px rgba(79, 70, 229, 0.15);
     }
 
-    .border-left-success {
-        border-left: 4px solid #28a745 !important;
+    .banner-content {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        position: relative;
+        z-index: 2;
     }
 
-    .table-hover tbody tr:hover {
-        background-color: #f8f9fa;
-        transform: scale(1.01);
-        transition: all 0.2s ease;
+    .badge-premium {
+        display: inline-flex;
+        align-items: center;
+        background: rgba(255, 255, 255, 0.15);
+        padding: 8px 16px;
+        border-radius: 100px;
+        color: white;
+        font-weight: 700;
+        font-size: 0.85rem;
+        backdrop-filter: blur(8px);
     }
 
-    .card {
-        transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    .badge-premium .material-icons-round {
+        font-size: 1.1rem;
+        margin-right: 8px;
     }
 
-    .card:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.12) !important;
+    .banner-visual {
+        position: relative;
+        width: 150px;
+        height: 150px;
     }
 
-    .btn-group .btn {
-        transition: all 0.2s ease;
+    .visual-circle {
+        width: 150px;
+        height: 150px;
+        border: 4px dashed rgba(255, 255, 255, 0.2);
+        border-radius: 50%;
+        animation: rotate 20s linear infinite;
     }
 
-    .btn-group .btn:hover {
-        transform: translateY(-1px);
-        z-index: 1;
+    .visual-icons {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
     }
 
-    .badge {
-        padding: 0.5em 0.75em;
-        font-size: 0.75rem;
+    .visual-icons .material-icons-round {
+        font-size: 3rem;
+        color: white;
+        position: absolute;
+        animation: float 4s ease-in-out infinite;
     }
 
-    /* Responsive design */
-    @media (max-width: 768px) {
-        .btn-group {
-            flex-direction: column;
-            width: 100%;
-        }
+    .visual-icons .material-icons-round:nth-child(1) { top: 10%; animation-delay: 0s; }
+    .visual-icons .material-icons-round:nth-child(2) { bottom: 20%; left: 10%; animation-delay: 1s; }
+    .visual-icons .material-icons-round:nth-child(3) { bottom: 10%; right: 10%; animation-delay: 2s; }
 
-        .btn-group .btn {
-            margin-bottom: 0.25rem;
-            font-size: 0.75rem;
-        }
-
-        .table-responsive .btn-group {
-            min-width: 100px;
-        }
+    /* Finalisator Scrollable Grid */
+    .finalisator-grid-scroll {
+        overflow-x: auto;
+        padding: 10px 0 20px 0;
+        scrollbar-width: none;
     }
 
-    /* Loading animation for buttons */
-    .btn:active {
-        transform: scale(0.98);
+    .finalisator-grid-scroll::-webkit-scrollbar { display: none; }
+
+    .finalisator-row {
+        display: flex;
+        gap: 20px;
+        width: max-content;
     }
 
-    /* Enhanced statistics cards */
-    .h5 {
+    .finalisator-col {
+        width: 260px;
+    }
+
+    /* Glass Cards */
+    .glass-card {
+        background: var(--glass-bg);
+        backdrop-filter: blur(12px);
+        border: 1px solid rgba(255, 255, 255, 0.4);
+        border-radius: 20px;
+        position: relative;
+    }
+
+    .stat-card-premium {
+        padding: 24px;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        overflow: hidden;
+    }
+
+    .stat-card-premium:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.08);
+    }
+
+    .stat-icon-wrapper {
+        width: 48px;
+        height: 48px;
+        border-radius: 14px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 20px;
+    }
+
+    .stat-icon-wrapper .material-icons-round {
+        color: white;
+        font-size: 1.5rem;
+    }
+
+    .bg-gradient-indigo { background: linear-gradient(135deg, #6366f1, #4f46e5); }
+
+    .stat-label {
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: #64748b;
+        display: block;
+        margin-bottom: 4px;
+    }
+
+    .stat-value {
+        font-family: var(--heading-font);
+        font-weight: 800;
         font-size: 1.75rem;
+        margin: 0;
+        color: var(--dark-blue);
+    }
+
+    .stat-unit {
+        font-size: 0.75rem;
+        color: #94a3b8;
+    }
+
+    /* Accents & Progress Bars */
+    .card-accent {
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 4px;
+        width: 100%;
+    }
+
+    .icon-shape {
+        width: 42px;
+        height: 42px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .progress-thin { height: 6px; border-radius: 100px; background-color: #f1f5f9; }
+
+    /* Tables */
+    .table-premium { border-collapse: separate; border-spacing: 0 12px; margin-top: -12px; }
+    .table-premium thead th {
+        background: #f8fafc;
+        border: none;
+        padding: 16px;
+        font-size: 0.75rem;
+        text-uppercase;
+        letter-spacing: 0.05em;
+        color: #64748b;
         font-weight: 700;
     }
 
-    .text-xs {
-        font-size: 0.7rem;
+    .table-premium tbody tr {
+        background: white;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+        transition: all 0.2s;
     }
 
-    /* DataTable buttons styling */
-    .dt-buttons {
-        margin-bottom: 1rem;
+    .table-premium tbody tr:hover {
+        transform: scale(1.005);
+        box-shadow: 0 8px 15px rgba(0, 0, 0, 0.05);
+        z-index: 2;
     }
 
-    .dt-buttons .btn {
-        margin-right: 0.5rem;
+    .table-premium td {
+        padding: 20px 16px;
+        border: none;
+        background: transparent;
+    }
+
+    .table-premium td:first-child { border-radius: 12px 0 0 12px; }
+    .table-premium td:last-child { border-radius: 0 12px 12px 0; }
+
+    /* Status Badges */
+    .status-badge {
+        display: inline-flex;
+        align-items: center;
+        padding: 6px 14px;
+        border-radius: 100px;
+        font-size: 0.75rem;
+        font-weight: 800;
+        gap: 6px;
+        position: relative;
+    }
+
+    .status-badge .material-icons-round { font-size: 14px; }
+
+    .status-primary { background: #eef2ff; color: #4f46e5; }
+    .status-warning { background: #fffbeb; color: #d97706; }
+    .status-danger { background: #fef2f2; color: #dc2626; }
+    .status-success { background: #f0fdf4; color: #16a34a; }
+    .status-info { background: #f0f9ff; color: #0284c7; }
+
+    /* Action Button */
+    .btn-action {
+        display: inline-flex;
+        align-items: center;
+        background: var(--dark-blue);
+        color: white !important;
+        padding: 10px 18px;
+        border-radius: 12px;
+        font-weight: 700;
+        font-size: 0.85rem;
+        text-decoration: none;
+        transition: all 0.2s;
+        gap: 8px;
+    }
+
+    .btn-action:hover {
+        background: #1e293b;
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(15, 23, 42, 0.2);
+    }
+
+    .btn-action .material-icons-round { font-size: 18px; }
+
+    .badge-soft-primary { background: #e0e7ff; color: #4338ca; }
+    .badge-soft-info { background: #e0f2fe; color: #0369a1; }
+
+    .font-size-14 { font-size: 14px; }
+
+    /* Animations */
+    @keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+    @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+
+    .pulse {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        border-radius: 100px;
+        background: inherit;
+        top: 0;
+        left: 0;
+        z-index: -1;
+        animation: pulse-anim 2s infinite;
+    }
+
+    @keyframes pulse-anim {
+        0% { transform: scale(1); opacity: 0.8; }
+        100% { transform: scale(1.3); opacity: 0; }
+    }
+
+    /* DataTable Overrides */
+    .dataTables_wrapper .dataTables_paginate .paginate_button {
+        border-radius: 8px !important;
+        border: none !important;
+    }
+    .dataTables_wrapper .dataTables_paginate .paginate_button.current {
+        background: var(--premium-gradient) !important;
+        color: white !important;
+        font-weight: 700;
     }
 </style>
+
+<script>
+$(document).ready(function() {
+    if ($.fn.DataTable.isDataTable('#data-tables')) {
+        $('#data-tables').DataTable().destroy();
+    }
+
+    $('#data-tables').DataTable({
+        responsive: true,
+        language: {
+            url: 'https://cdn.datatables.net/plug-ins/1.13.7/i18n/id.json'
+        },
+        pageLength: 25,
+        dom: '<"d-flex justify-content-between align-items-center mb-4"Bf>rt<"d-flex justify-content-between align-items-center mt-4"ip>',
+        buttons: [
+            {
+                extend: 'excel',
+                text: '<span class="material-icons-round me-1" style="font-size:16px">file_download</span> Export Excel',
+                className: 'btn btn-soft-success btn-sm border-0 px-3 fw-700'
+            },
+            {
+                extend: 'pdf',
+                text: '<span class="material-icons-round me-1" style="font-size:16px">picture_as_pdf</span> PDF',
+                className: 'btn btn-soft-danger btn-sm border-0 px-3 fw-700'
+            }
+        ],
+        drawCallback: function() {
+            $('.paginate_button').addClass('btn btn-sm mx-1');
+        }
+    });
+
+    // Custom CSS for export buttons to match theme
+    $('.btn-soft-success').css({
+        'background-color': '#dcfce7',
+        'color': '#166534'
+    });
+    $('.btn-soft-danger').css({
+        'background-color': '#fee2e2',
+        'color': '#991b1b'
+    });
+});
+</script>
