@@ -1,282 +1,194 @@
-<div class="legalisasi-module">
-    <div class="container-fluid">
-        <!-- Header Section -->
-        <div class="d-sm-flex align-items-center justify-content-between mb-4">
-            <h1 class="h3 mb-0 text-gray-800">
-                <i class="fas fa-gavel text-primary me-2"></i><?= esc($title) ?>
-            </h1>
-            <nav aria-label="breadcrumb">
-                <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="<?= base_url('dashboard') ?>">Dashboard</a></li>
-                    <li class="breadcrumb-item active" aria-current="page">Legalisasi</li>
-                </ol>
-            </nav>
+<div class="legalisasi-module pb-5">
+    <!-- Premium Header Section -->
+    <div class="header-premium-blue p-4 p-md-5 mb-4 position-relative overflow-hidden" style="background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%); border-radius: 0 0 2rem 2rem;">
+        <div class="position-relative z-1">
+            <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
+                <div>
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb breadcrumb-light mb-2">
+                            <li class="breadcrumb-item"><a href="<?= base_url('dashboard') ?>" class="text-white-50">Dashboard</a></li>
+                            <li class="breadcrumb-item active text-white" aria-current="page">Legalisasi</li>
+                        </ol>
+                    </nav>
+                    <h1 class="display-6 fw-bold text-white mb-0 font-outfit">
+                        <i class="fas fa-gavel me-2 opacity-75"></i>Modul Legalisasi
+                    </h1>
+                    <p class="text-white-50 mt-2 mb-0">Selamat datang di sistem manajemen legalisasi & Tanda Tangan Elektronik.</p>
+                </div>
+            </div>
         </div>
+        <!-- Decorative elements -->
+        <div class="position-absolute top-0 end-0 p-5 mt-5 opacity-10">
+            <i class="fas fa-shield-alt fa-10x text-white rotate-12"></i>
+        </div>
+    </div>
 
+    <div class="container-fluid px-md-4">
         <!-- Flash Messages -->
         <?php if (session()->getFlashdata('success')): ?>
-            <div class="alert alert-success alert-dismissible fade show" role="alert">
-                <i class="fas fa-check-circle me-2"></i><?= esc(session()->getFlashdata('success')) ?>
+            <div class="alert alert-soft-success border-0 shadow-sm rounded-4 mb-4" role="alert">
+                <div class="d-flex align-items-center">
+                    <i class="fas fa-check-circle me-3 fs-4"></i>
+                    <div><?= esc(session()->getFlashdata('success')) ?></div>
+                </div>
                 <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
             </div>
         <?php endif; ?>
 
-        <?php if (session()->getFlashdata('error')): ?>
-            <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                <i class="fas fa-exclamation-triangle me-2"></i><?= esc(session()->getFlashdata('error')) ?>
-                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        <!-- Dashboard Selection Card -->
+        <div class="glass-card mb-4 border-top border-4 border-blue-premium">
+            <div class="p-4 border-bottom bg-white d-sm-flex align-items-center justify-content-between">
+                <div>
+                    <h5 class="fw-bold font-outfit mb-1 text-blue"><i class="fas fa-users-cog me-2"></i>Pilih Dashboard Role</h5>
+                    <p class="text-muted small mb-0">Pilih dashboard yang sesuai dengan kewenangan Anda saat ini.</p>
+                </div>
+                <div class="mt-3 mt-sm-0 px-3 py-2 bg-light rounded-pill border d-flex align-items-center" style="min-width: 300px;">
+                    <i class="fas fa-search text-muted me-2"></i>
+                    <input type="text" id="dashboardFilter" class="form-control form-control-sm border-0 bg-transparent p-0" placeholder="Cari kewenangan atau dashboard...">
+                </div>
             </div>
-        <?php endif; ?>
+            
+            <div class="p-4">
+                <?php
+                $visible_dashboards = $visible_dashboards ?? (session()->get('visible_dashboards') ?? []);
+                if (!is_array($visible_dashboards)) { $visible_dashboards = []; }
+                $default_dashboard_url = $default_dashboard_url ?? (session()->get('default_page_url') ?? null);
+                $show_all_dashboards = empty($visible_dashboards);
+                $cardVisible = function (string $slug) use ($visible_dashboards, $show_all_dashboards): bool {
+                    return $show_all_dashboards || in_array($slug, $visible_dashboards, true);
+                };
+                ?>
 
-        <!-- Info Message -->
-        <?php if (isset($message)): ?>
-            <div class="alert alert-info alert-dismissible fade show" role="alert">
-                <i class="fas fa-info-circle me-2"></i><?= esc($message) ?>
-                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-            </div>
-        <?php endif; ?>
-
-        <!-- Dashboard Selection -->
-        <div class="row mb-4">
-            <div class="col-12">
-                <div class="card shadow">
-                    <div class="card-header bg-primary text-white">
-                        <h6 class="m-0 font-weight-bold">
-                            <i class="fas fa-users me-2"></i>Pilih Dashboard Legalisasi
-                        </h6>
+                <?php if ($default_dashboard_url): ?>
+                    <div class="mb-4 text-center">
+                        <a href="<?= esc($default_dashboard_url) ?>" class="btn btn-blue-premium py-2 px-4 rounded-pill shadow-blue transition-all">
+                            <i class="fas fa-rocket me-2"></i>Masuk Ke Dashboard Utama Saya
+                        </a>
                     </div>
-                    <div class="card-body">
-                        <?php
-                        $visible_dashboards = $visible_dashboards ?? (session()->get('visible_dashboards') ?? []);
-                        if (!is_array($visible_dashboards)) {
-                            $visible_dashboards = [];
-                        }
-                        $default_dashboard_url = $default_dashboard_url ?? (session()->get('default_page_url') ?? null);
-                        $show_all_dashboards = empty($visible_dashboards);
-                        $cardVisible = function (string $slug) use ($visible_dashboards, $show_all_dashboards): bool {
-                            return $show_all_dashboards || in_array($slug, $visible_dashboards, true);
-                        };
-                        ?>
+                <?php endif; ?>
 
-                        <div class="d-flex justify-content-between align-items-center mb-3 flex-column flex-md-row">
-                            <div class="mb-2 mb-md-0">
-                                <?php if ($default_dashboard_url): ?>
-                                    <a href="<?= esc($default_dashboard_url) ?>" class="btn btn-sm btn-primary">
-                                        <i class="fas fa-play me-1"></i> Dashboard Saya
-                                    </a>
-                                <?php endif; ?>
+                <div class="row g-4">
+                    <?php 
+                    $roles = [
+                        'opd' => ['title' => 'Dashboard Kepala OPD', 'icon' => 'fa-building', 'color' => 'blue', 'keywords' => 'opd instansi perangkat daerah paraf awal'],
+                        'kabag' => ['title' => 'Dashboard Kabag Hukum', 'icon' => 'fa-user-shield', 'color' => 'indigo', 'keywords' => 'kabag hukum legal verifikasi paraf'],
+                        'asisten' => ['title' => 'Dashboard Asisten Walikota', 'icon' => 'fa-user-tie', 'color' => 'cyan', 'keywords' => 'asisten walikota review paraf'],
+                        'sekda' => ['title' => 'Dashboard Sekretaris Daerah', 'icon' => 'fa-stamp', 'color' => 'orange', 'keywords' => 'sekda tte final sekretaris daerah'],
+                        'wawako' => ['title' => 'Dashboard Wakil Walikota', 'icon' => 'fa-signature', 'color' => 'teal', 'keywords' => 'wawako wakil walikota paraf review'],
+                        'walikota' => ['title' => 'Dashboard Walikota', 'icon' => 'fa-crown', 'color' => 'red', 'keywords' => 'walikota tte final pimpinan']
+                    ];
+                    ?>
+
+                    <?php foreach ($roles as $slug => $data): ?>
+                        <?php if ($cardVisible($slug)): ?>
+                            <div class="col-xl-4 col-md-6 dashboard-card" data-keywords="<?= $data['keywords'] ?>">
+                                <div class="glass-card h-100 shadow-hover transition-all-slow border-0">
+                                    <div class="p-4 text-center position-relative">
+                                        <div class="role-icon-bg bg-soft-<?= $data['color'] ?> mx-auto mb-3">
+                                            <i class="fas <?= $data['icon'] ?> text-<?= $data['color'] ?> fs-2"></i>
+                                        </div>
+                                        <h5 class="fw-bold font-outfit mb-2 text-dark"><?= $data['title'] ?></h5>
+                                        <p class="text-muted small mb-4 px-2">Akses modul verifikasi, paraf, dan tanda tangan elektronik sesuai role <?= $data['title'] ?>.</p>
+                                        <a href="<?= base_url('legalisasi/dashboard/' . $slug) ?>" class="btn btn-soft-<?= $data['color'] ?> w-100 rounded-pill fw-bold py-2">
+                                            Masuk Dashboard <i class="fas fa-arrow-right ms-1 small"></i>
+                                        </a>
+                                    </div>
+                                </div>
                             </div>
-                            <div style="max-width: 320px; width: 100%;">
-                                <input type="text" id="dashboardFilter" class="form-control form-control-sm" placeholder="Cari dashboard...">
-                            </div>
-                        </div>
-
-                        <p class="mb-4">Pilih dashboard yang sesuai dengan role dan kewenangan Anda:</p>
-
-                        <div class="row">
-                            <?php if ($cardVisible('opd')): ?>
-                                <div class="col-md-6 mb-4 dashboard-card" data-keywords="kepala opd building paraf awal">
-                                    <div class="card border-left-primary">
-                                        <div class="card-body">
-                                            <h5 class="card-title text-primary">
-                                                <i class="fas fa-building me-2"></i>Dashboard Kepala OPD
-                                            </h5>
-                                            <p class="card-text">
-                                                <strong>Kewenangan:</strong><br>
-                                                • Paraf awal dokumen (sebelum Kabag)<br>
-                                                • Filter: Menunggu Paraf OPD
-                                            </p>
-                                            <a href="<?= base_url('legalisasi/dashboard/opd') ?>" class="btn btn-primary">
-                                                <i class="fas fa-arrow-right me-1"></i>Akses Dashboard OPD
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
-                            <?php endif; ?>
-
-                            <?php if ($cardVisible('kabag')): ?>
-                                <div class="col-md-6 mb-4 dashboard-card" data-keywords="kabag hukum user shield paraf">
-                                    <div class="card border-left-info">
-                                        <div class="card-body">
-                                            <h5 class="card-title text-info">
-                                                <i class="fas fa-user-shield me-2"></i>Dashboard Kabag Hukum
-                                            </h5>
-                                            <p class="card-text">
-                                                <strong>Kewenangan:</strong><br>
-                                                • Paraf setelah OPD, sebelum Asisten<br>
-                                                • Filter: Menunggu Paraf Kabag
-                                            </p>
-                                            <a href="<?= base_url('legalisasi/dashboard/kabag') ?>" class="btn btn-info">
-                                                <i class="fas fa-arrow-right me-1"></i>Akses Dashboard Kabag
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
-                            <?php endif; ?>
-
-                            <?php if ($cardVisible('asisten')): ?>
-                                <div class="col-md-6 mb-4 dashboard-card" data-keywords="asisten walikota user tie review">
-                                    <div class="card border-left-primary">
-                                        <div class="card-body">
-                                            <h5 class="card-title text-primary">
-                                                <i class="fas fa-user-tie me-2"></i>Dashboard Asisten Walikota
-                                            </h5>
-                                            <p class="card-text">
-                                                <strong>Kewenangan:</strong><br>
-                                                • Paraf: Semua jenis dokumen (Group A & B)<br>
-                                                • Review: Setelah paraf OPD dan Kabag
-                                            </p>
-                                            <a href="<?= base_url('legalisasi/dashboard/asisten') ?>" class="btn btn-primary">
-                                                <i class="fas fa-arrow-right me-1"></i>Akses Dashboard Asisten
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
-                            <?php endif; ?>
-
-                            <?php if ($cardVisible('sekda')): ?>
-                                <div class="col-md-6 mb-4 dashboard-card" data-keywords="sekda sekretaris tte stamp">
-                                    <div class="card border-left-warning">
-                                        <div class="card-body">
-                                            <h5 class="card-title text-warning">
-                                                <i class="fas fa-stamp me-2"></i>Dashboard Sekretaris Daerah
-                                            </h5>
-                                            <p class="card-text">
-                                                <strong>Kewenangan:</strong><br>
-                                                • TTE Final: Keputusan Sekda, Instruksi Sekda, SE Sekda<br>
-                                                • Paraf: Peraturan Walikota (lanjut ke Wawako)
-                                            </p>
-                                            <a href="<?= base_url('legalisasi/dashboard/sekda') ?>" class="btn btn-warning">
-                                                <i class="fas fa-arrow-right me-1"></i>Akses Dashboard Sekda
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
-                            <?php endif; ?>
-
-                            <?php if ($cardVisible('wawako')): ?>
-                                <div class="col-md-6 mb-4 dashboard-card" data-keywords="wakil walikota wawako signature paraf">
-                                    <div class="card border-left-info">
-                                        <div class="card-body">
-                                            <h5 class="card-title text-info">
-                                                <i class="fas fa-signature me-2"></i>Dashboard Wakil Walikota
-                                            </h5>
-                                            <p class="card-text">
-                                                <strong>Kewenangan:</strong><br>
-                                                • Paraf: Peraturan Walikota (sebelum TTE Walikota)<br>
-                                                • Review: Keputusan Walikota, Perda
-                                            </p>
-                                            <a href="<?= base_url('legalisasi/dashboard/wawako') ?>" class="btn btn-info">
-                                                <i class="fas fa-arrow-right me-1"></i>Akses Dashboard Wawako
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
-                            <?php endif; ?>
-
-                            <?php if ($cardVisible('walikota')): ?>
-                                <div class="col-md-6 mb-4 dashboard-card" data-keywords="walikota crown tte final">
-                                    <div class="card border-left-danger">
-                                        <div class="card-body">
-                                            <h5 class="card-title text-danger">
-                                                <i class="fas fa-crown me-2"></i>Dashboard Walikota
-                                            </h5>
-                                            <p class="card-text">
-                                                <strong>Kewenangan:</strong><br>
-                                                • TTE Final: Peraturan Walikota, Keputusan Walikota<br>
-                                                • TTE Final: Instruksi Walikota, SE Walikota, Perda
-                                            </p>
-                                            <a href="<?= base_url('legalisasi/dashboard/walikota') ?>" class="btn btn-danger">
-                                                <i class="fas fa-arrow-right me-1"></i>Akses Dashboard Walikota
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
-                            <?php endif; ?>
-
-                        </div>
-                    </div>
+                        <?php endif; ?>
+                    <?php endforeach; ?>
                 </div>
             </div>
         </div>
     </div>
 </div>
 
+<style>
+    :root {
+        --blue-premium: #2563eb;
+        --blue-soft: #eff6ff;
+        --indigo-premium: #4f46e5;
+        --indigo-soft: #eef2ff;
+        --cyan-premium: #0891b2;
+        --cyan-soft: #ecfeff;
+        --orange-premium: #ea580c;
+        --orange-soft: #fff7ed;
+        --teal-premium: #0d9488;
+        --teal-soft: #f0fdfa;
+        --red-premium: #dc2626;
+        --red-soft: #fef2f2;
+    }
+
+    .font-outfit { font-family: 'Outfit', sans-serif; }
+    .transition-all { transition: all 0.3s ease; }
+    .transition-all-slow { transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+    .shadow-hover:hover { transform: translateY(-10px); box-shadow: 0 20px 40px rgba(0,0,0,0.1) !important; }
+    .shadow-blue { box-shadow: 0 10px 20px rgba(37, 99, 235, 0.2); }
+
+    .glass-card {
+        background: rgba(255, 255, 255, 0.9);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.5);
+        border-radius: 1.5rem;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.03);
+    }
+
+    .role-icon-bg { width: 70px; height: 70px; display: flex; align-items: center; justify-content: center; border-radius: 20px; transition: all 0.3s ease; }
+    .dashboard-card:hover .role-icon-bg { transform: scale(1.1) rotate(5deg); }
+
+    .bg-soft-blue { background: var(--blue-soft); }
+    .text-blue { color: var(--blue-premium); }
+    .btn-soft-blue { background: var(--blue-soft); color: var(--blue-premium); border: 1px solid transparent; }
+    .btn-soft-blue:hover { background: var(--blue-premium); color: white; }
+
+    .bg-soft-indigo { background: var(--indigo-soft); }
+    .text-indigo { color: var(--indigo-premium); }
+    .btn-soft-indigo { background: var(--indigo-soft); color: var(--indigo-premium); border: 1px solid transparent; }
+    .btn-soft-indigo:hover { background: var(--indigo-premium); color: white; }
+
+    .bg-soft-cyan { background: var(--cyan-soft); }
+    .text-cyan { color: var(--cyan-premium); }
+    .btn-soft-cyan { background: var(--cyan-soft); color: var(--cyan-premium); border: 1px solid transparent; }
+    .btn-soft-cyan:hover { background: var(--cyan-premium); color: white; }
+
+    .bg-soft-orange { background: var(--orange-soft); }
+    .text-orange { color: var(--orange-premium); }
+    .btn-soft-orange { background: var(--orange-soft); color: var(--orange-premium); border: 1px solid transparent; }
+    .btn-soft-orange:hover { background: var(--orange-premium); color: white; }
+
+    .bg-soft-teal { background: var(--teal-soft); }
+    .text-teal { color: var(--teal-premium); }
+    .btn-soft-teal { background: var(--teal-soft); color: var(--teal-premium); border: 1px solid transparent; }
+    .btn-soft-teal:hover { background: var(--teal-premium); color: white; }
+
+    .bg-soft-red { background: var(--red-soft); }
+    .text-red { color: var(--red-premium); }
+    .btn-soft-red { background: var(--red-soft); color: var(--red-premium); border: 1px solid transparent; }
+    .btn-soft-red:hover { background: var(--red-premium); color: white; }
+
+    .btn-blue-premium { background: var(--blue-premium); color: white; border: none; font-weight: 600; }
+    .btn-blue-premium:hover { background: #1e40af; color: white; transform: translateY(-3px); }
+
+    .alert-soft-success { background-color: #f0fdf4; color: #166534; border-left: 5px solid #22c55e; }
+    .breadcrumb-light .breadcrumb-item + .breadcrumb-item::before { color: rgba(255,255,255,0.4); }
+</style>
+
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        var input = document.getElementById('dashboardFilter');
+        const input = document.getElementById('dashboardFilter');
         if (!input) return;
-        var cards = Array.prototype.slice.call(document.querySelectorAll('.dashboard-card'));
+        const cards = Array.from(document.querySelectorAll('.dashboard-card'));
         input.addEventListener('input', function(e) {
-            var term = (e.target.value || '').toLowerCase().trim();
+            const term = (e.target.value || '').toLowerCase().trim();
             cards.forEach(function(el) {
-                var text = (el.textContent || '').toLowerCase();
-                var keys = (el.getAttribute('data-keywords') || '').toLowerCase();
-                var match = !term || text.indexOf(term) !== -1 || keys.indexOf(term) !== -1;
+                const text = (el.textContent || '').toLowerCase();
+                const keywords = (el.getAttribute('data-keywords') || '').toLowerCase();
+                const match = !term || text.includes(term) || keywords.includes(term);
                 el.style.display = match ? '' : 'none';
+                if (match) {
+                    el.classList.add('animate__animated', 'animate__fadeIn');
+                }
             });
         });
     });
 </script>
-
-<style>
-    /* Legalisasi Module Styling */
-    .legalisasi-module {
-        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-        min-height: 100vh;
-        padding: 20px 0;
-    }
-
-    /* Border left styling */
-    .border-left-warning {
-        border-left: 4px solid #ffc107 !important;
-    }
-
-    .border-left-danger {
-        border-left: 4px solid #dc3545 !important;
-    }
-
-    .border-left-info {
-        border-left: 4px solid #17a2b8 !important;
-    }
-
-    .border-left-success {
-        border-left: 4px solid #28a745 !important;
-    }
-
-    .border-left-primary {
-        border-left: 4px solid #007bff !important;
-    }
-
-    /* Card styling */
-    .card {
-        border-radius: 10px;
-        overflow: hidden;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-        transition: all 0.2s ease;
-    }
-
-    .card:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
-    }
-
-    /* Button enhancements */
-    .btn {
-        border-radius: 6px;
-        font-weight: 500;
-        transition: all 0.2s ease;
-    }
-
-    .btn:hover {
-        transform: translateY(-1px);
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-    }
-
-    /* Alert styling */
-    .alert {
-        border-radius: 8px;
-        border: none;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    }
-</style>

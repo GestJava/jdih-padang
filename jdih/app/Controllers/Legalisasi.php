@@ -242,12 +242,10 @@ class Legalisasi extends BaseController
                 ->where('YEAR(created_at)', $currentYear)
                 ->countAllResults();
             
-            // 3. TTE Tahun Ini - dokumen yang sudah di-TTE Walikota (status 14, Group B, tahun berjalan)
             $tteTahunIni = $this->db->table('harmonisasi_ajuan ha')
                 ->join('harmonisasi_jenis_peraturan j', 'ha.id_jenis_peraturan = j.id', 'left')
                 ->where('ha.id_status_ajuan', HarmonisasiStatus::SELESAI)
-                ->where('YEAR(ha.tte_signed_at)', $currentYear)
-                ->whereIn('j.nama_jenis', ['Peraturan Walikota', 'Keputusan Walikota', 'Instruksi Walikota', 'SE Walikota', 'Perda'])
+                ->where('YEAR(ha.updated_at)', $currentYear)
                 ->where('ha.tte_signed_at IS NOT NULL')
                 ->countAllResults();
             
@@ -317,17 +315,22 @@ class Legalisasi extends BaseController
             // Ambil data sesuai kewenangan
             if ($isAdmin) {
                 // Admin: get all OPD paraf data
-                $this->data['pending_paraf'] = $this->harmonisasiAjuanModel
-                    ->select('harmonisasi_ajuan.*, instansi.nama_instansi, user.nama as nama_pemohon, harmonisasi_status.nama_status, harmonisasi_jenis_peraturan.nama_jenis')
-                    ->join('instansi', 'instansi.id = harmonisasi_ajuan.id_instansi_pemohon', 'left')
-                    ->join('user', 'user.id_user = harmonisasi_ajuan.id_user_pemohon', 'left')
-                    ->join('harmonisasi_status', 'harmonisasi_status.id = harmonisasi_ajuan.id_status_ajuan', 'left')
-                    ->join('harmonisasi_jenis_peraturan', 'harmonisasi_jenis_peraturan.id = harmonisasi_ajuan.id_jenis_peraturan', 'left')
-                    ->where('harmonisasi_ajuan.id_status_ajuan', HarmonisasiStatus::PARAF_OPD)
-                    ->orderBy('harmonisasi_ajuan.created_at', 'DESC')
-                    ->findAll();
+                $this->data['pending_paraf'] = $this->db->table('harmonisasi_ajuan ha')
+                    ->select("ha.*, ha.id as id_ajuan, i.nama_instansi, u.nama as nama_pemohon, s.nama_status, j.nama_jenis, COALESCE(ha.tanggal_selesai, ha.updated_at) AS tanggal_finalisasi")
+                    ->join('instansi i', 'i.id = ha.id_instansi_pemohon', 'left')
+                    ->join('user u', 'u.id_user = ha.id_user_pemohon', 'left')
+                    ->join('harmonisasi_status s', 's.id = ha.id_status_ajuan', 'left')
+                    ->join('harmonisasi_jenis_peraturan j', 'j.id = ha.id_jenis_peraturan', 'left')
+                    ->where('ha.id_status_ajuan', HarmonisasiStatus::PARAF_OPD)
+                    ->orderBy('ha.updated_at', 'DESC')
+                    ->get()
+                    ->getResultArray();
             } else {
                 $this->data['pending_paraf'] = $this->getAjuanForOpdParaf($instansiId);
+            }
+
+            if (!empty($this->data['pending_paraf'])) {
+                log_message('debug', 'Dashboard OPD first item keys: ' . json_encode(array_keys($this->data['pending_paraf'][0])));
             }
 
             // Hitung statistik untuk OPD berdasarkan instansi dan tahun berjalan
@@ -621,7 +624,7 @@ class Legalisasi extends BaseController
             $namaJenis = $jenisPeraturan['nama_jenis'] ?? '';
 
             // Cek apakah ini adalah Keputusan Sekda yang memerlukan TTE final
-            $isKeputusanSekda = in_array($namaJenis, ['Keputusan Sekda', 'Keputusan Sekretaris Daerah', 'Instruksi Sekda', 'Instruksi Sekretaris Daerah', 'Surat Edaran Sekda', 'Surat Edaran Sekretaris Daerah']);
+            $isKeputusanSekda = $this->isSekdaFinalDocument($namaJenis);
 
             if ($user_role === 'sekda' && $isKeputusanSekda) {
                 // Validasi tambahan untuk TTE Sekda - Keputusan Sekda
@@ -824,7 +827,7 @@ class Legalisasi extends BaseController
                     $jenisPeraturan = $this->jenisPeraturanModel->find($ajuan['id_jenis_peraturan']);
                     $namaJenis = $jenisPeraturan['nama_jenis'] ?? '';
 
-                    if (in_array($namaJenis, ['Keputusan Sekda', 'Keputusan Sekretaris Daerah', 'Instruksi Sekda', 'Instruksi Sekretaris Daerah', 'Surat Edaran Sekda', 'Surat Edaran Sekretaris Daerah'])) {
+                    if ($this->isSekdaFinalDocument($namaJenis)) {
                         $new_status = 14; // Keputusan Sekda: TTE langsung selesai
                         $tte_message = 'Dokumen ' . $namaJenis . ' telah ditandatangani elektronik (TTE) oleh Sekretaris Daerah dan SELESAI';
 
@@ -843,10 +846,11 @@ class Legalisasi extends BaseController
 
             if ($new_status) {
                 // Update status ajuan
-                $this->harmonisasiAjuanModel->update($ajuan_id, [
-                    'id_status_ajuan' => $new_status,
-                    'tanggal_selesai' => date('Y-m-d H:i:s')
-                ]);
+                $updateData = ['id_status_ajuan' => $new_status];
+                if ($new_status == HarmonisasiStatus::SELESAI) {
+                    $updateData['tanggal_selesai'] = date('Y-m-d H:i:s');
+                }
+                $this->harmonisasiAjuanModel->update($ajuan_id, $updateData);
 
                 // Tambahkan histori dengan pesan yang lebih spesifik
                 $this->harmonisasiHistoriModel->insert([
@@ -1292,7 +1296,7 @@ class Legalisasi extends BaseController
                         $jenisPeraturan = $this->jenisPeraturanModel->find($ajuan['id_jenis_peraturan']);
                         $namaJenis = $jenisPeraturan['nama_jenis'] ?? '';
 
-                        if (in_array($namaJenis, ['Keputusan Sekda', 'Keputusan Sekretaris Daerah', 'Instruksi Sekda', 'Instruksi Sekretaris Daerah', 'Surat Edaran Sekda', 'Surat Edaran Sekretaris Daerah'])) {
+                        if ($this->isSekdaFinalDocument($namaJenis)) {
                             $user_actions['can_process_tte'] = true; // TTE untuk Keputusan Sekda
                             $user_actions['can_process_paraf'] = false;
                         } else {
@@ -1416,10 +1420,11 @@ class Legalisasi extends BaseController
 
             if ($new_status) {
                 // Update status ajuan
-                $this->harmonisasiAjuanModel->update($ajuan_id, [
-                    'id_status_ajuan' => $new_status,
-                    'tanggal_selesai' => date('Y-m-d H:i:s')
-                ]);
+                $updateData = ['id_status_ajuan' => $new_status];
+                if ($new_status == HarmonisasiStatus::SELESAI) {
+                    $updateData['tanggal_selesai'] = date('Y-m-d H:i:s');
+                }
+                $this->harmonisasiAjuanModel->update($ajuan_id, $updateData);
 
                 // Tambahkan histori
                 $this->harmonisasiHistoriModel->insert([
@@ -1612,15 +1617,19 @@ class Legalisasi extends BaseController
         try {
             // Dokumen Keputusan Sekda yang menunggu TTE Sekda (langsung selesai)
             $result = $this->db->table('harmonisasi_ajuan ha')
-                ->select("ha.*, j.nama_jenis, i.nama_instansi, u.nama as nama_pemohon, COALESCE(ha.tanggal_selesai, ha.updated_at) AS tanggal_finalisasi")
+                ->select("ha.*, ha.id as id_ajuan, j.nama_jenis, i.nama_instansi, u.nama as nama_pemohon, COALESCE(ha.tanggal_selesai, ha.updated_at) AS tanggal_finalisasi")
                 ->join('harmonisasi_jenis_peraturan j', 'ha.id_jenis_peraturan = j.id', 'left')
                 ->join('instansi i', 'ha.id_instansi_pemohon = i.id', 'left')
                 ->join('user u', 'ha.id_user_pemohon = u.id_user', 'left')
                 ->where('ha.id_status_ajuan', HarmonisasiStatus::PARAF_SEKDA)
-                ->whereIn('j.nama_jenis', ['Keputusan Sekda', 'Keputusan Sekretaris Daerah', 'Instruksi Sekda', 'Instruksi Sekretaris Daerah', 'Surat Edaran Sekda', 'Surat Edaran Sekretaris Daerah'])
-                ->orderBy('ha.updated_at', 'DESC')
                 ->get()
                 ->getResultArray();
+
+            // Filter secara manual menggunakan helper untuk case-insensitivity dan fleksibilitas
+            $result = array_filter($result, function($item) {
+                return $this->isSekdaFinalDocument($item['nama_jenis'] ?? '');
+            });
+            $result = array_values($result);
 
             // Debug: Log data untuk troubleshooting
             log_message('debug', 'getAjuanForSekdaTTE result: ' . json_encode([
@@ -1650,15 +1659,19 @@ class Legalisasi extends BaseController
         try {
             // Dokumen selain Keputusan Sekda yang menunggu paraf Sekda (lanjut ke Wawako)
             $result = $this->db->table('harmonisasi_ajuan ha')
-                ->select("ha.*, j.nama_jenis, i.nama_instansi, u.nama as nama_pemohon, COALESCE(ha.tanggal_selesai, ha.updated_at) AS tanggal_finalisasi")
+                ->select("ha.*, ha.id as id_ajuan, j.nama_jenis, i.nama_instansi, u.nama as nama_pemohon, COALESCE(ha.tanggal_selesai, ha.updated_at) AS tanggal_finalisasi")
                 ->join('harmonisasi_jenis_peraturan j', 'ha.id_jenis_peraturan = j.id', 'left')
                 ->join('instansi i', 'ha.id_instansi_pemohon = i.id', 'left')
                 ->join('user u', 'ha.id_user_pemohon = u.id_user', 'left')
                 ->where('ha.id_status_ajuan', HarmonisasiStatus::PARAF_SEKDA)
-                ->whereNotIn('j.nama_jenis', ['Keputusan Sekda', 'Keputusan Sekretaris Daerah', 'Instruksi Sekda', 'Instruksi Sekretaris Daerah', 'Surat Edaran Sekda', 'Surat Edaran Sekretaris Daerah'])
-                ->orderBy('ha.updated_at', 'DESC')
                 ->get()
                 ->getResultArray();
+
+            // Filter secara manual untuk mengecualikan dokumen final Sekda
+            $result = array_filter($result, function($item) {
+                return !$this->isSekdaFinalDocument($item['nama_jenis'] ?? '');
+            });
+            $result = array_values($result);
 
             // Debug: Log data untuk troubleshooting
             log_message('debug', 'getAjuanForSekdaParaf result: ' . json_encode([
@@ -1709,7 +1722,7 @@ class Legalisasi extends BaseController
 
             // Query ajuan dengan filter instansi kewenangan
             $result = $this->db->table('harmonisasi_ajuan ha')
-                ->select("ha.*, j.nama_jenis, i.nama_instansi, COALESCE(ha.tanggal_selesai, ha.updated_at) AS tanggal_finalisasi")
+                ->select("ha.*, ha.id as id_ajuan, j.nama_jenis, i.nama_instansi, COALESCE(ha.tanggal_selesai, ha.updated_at) AS tanggal_finalisasi")
                 ->join('harmonisasi_jenis_peraturan j', 'ha.id_jenis_peraturan = j.id', 'left')
                 ->join('instansi i', 'i.id = ha.id_instansi_pemohon', 'left')
                 ->where('ha.id_status_ajuan', HarmonisasiStatus::PARAF_ASISTEN)
@@ -1750,11 +1763,10 @@ class Legalisasi extends BaseController
         try {
             // Group B: Dokumen yang sudah diparaf Wawako, siap TTE Walikota
             return $this->db->table('harmonisasi_ajuan ha')
-                ->select("ha.*, j.nama_jenis, i.nama_instansi, COALESCE(ha.tanggal_selesai, ha.updated_at) AS tanggal_finalisasi")
+                ->select("ha.*, ha.id as id_ajuan, j.nama_jenis, i.nama_instansi, COALESCE(ha.tanggal_selesai, ha.updated_at) AS tanggal_finalisasi")
                 ->join('harmonisasi_jenis_peraturan j', 'ha.id_jenis_peraturan = j.id', 'left')
                 ->join('instansi i', 'ha.id_instansi_pemohon = i.id', 'left')
                 ->where('ha.id_status_ajuan', HarmonisasiStatus::TTE_WALIKOTA)
-                ->whereIn('j.nama_jenis', ['Peraturan Walikota', 'Keputusan Walikota', 'Instruksi Walikota', 'SE Walikota', 'Perda'])
                 ->orderBy('ha.updated_at', 'DESC')
                 ->get()
                 ->getResultArray();
@@ -1772,11 +1784,10 @@ class Legalisasi extends BaseController
         try {
             // Group B: Dokumen yang sudah diparaf Sekda, menunggu paraf Wawako
             return $this->db->table('harmonisasi_ajuan ha')
-                ->select("ha.*, j.nama_jenis, i.nama_instansi, COALESCE(ha.tanggal_selesai, ha.updated_at) AS tanggal_finalisasi")
+                ->select("ha.*, ha.id as id_ajuan, j.nama_jenis, i.nama_instansi, COALESCE(ha.tanggal_selesai, ha.updated_at) AS tanggal_finalisasi")
                 ->join('harmonisasi_jenis_peraturan j', 'ha.id_jenis_peraturan = j.id', 'left')
                 ->join('instansi i', 'ha.id_instansi_pemohon = i.id', 'left')
                 ->where('ha.id_status_ajuan', HarmonisasiStatus::PARAF_WAWAKO)
-                ->whereIn('j.nama_jenis', ['Peraturan Walikota', 'Keputusan Walikota', 'Instruksi Walikota', 'SE Walikota', 'Perda'])
                 ->orderBy('ha.updated_at', 'DESC')
                 ->get()
                 ->getResultArray();
@@ -1793,7 +1804,7 @@ class Legalisasi extends BaseController
     {
         try {
             $builder = $this->db->table('harmonisasi_ajuan ha')
-                ->select("ha.*, j.nama_jenis, i.nama_instansi, COALESCE(ha.tanggal_selesai, ha.updated_at) AS tanggal_finalisasi")
+                ->select("ha.*, ha.id as id_ajuan, j.nama_jenis, i.nama_instansi, COALESCE(ha.tanggal_selesai, ha.updated_at) AS tanggal_finalisasi")
                 ->join('harmonisasi_jenis_peraturan j', 'ha.id_jenis_peraturan = j.id', 'left')
                 ->join('instansi i', 'ha.id_instansi_pemohon = i.id', 'left')
                 ->where('ha.id_status_ajuan', HarmonisasiStatus::PARAF_OPD);
@@ -1818,7 +1829,7 @@ class Legalisasi extends BaseController
     private function getAjuanForKabagParaf()
     {
         return $this->db->table('harmonisasi_ajuan ha')
-            ->select("ha.*, j.nama_jenis, i.nama_instansi, COALESCE(ha.tanggal_selesai, ha.updated_at) AS tanggal_finalisasi")
+            ->select("ha.*, ha.id as id_ajuan, j.nama_jenis, i.nama_instansi, COALESCE(ha.tanggal_selesai, ha.updated_at) AS tanggal_finalisasi")
             ->join('harmonisasi_jenis_peraturan j', 'ha.id_jenis_peraturan = j.id', 'left')
             ->join('instansi i', 'ha.id_instansi_pemohon = i.id', 'left')
             ->where('ha.id_status_ajuan', HarmonisasiStatus::PARAF_KABAG)
@@ -2297,7 +2308,7 @@ class Legalisasi extends BaseController
 
             // Ambil data TTE Sekda yang sudah selesai (dalam 30 hari terakhir)
             $completedTTE = $this->db->table('harmonisasi_ajuan ha')
-                ->select("ha.*, j.nama_jenis, i.nama_instansi")
+                ->select("ha.*, ha.id as id_ajuan, j.nama_jenis, i.nama_instansi")
                 ->join('harmonisasi_jenis_peraturan j', 'ha.id_jenis_peraturan = j.id', 'left')
                 ->join('instansi i', 'ha.id_instansi_pemohon = i.id', 'left')
                 ->where('ha.id_status_ajuan', HarmonisasiStatus::SELESAI)
@@ -2814,6 +2825,32 @@ class Legalisasi extends BaseController
                 'message' => 'Terjadi kesalahan saat mengambil dokumen'
             ]);
         }
+    }
+
+    /**
+     * Helper untuk mengecek apakah dokumen adalah Keputusan Sekda (Final di Sekda)
+     */
+    private function isSekdaFinalDocument($namaJenis): bool
+    {
+        if (!$namaJenis) return false;
+        
+        $namaJenis = strtolower($namaJenis);
+        $searchTerms = [
+            'keputusan sekda',
+            'keputusan sekretaris daerah',
+            'instruksi sekda',
+            'instruksi sekretaris daerah',
+            'surat edaran sekda',
+            'surat edaran sekretaris daerah'
+        ];
+
+        foreach ($searchTerms as $term) {
+            if (strpos($namaJenis, $term) !== false) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
 }

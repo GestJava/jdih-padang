@@ -1,410 +1,256 @@
+<div class="legalisasi-module detail-view animate__animated animate__fadeIn">
     <div class="container-fluid">
-        <div class="d-sm-flex align-items-center justify-content-between mb-4">
-            <h1 class="h3 mb-0 text-gray-800">
-                <i class="fas fa-file-alt text-primary me-2"></i>Detail Ajuan Legalisasi
-            </h1>
-            <nav aria-label="breadcrumb">
-                <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="<?= base_url('dashboard') ?>">Dashboard</a></li>
-                    <li class="breadcrumb-item"><a href="<?= base_url('legalisasi') ?>">Legalisasi</a></li>
-                    <li class="breadcrumb-item active" aria-current="page">Detail</li>
-                </ol>
-            </nav>
+        <!-- Premium Header -->
+        <div class="detail-header mb-5">
+            <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
+                <div class="header-left">
+                    <div class="d-flex align-items-center mb-2">
+                        <div class="back-link me-3">
+                            <a href="<?= base_url('legalisasi') ?>" class="btn btn-soft-blue rounded-circle">
+                                <i class="fas fa-arrow-left"></i>
+                            </a>
+                        </div>
+                        <h1 class="h2 fw-bold text-dark font-outfit mb-0">Detail Ajuan Legalisasi</h1>
+                    </div>
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb mb-0 ms-5 px-1">
+                            <li class="breadcrumb-item"><a href="<?= base_url('dashboard') ?>">Dashboard</a></li>
+                            <li class="breadcrumb-item"><a href="<?= base_url('legalisasi') ?>">Legalisasi</a></li>
+                            <li class="breadcrumb-item active">Detail</li>
+                        </ol>
+                    </nav>
+                </div>
+                <div class="header-right d-flex gap-2">
+                    <div class="status-badge-premium">
+                        <?php
+                        $statusId = $ajuan['id_status_ajuan'] ?? null;
+                        if ($statusId) {
+                            $statusName = \App\Config\HarmonisasiStatus::getStatusName($statusId);
+                            $badgeClass = 'status-green'; $icon = 'fa-check-circle';
+                            
+                            if ($user_role === 'sekda' && $isKeputusanSekda && $statusId == 11) {
+                                $badgeClass = 'status-blue'; $icon = 'fa-stamp';
+                                $statusName = 'Menunggu TTE Sekda (Final)';
+                            }
+                            ?>
+                            <div class="badge-wrapper <?= $badgeClass ?>">
+                                <i class="fas <?= $icon ?> me-2"></i><?= esc($statusName) ?>
+                            </div>
+                        <?php } ?>
+                    </div>
+                </div>
+            </div>
         </div>
 
-        <!-- Flash Messages -->
         <?php if (session()->getFlashdata('success')): ?>
-            <div class="alert alert-success alert-dismissible fade show" role="alert">
-                <i class="fas fa-check-circle me-2"></i><?= esc(session()->getFlashdata('success')) ?>
+            <div class="alert alert-premium-success alert-dismissible fade show mb-4 animate__animated animate__slideInDown" role="alert">
+                <div class="d-flex align-items-center">
+                    <i class="fas fa-check-circle fs-4 me-3"></i>
+                    <div><?= esc(session()->getFlashdata('success')) ?></div>
+                </div>
                 <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
             </div>
         <?php endif; ?>
 
         <?php if (session()->getFlashdata('error')): ?>
-            <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                <i class="fas fa-exclamation-triangle me-2"></i><?= esc(session()->getFlashdata('error')) ?>
+            <div class="alert alert-premium-danger alert-dismissible fade show mb-4 animate__animated animate__slideInDown" role="alert">
+                <div class="d-flex align-items-center">
+                    <i class="fas fa-exclamation-triangle fs-4 me-3"></i>
+                    <div><?= esc(session()->getFlashdata('error')) ?></div>
+                </div>
                 <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
             </div>
         <?php endif; ?>
 
-        <!-- Safety check -->
         <?php if (!isset($ajuan) || !is_array($ajuan)): ?>
-            <div class="alert alert-danger">
-                <i class="fas fa-exclamation-triangle me-2"></i>Data ajuan tidak tersedia.
+            <div class="glass-card text-center py-5">
+                <i class="fas fa-search fa-3x text-muted mb-3"></i>
+                <h4 class="text-dark">Data Tidak Ditemukan</h4>
+                <p class="text-muted">Maaf, data ajuan yang Anda cari tidak tersedia dalam sistem.</p>
+                <a href="<?= base_url('legalisasi') ?>" class="btn btn-blue-premium mt-3">Kembali ke Dashboard</a>
             </div>
         <?php else: ?>
-            <div class="row">
+            <div class="row g-4">
                 <div class="col-lg-8">
-                    <!-- Detail Ajuan -->
-                    <div class="card shadow mb-4">
-                        <div class="card-header bg-primary text-white py-3">
-                            <h6 class="m-0 font-weight-bold">
+                    <!-- Main Information Card -->
+                    <div class="glass-card info-section mb-4">
+                        <div class="card-header-premium border-bottom">
+                            <h5 class="mb-0 font-outfit text-blue">
                                 <i class="fas fa-info-circle me-2"></i>Informasi Pengajuan
-                            </h6>
+                            </h5>
                         </div>
-                        <div class="card-body">
-                            <div class="row">
+                        <div class="card-body p-4">
+                            <div class="row g-4">
                                 <div class="col-md-6">
-                                    <table class="table table-borderless">
-                                        <tr>
-                                            <th width="40%" class="text-muted">ID Ajuan</th>
-                                            <td>
-                                                <span class="badge bg-secondary"><?= esc($ajuan['id'] ?? $ajuan['id_ajuan'] ?? '-') ?></span>
-                                                <?php if ($user_role === 'sekda' && $isKeputusanSekda): ?>
-                                                    <br><small class="text-success mt-1 d-block">
-                                                        <i class="fas fa-stamp me-1"></i>
-                                                        <strong>TTE Sekda:</strong> Dokumen ini akan langsung selesai setelah TTE
-                                                    </small>
-                                                <?php endif; ?>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <th class="text-muted">Judul Peraturan</th>
-                                            <td>
-                                                <?= esc($ajuan['judul_peraturan'] ?? '-') ?>
-                                                <?php if ($user_role === 'sekda' && $isKeputusanSekda): ?>
-                                                    <br><small class="text-success mt-1 d-block">
-                                                        <i class="fas fa-stamp me-1"></i>
-                                                        <strong>TTE Sekda:</strong> Dokumen ini akan langsung selesai setelah TTE
-                                                    </small>
-                                                <?php endif; ?>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <th class="text-muted">Jenis Peraturan</th>
-                                            <td>
-                                                <?php if (!empty($ajuan['nama_jenis'])): ?>
-                                                    <?php
-                                                    $badgeClass = 'bg-info';
-                                                    $badgeText = $ajuan['nama_jenis'];
-
-                                                    // Khusus untuk TTE Sekda
-                                                    if ($user_role === 'sekda' && $isKeputusanSekda) {
-                                                        $badgeClass = 'bg-success';
-                                                        $badgeText = $ajuan['nama_jenis'] . ' (TTE Final)';
-                                                    }
-                                                    ?>
-                                                    <span class="badge <?= $badgeClass ?> text-white"><?= esc($badgeText) ?></span>
-
-                                                    <?php if ($user_role === 'sekda' && $isKeputusanSekda): ?>
-                                                        <br><small class="text-success mt-1 d-block">
-                                                            <i class="fas fa-stamp me-1"></i>
-                                                            Dokumen ini akan langsung selesai setelah TTE Sekda
-                                                        </small>
-                                                    <?php endif; ?>
-                                                <?php else: ?>
-                                                    <span class="text-muted">ID: <?= esc($ajuan['id_jenis_peraturan'] ?? '-') ?></span>
-                                                <?php endif; ?>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <th class="text-muted">Instansi Pemohon</th>
-                                            <td>
-                                                <?php if (!empty($ajuan['nama_instansi'])): ?>
-                                                    <i class="fas fa-building me-1 text-primary"></i>
-                                                    <?= esc($ajuan['nama_instansi']) ?>
-                                                <?php else: ?>
-                                                    <span class="text-muted">ID: <?= esc($ajuan['id_instansi_pemohon'] ?? '-') ?></span>
-                                                <?php endif; ?>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <th class="text-muted">User Pemohon</th>
-                                            <td>
-                                                <?php if (!empty($ajuan['nama_pemohon'])): ?>
-                                                    <i class="fas fa-user me-1 text-success"></i>
-                                                    <?= esc($ajuan['nama_pemohon']) ?>
-                                                <?php else: ?>
-                                                    <span class="text-muted">ID: <?= esc($ajuan['id_user_pemohon'] ?? '-') ?></span>
-                                                <?php endif; ?>
-                                            </td>
-                                        </tr>
-                                    </table>
+                                    <div class="info-group mb-4">
+                                        <label class="info-label">Judul Peraturan</label>
+                                        <div class="info-value fw-bold fs-5 text-dark"><?= esc($ajuan['judul_peraturan'] ?? '-') ?></div>
+                                    </div>
+                                    <div class="info-group mb-4">
+                                        <label class="info-label">Jenis Peraturan</label>
+                                        <div class="info-value">
+                                            <?php if (!empty($ajuan['nama_jenis'])): ?>
+                                                <span class="badge bg-soft-blue text-blue fs-6 px-3 py-2 border">
+                                                    <?= esc($ajuan['nama_jenis']) ?>
+                                                </span>
+                                            <?php else: ?>
+                                                <span class="text-muted">ID: <?= esc($ajuan['id_jenis_peraturan'] ?? '-') ?></span>
+                                            <?php endif; ?>
+                                        </div>
+                                    </div>
+                                    <div class="info-group">
+                                        <label class="info-label">ID Ajuan</label>
+                                        <div class="info-value text-muted font-monospace">#<?= esc($ajuan['id'] ?? $ajuan['id_ajuan'] ?? '-') ?></div>
+                                    </div>
                                 </div>
                                 <div class="col-md-6">
-                                    <table class="table table-borderless">
-                                        <tr>
-                                            <th width="40%" class="text-muted">Tanggal Pengajuan</th>
-                                            <td>
-                                                <i class="fas fa-calendar me-1"></i>
-                                                <?= esc($ajuan['tanggal_pengajuan_formatted'] ?? '-') ?>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <th class="text-muted">Status Saat Ini</th>
-                                            <td>
-                                                <?php
-                                                $statusId = $ajuan['id_status_ajuan'] ?? null;
-                                                if ($statusId) {
-                                                    $statusName = \App\Config\HarmonisasiStatus::getStatusName($statusId);
-                                                    $badgeClass = 'bg-success';
-                                                    $icon = 'fa-check-circle';
-
-                                                    // Khusus untuk TTE Sekda
-                                                    if ($user_role === 'sekda' && $isKeputusanSekda && $statusId == 11) {
-                                                        $badgeClass = 'bg-info';
-                                                        $icon = 'fa-stamp';
-                                                        $statusName = 'Menunggu TTE Sekda (Final)';
-                                                    }
-
-                                                    echo '<span class="badge ' . $badgeClass . ' text-white fs-6">';
-                                                    echo '<i class="fas ' . $icon . ' me-1"></i>' . esc($statusName);
-                                                    echo '</span>';
-
-                                                    // Tambahkan informasi khusus untuk TTE Sekda
-                                                    if ($user_role === 'sekda' && $isKeputusanSekda && $statusId == 11) {
-                                                        echo '<br><small class="text-info mt-1 d-block">';
-                                                        echo '<i class="fas fa-exclamation-triangle me-1"></i>';
-                                                        echo 'TTE Sekda akan menghasilkan dokumen FINAL dan SELESAI';
-                                                        echo '</small>';
-                                                    }
-                                                } else {
-                                                    echo '<span class="badge bg-secondary text-white fs-6">';
-                                                    echo '<i class="fas fa-question-circle me-1"></i>Tidak diketahui';
-                                                    echo '</span>';
-                                                }
-                                                ?>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <th class="text-muted">Tanggal Selesai</th>
-                                            <td>
-                                                <?php if (!empty($ajuan['tanggal_selesai'])): ?>
-                                                    <i class="fas fa-check-circle me-1 text-success"></i>
-                                                    <?= date('d F Y H:i', strtotime($ajuan['tanggal_selesai'])) ?>
-                                                <?php else: ?>
-                                                    <i class="fas fa-clock me-1 text-muted"></i>
-                                                    <span class="text-muted">Belum selesai</span>
-                                                <?php endif; ?>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <th class="text-muted">Petugas Verifikasi</th>
-                                            <td>
-                                                <?php if (!empty($ajuan['nama_verifikator'])): ?>
-                                                    <i class="fas fa-user-check me-1 text-success"></i>
-                                                    <?= esc($ajuan['nama_verifikator']) ?>
-                                                <?php else: ?>
-                                                    <i class="fas fa-user-times me-1 text-muted"></i>
-                                                    <span class="text-muted">Belum Ditugaskan</span>
-                                                <?php endif; ?>
-                                            </td>
-                                        </tr>
-                                    </table>
+                                    <div class="info-group mb-4">
+                                        <label class="info-label">Instansi Pemohon</label>
+                                        <div class="info-value d-flex align-items-center">
+                                            <div class="mini-icon bg-soft-blue text-blue me-2"><i class="fas fa-building"></i></div>
+                                            <span class="text-dark fw-medium"><?= esc($ajuan['nama_instansi'] ?? '-') ?></span>
+                                        </div>
+                                    </div>
+                                    <div class="info-group mb-4">
+                                        <label class="info-label">User Pemohon</label>
+                                        <div class="info-value d-flex align-items-center">
+                                            <div class="mini-icon bg-soft-green text-green me-2"><i class="fas fa-user-circle"></i></div>
+                                            <span class="text-dark fw-medium"><?= esc($ajuan['nama_pemohon'] ?? '-') ?></span>
+                                        </div>
+                                    </div>
+                                    <div class="info-group">
+                                        <label class="info-label">Tanggal Pengajuan</label>
+                                        <div class="info-value d-flex align-items-center">
+                                            <div class="mini-icon bg-soft-purple text-purple me-2"><i class="fas fa-calendar-alt"></i></div>
+                                            <span class="text-muted"><?= esc($ajuan['tanggal_pengajuan_formatted'] ?? '-') ?></span>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
 
                             <?php if (!empty($ajuan['keterangan'])): ?>
-                                <div class="mt-3">
-                                    <h6 class="text-muted">Keterangan:</h6>
-                                    <div class="alert alert-light">
-                                        <?= nl2br(esc($ajuan['keterangan'])) ?>
-                                    </div>
+                                <div class="keterangan-box mt-4 p-3 rounded-3 bg-light border-start border-blue border-4">
+                                    <label class="info-label mb-2 d-block">Catatan / Keterangan:</label>
+                                    <p class="text-muted italic mb-0">"<?= nl2br(esc($ajuan['keterangan'])) ?>"</p>
                                 </div>
                             <?php endif; ?>
                         </div>
                     </div>
 
-                    <!-- Daftar Dokumen -->
-                    <div class="card shadow mb-4">
-                        <div class="card-header bg-success text-white py-3">
-                            <h6 class="m-0 font-weight-bold">
+                    <!-- Documents Table -->
+                    <div class="glass-card mb-4 document-section">
+                        <div class="card-header-premium border-bottom d-flex align-items-center justify-content-between">
+                            <h5 class="mb-0 font-outfit text-indigo">
                                 <i class="fas fa-paperclip me-2"></i>Dokumen Final
-                                <?php if (isset($dokumen) && is_array($dokumen)): ?>
-                                    <span class="badge bg-light text-dark ms-2"><?= count($dokumen) ?> file</span>
-                                <?php endif; ?>
-                            </h6>
+                            </h5>
+                            <?php if (isset($dokumen) && is_array($dokumen)): ?>
+                                <span class="badge bg-soft-indigo text-indigo border"><?= count($dokumen) ?> File</span>
+                            <?php endif; ?>
                         </div>
-                        <div class="card-body">
+                        <div class="card-body p-0">
                             <?php if (isset($dokumen) && !empty($dokumen)): ?>
-                                <div class="list-group list-group-flush">
-                                    <?php foreach ($dokumen as $doc) : ?>
-                                        <div class="list-group-item d-flex justify-content-between align-items-start">
-                                            <div class="ms-2 me-auto">
-                                                <div class="fw-bold text-primary">
-                                                    <i class="fas fa-file-alt me-1"></i>
-                                                    <?= esc(ucwords(str_replace('_', ' ', $doc['tipe_dokumen'] ?? 'Dokumen'))) ?>
-                                                </div>
-                                                <p class="mb-1"><?= esc($doc['nama_file_original'] ?? $doc['file_dokumen'] ?? 'Unknown file') ?></p>
-                                                <small class="text-muted">
-                                                    <i class="fas fa-clock me-1"></i>
-                                                    Diunggah: <?= isset($doc['created_at']) ? date('d F Y H:i', strtotime($doc['created_at'])) : 'Tidak diketahui' ?>
-                                                </small>
-                                            </div>
-                                            <div class="btn-group" role="group">
-                                                <button type="button" class="btn btn-primary btn-sm"
-                                                    onclick="previewPDF('<?= base_url('legalisasi/preview/' . ($doc['id'] ?? $ajuan['id'])) ?>', '<?= esc($doc['nama_file_original'] ?? 'Dokumen') ?>')"
-                                                    title="Preview PDF">
-                                                    <i class="fas fa-eye"></i> Preview
-                                                </button>
-                                                <?php if ($doc['tipe_dokumen'] === 'FINAL_TTE'): ?>
-                                                    <a href="<?= base_url('legalisasi/download/' . $ajuan['id']) ?>"
-                                                        class="btn btn-success btn-sm" title="Download Dokumen TTE">
-                                                        <i class="fas fa-download"></i> Download TTE
-                                                    </a>
-                                                    <?php if ($user_role === 'sekda' && $isKeputusanSekda): ?>
-                                                        <span class="badge bg-success ms-1" title="Dokumen TTE Sekda Final">
-                                                            <i class="fas fa-check-circle"></i> Final
-                                                        </span>
-                                                    <?php endif; ?>
-                                                <?php endif; ?>
-                                            </div>
-                                        </div>
-                                    <?php endforeach; ?>
+                                <div class="table-responsive">
+                                    <table class="table table-premium mb-0">
+                                        <thead>
+                                            <tr>
+                                                <th>Tipe & Nama File</th>
+                                                <th class="text-center">Tgl Unggah</th>
+                                                <th class="text-end">Aksi</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <?php foreach ($dokumen as $doc) : ?>
+                                                <tr>
+                                                    <td>
+                                                        <div class="d-flex align-items-center">
+                                                            <div class="file-icon bg-light rounded-3 p-2 me-3">
+                                                                <i class="fas fa-file-pdf text-danger fs-4"></i>
+                                                            </div>
+                                                            <div>
+                                                                <div class="fw-bold text-dark mb-0"><?= esc(ucwords(str_replace('_', ' ', $doc['tipe_dokumen'] ?? 'Dokumen'))) ?></div>
+                                                                <div class="text-muted small text-truncate" style="max-width: 250px;"><?= esc($doc['nama_file_original'] ?? $doc['file_dokumen'] ?? 'Unknown file') ?></div>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                    <td class="text-center">
+                                                        <div class="small text-muted"><?= isset($doc['created_at']) ? date('d M Y', strtotime($doc['created_at'])) : '-' ?></div>
+                                                        <div class="text-muted tiny mt-1"><?= isset($doc['created_at']) ? date('H:i', strtotime($doc['created_at'])) : '' ?> WIB</div>
+                                                    </td>
+                                                    <td class="text-end">
+                                                        <div class="d-flex justify-content-end gap-2 px-3">
+                                                            <button type="button" class="btn btn-action-circle btn-soft-blue"
+                                                                onclick="previewPDF('<?= base_url('legalisasi/preview/' . ($doc['id'] ?? $ajuan['id'])) ?>', '<?= esc($doc['nama_file_original'] ?? 'Dokumen') ?>')"
+                                                                title="Preview PDF">
+                                                                <i class="fas fa-eye"></i>
+                                                            </button>
+                                                            <?php if ($doc['tipe_dokumen'] === 'FINAL_TTE'): ?>
+                                                                <a href="<?= base_url('legalisasi/download/' . $ajuan['id']) ?>"
+                                                                    class="btn btn-action-circle btn-soft-green" title="Download TTE">
+                                                                    <i class="fas fa-download"></i>
+                                                                </a>
+                                                            <?php endif; ?>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            <?php endforeach; ?>
+                                        </tbody>
+                                    </table>
                                 </div>
                             <?php else: ?>
-                                <div class="text-center py-4">
-                                    <i class="fas fa-folder-open fa-3x text-muted mb-3"></i>
-                                    <p class="text-muted">Belum ada dokumen final yang tersedia</p>
-                                    <small class="text-muted">Dokumen final akan muncul setelah proses paraf atau TTE selesai</small>
-                                    <?php if ($user_role === 'sekda' && $isKeputusanSekda): ?>
-                                        <div class="mt-3">
-                                            <div class="alert alert-info">
-                                                <i class="fas fa-info-circle me-2"></i>
-                                                <strong>TTE Sekda:</strong> Dokumen akan langsung selesai setelah TTE dan tidak memerlukan persetujuan lebih lanjut.
-                                            </div>
-                                        </div>
-                                    <?php endif; ?>
+                                <div class="text-center py-5 opacity-75">
+                                    <div class="empty-docs-icon mb-3">
+                                        <i class="fas fa-folder-open fa-3x text-muted"></i>
+                                    </div>
+                                    <p class="text-muted mb-0">Belum ada dokumen final yang diunggah.</p>
+                                    <small class="text-muted">Dokumen ini akan tersedia setelah proses paraf selesai.</small>
                                 </div>
                             <?php endif; ?>
                         </div>
                     </div>
-
-                    <!-- Data TTE Result -->
-                    <?php if (isset($tte_data) && !empty($tte_data) && !empty($tte_data['tte_file_path'])): ?>
-                        <div class="card shadow mb-4" id="tteResultCard">
-                            <div class="card-header bg-primary text-white py-3">
-                                <h6 class="m-0 font-weight-bold">
-                                    <i class="fas fa-stamp me-2"></i>Hasil Tanda Tangan Elektronik (TTE)
-                                </h6>
-                            </div>
-                            <div class="card-body">
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <table class="table table-borderless">
-                                            <tr>
-                                                <th width="40%" class="text-muted">Nomor Peraturan</th>
-                                                <td>
-                                                    <span class="badge bg-info text-white"><?= esc($tte_data['nomor_peraturan'] ?? '-') ?></span>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <th class="text-muted">Jenis Peraturan</th>
-                                                <td><?= esc($tte_data['jenis_peraturan'] ?? '-') ?></td>
-                                            </tr>
-                                            <tr>
-                                                <th class="text-muted">Tanggal Pengesahan</th>
-                                                <td>
-                                                    <i class="fas fa-calendar me-1"></i>
-                                                    <?= isset($tte_data['tanggal_pengesahan']) ? date('d F Y', strtotime($tte_data['tanggal_pengesahan'])) : '-' ?>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <th class="text-muted">User Role</th>
-                                                <td>
-                                                    <span class="badge bg-secondary"><?= esc($tte_data['tte_user_role'] ?? '-') ?></span>
-                                                </td>
-                                            </tr>
-                                        </table>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <table class="table table-borderless">
-                                            <tr>
-                                                <th width="40%" class="text-muted">TTE Completed At</th>
-                                                <td>
-                                                    <i class="fas fa-clock me-1"></i>
-                                                    <?= isset($tte_data['tte_completed_at']) ? date('d F Y H:i', strtotime($tte_data['tte_completed_at'])) : '-' ?>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <th class="text-muted">Document URL</th>
-                                                <td>
-                                                    <?php if (!empty($tte_data['document_url'])): ?>
-                                                        <a href="<?= esc($tte_data['document_url']) ?>" target="_blank" class="btn btn-sm btn-outline-primary">
-                                                            <i class="fas fa-external-link-alt me-1"></i> Buka Dokumen
-                                                        </a>
-                                                    <?php else: ?>
-                                                        <span class="text-muted">-</span>
-                                                    <?php endif; ?>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <th class="text-muted">File Path</th>
-                                                <td>
-                                                    <small class="text-muted"><?= esc($tte_data['tte_file_path'] ?? '-') ?></small>
-                                                </td>
-                                            </tr>
-                                        </table>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    <?php endif; ?>
                 </div>
 
                 <div class="col-lg-4">
-                    <!-- Histori Ajuan -->
-                    <div class="card shadow mb-4">
-                        <div class="card-header bg-warning text-dark py-3">
-                            <h6 class="m-0 font-weight-bold">
-                                <i class="fas fa-history me-2"></i>Riwayat Proses
-                            </h6>
+                    <!-- History Timeline Card -->
+                    <div class="glass-card history-section h-100">
+                        <div class="card-header-premium border-bottom">
+                            <h5 class="mb-0 font-outfit text-dark">
+                                <i class="fas fa-history me-2 text-muted"></i>Riwayat Proses
+                            </h5>
                         </div>
-                        <div class="card-body">
+                        <div class="card-body p-4">
                             <?php if (isset($histori) && !empty($histori)): ?>
-                                <div class="timeline-container" id="timelineContainer">
+                                <div class="premium-timeline">
                                     <?php
-                                    // Data sudah dalam urutan DESC (terbaru ke terlama) dari controller
                                     $totalItems = count($histori);
-                                    $showLimit = 5; // Tampilkan 5 item terbaru
-                                    $showMore = $totalItems > $showLimit;
+                                    $showLimit = 5;
                                     ?>
-
                                     <?php foreach ($histori as $index => $item) : ?>
-                                        <div class="timeline-item <?= $index >= $showLimit ? 'timeline-item-hidden' : '' ?>"
-                                            data-index="<?= $index ?>">
-                                            <div class="timeline-marker bg-primary"></div>
-                                            <div class="timeline-content">
-                                                <h6 class="timeline-title text-primary">
-                                                    <?= esc($item['status_sekarang'] ?? 'Status Update') ?>
-                                                </h6>
-                                                <p class="timeline-description">
-                                                    <?= esc($item['keterangan'] ?? 'Tidak ada keterangan') ?>
-                                                </p>
-                                                <small class="timeline-time text-muted">
-                                                    <i class="fas fa-clock me-1"></i>
-                                                    <?= esc($item['tanggal_formatted']) ?>
-                                                    oleh <?= esc($item['nama_user']) ?>
-                                                </small>
+                                        <div class="timeline-box <?= $index >= $showLimit ? 'timeline-item-hidden' : '' ?>" data-index="<?= $index ?>">
+                                            <div class="timeline-node"></div>
+                                            <div class="timeline-info">
+                                                <div class="timeline-header d-flex justify-content-between align-items-start mb-1">
+                                                    <div class="timeline-status fw-bold text-dark small text-uppercase letter-spacing-1"><?= esc($item['status_sekarang'] ?? 'Update') ?></div>
+                                                    <div class="timeline-date tiny text-muted"><?= date('d M', strtotime($item['tanggal_aksi'])) ?></div>
+                                                </div>
+                                                <div class="timeline-desc text-muted mb-2"><?= esc($item['keterangan'] ?? 'Tanpa keterangan') ?></div>
+                                                <div class="timeline-footer d-flex align-items-center">
+                                                    <div class="timeline-user badge bg-soft-dark text-dark tiny px-2 py-1">
+                                                        <i class="fas fa-user-circle me-1"></i><?= esc($item['nama_user']) ?>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     <?php endforeach; ?>
                                 </div>
-
-                                <?php if ($showMore): ?>
-                                    <div class="text-center mt-3">
-                                        <button type="button" class="btn btn-outline-primary btn-sm" id="showMoreBtn">
-                                            <i class="fas fa-chevron-down me-1"></i>
-                                            Tampilkan <?= $totalItems - $showLimit ?> riwayat sebelumnya
-                                        </button>
-                                        <button type="button" class="btn btn-outline-secondary btn-sm d-none" id="showLessBtn">
-                                            <i class="fas fa-chevron-up me-1"></i>
-                                            Sembunyikan riwayat lama
-                                        </button>
-                                    </div>
+                                <?php if ($totalItems > $showLimit): ?>
+                                    <button class="btn btn-link btn-sm w-100 mt-3 text-blue" id="showMoreBtn">
+                                        <i class="fas fa-chevron-down me-1"></i>Lihat Lebih Banyak
+                                    </button>
                                 <?php endif; ?>
                             <?php else: ?>
-                                <div class="text-center py-4">
-                                    <i class="fas fa-history fa-3x text-muted mb-3"></i>
-                                    <p class="text-muted">Belum ada riwayat proses</p>
-                                    <?php if ($user_role === 'sekda' && $isKeputusanSekda): ?>
-                                        <div class="mt-3">
-                                            <div class="alert alert-info" style="background-color: #20c997; border-color: #20c997; color: #fff;">
-                                                <i class="fas fa-exclamation-triangle me-2"></i>
-                                                <strong>TTE Sekda:</strong> Setelah TTE, dokumen akan langsung selesai dan tidak ada tahap berikutnya.
-                                            </div>
-                                        </div>
-                                    <?php endif; ?>
+                                <div class="text-center py-5 opacity-50">
+                                    <i class="fas fa-stream fa-3x mb-3"></i>
+                                    <p class="small">Belum ada data riwayat.</p>
                                 </div>
                             <?php endif; ?>
                         </div>
@@ -412,96 +258,53 @@
                 </div>
             </div>
 
-            <!-- Action Buttons -->
-            <div class="row">
-                <div class="col-12">
-                    <div class="card shadow mb-4">
-                        <div class="card-body">
-                            <div class="d-flex flex-wrap gap-2">
-                                <!-- Back Button -->
-                                <a href="<?= base_url('legalisasi') ?>" class="btn btn-secondary">
-                                    <i class="fas fa-arrow-left me-1"></i> Kembali ke Dashboard
-                                </a>
-
-                                <!-- Debug Information -->
-                                <?php
-                                $user_role = session('user')['nama_role'] ?? 'unknown';
-                                $status_id = $ajuan['id_status_ajuan'] ?? 'unknown';
-                                echo "<!-- Debug: User role: $user_role, Status ID: $status_id -->";
-                                echo "<!-- Debug: User actions: " . json_encode($user_actions ?? []) . " -->";
-                                ?>
-
-                                <!-- Action buttons based on user role and status -->
-                                <?php if (isset($user_actions)): ?>
-
-                                    <?php if (isset($user_actions['can_process_tte']) && $user_actions['can_process_tte']): ?>
-                                        <?php
-                                        $user_role = $user_role ?? session('user')['nama_role'] ?? '';
-                                        // Use data already passed from controller
-                                        $namaJenis = $ajuan['nama_jenis'] ?? '';
-                                        $isKeputusanSekda = $isKeputusanSekda ?? false;
-
-                                        $tte_text = 'Proses TTE';
-                                        if ($user_role === 'sekda' && $isKeputusanSekda) {
-                                            $tte_text = 'Proses TTE Sekda (Final)';
-                                        } elseif ($user_role === 'sekda') {
-                                            $tte_text = 'Proses TTE (Lanjut ke Wawako)';
-                                        } elseif ($user_role === 'walikota') {
-                                            $tte_text = 'Proses TTE (Final)';
-                                        }
-                                        ?>
-                                        <?php if ($user_role === 'sekda' && $isKeputusanSekda): ?>
-                                            <button type="button" class="btn btn-success" onclick="processTTESekda(<?= $ajuan['id'] ?>)">
-                                                <i class="fas fa-stamp me-1"></i> <?= $tte_text ?>
-                                            </button>
-                                            <div class="mt-2">
-                                                <small class="text-warning">
-                                                    <i class="fas fa-exclamation-triangle me-1"></i>
-                                                    TTE Sekda akan menghasilkan dokumen FINAL dan SELESAI
-                                                </small>
-                                            </div>
-                                        <?php else: ?>
-                                            <button type="button" class="btn btn-success" onclick="processTTE(<?= $ajuan['id'] ?>)">
-                                                <i class="fas fa-stamp me-1"></i> <?= $tte_text ?>
-                                            </button>
-                                        <?php endif; ?>
-                                    <?php endif; ?>
-
-                                    <?php if (isset($user_actions['can_process_paraf']) && $user_actions['can_process_paraf']): ?>
-                                        <?php
-                                        $user_role = session('user')['nama_role'] ?? '';
-                                        $paraf_text = 'Proses Paraf';
-                                        if ($user_role === 'sekda') {
-                                            $paraf_text = 'Proses Paraf (Lanjut ke Wawako)';
-                                        } elseif ($user_role === 'wawako') {
-                                            $paraf_text = 'Proses Paraf (Lanjut ke Walikota)';
-                                        } elseif ($user_role === 'kabag') {
-                                            $paraf_text = 'Proses Paraf (Lanjut ke Asisten)';
-                                        } elseif ($user_role === 'asisten') {
-                                            $paraf_text = 'Proses Paraf (Lanjut ke Sekda)';
-                                        } elseif ($user_role === 'opd') {
-                                            $paraf_text = 'Proses Paraf (Lanjut ke Kabag)';
-                                        }
-                                        ?>
-                                        <button type="button" class="btn btn-primary" onclick="processParaf(<?= $ajuan['id'] ?>)">
-                                            <i class="fas fa-signature me-1"></i> <?= $paraf_text ?>
-                                        </button>
-                                    <?php endif; ?>
-
-                                    <?php if (isset($user_actions['can_revise_to_finalisasi']) && $user_actions['can_revise_to_finalisasi']): ?>
-                                        <button type="button" class="btn btn-warning" onclick="revisiKeFinalisasi(<?= $ajuan['id'] ?>)">
-                                            <i class="fas fa-undo me-1"></i> Revisi ke Finalisasi
-                                        </button>
-                                    <?php endif; ?>
-
+            <!-- Footer Action Bar -->
+            <div class="action-footer-bar mt-5 animate__animated animate__fadeInUp">
+                <div class="glass-card p-3 shadow-premium">
+                    <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
+                        <div class="footer-left">
+                            <a href="<?= base_url('legalisasi') ?>" class="btn btn-outline-dark px-4 rounded-pill">
+                                <i class="fas fa-arrow-left me-2"></i>Dashboard
+                            </a>
+                        </div>
+                        <div class="footer-right d-flex gap-2">
+                            <?php if (isset($user_actions)): ?>
+                                <?php if (isset($user_actions['can_process_tte']) && $user_actions['can_process_tte']): ?>
+                                    <?php
+                                    $tte_text = 'Proses TTE';
+                                    if ($user_role === 'sekda' && $isKeputusanSekda) $tte_text = 'Proses TTE Sekda (Final)';
+                                    elseif ($user_role === 'sekda') $tte_text = 'Proses TTE (Sekda)';
+                                    elseif ($user_role === 'walikota') $tte_text = 'Proses TTE (Walikota)';
+                                    ?>
+                                    <button type="button" class="btn btn-green-premium px-4 rounded-pill shadow-sm" onclick="<?= ($user_role === 'sekda' && $isKeputusanSekda) ? 'processTTESekda' : 'processTTE' ?>(<?= $ajuan['id'] ?>)">
+                                        <i class="fas fa-stamp me-2"></i> <?= $tte_text ?>
+                                    </button>
                                 <?php endif; ?>
-                            </div>
+
+                                <?php if (isset($user_actions['can_process_paraf']) && $user_actions['can_process_paraf']): ?>
+                                    <?php
+                                    $paraf_text = 'Proses Paraf';
+                                    $roles_next = ['sekda' => 'Wawako', 'wawako' => 'Walikota', 'kabag' => 'Asisten', 'asisten' => 'Sekda', 'opd' => 'Kabag'];
+                                    if (isset($roles_next[$user_role])) $paraf_text = "Paraf (Lanjut ke " . $roles_next[$user_role] . ")";
+                                    ?>
+                                    <button type="button" class="btn btn-blue-premium px-4 rounded-pill shadow-sm" onclick="processParaf(<?= $ajuan['id'] ?>)">
+                                        <i class="fas fa-signature me-2"></i> <?= $paraf_text ?>
+                                    </button>
+                                <?php endif; ?>
+
+                                <?php if (isset($user_actions['can_revise_to_finalisasi']) && $user_actions['can_revise_to_finalisasi']): ?>
+                                    <button type="button" class="btn btn-soft-warning px-4 rounded-pill border" onclick="revisiKeFinalisasi(<?= $ajuan['id'] ?>)">
+                                        <i class="fas fa-undo me-2"></i> Revisi
+                                    </button>
+                                <?php endif; ?>
+                            <?php endif; ?>
                         </div>
                     </div>
                 </div>
             </div>
         <?php endif; ?>
     </div>
+</div>
 
     <!-- TTE Loading Overlay -->
     <div id="tteLoadingOverlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 9999; justify-content: center; align-items: center;">
@@ -516,166 +319,211 @@
     </div>
 
     <style>
-        .timeline-container {
-            position: relative;
-            padding-left: 30px;
+        :root {
+            --blue-premium: #2563eb;
+            --blue-soft: #eff6ff;
+            --indigo-premium: #4f46e5;
+            --green-premium: #10b981;
+            --green-soft: #ecfdf5;
+            --purple-premium: #8b5cf6;
+            --purple-soft: #f5f3ff;
+            --glass-bg: rgba(255, 255, 255, 0.8);
+            --glass-border: rgba(255, 255, 255, 0.4);
+            --card-shadow: 0 8px 32px rgba(31, 38, 135, 0.07);
         }
 
-        .timeline-container:before {
-            content: '';
-            position: absolute;
-            left: 15px;
-            top: 0;
-            bottom: 0;
-            width: 2px;
-            background: #e9ecef;
-        }
+        .font-outfit { font-family: 'Outfit', sans-serif; }
+        .letter-spacing-1 { letter-spacing: 1px; }
+        .tiny { font-size: 0.7rem; }
 
-        .timeline-item {
-            position: relative;
-            margin-bottom: 20px;
-        }
-
-        .timeline-marker {
-            position: absolute;
-            left: -22px;
-            top: 5px;
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            border: 2px solid #fff;
-            box-shadow: 0 0 0 2px #007bff;
-        }
-
-        .timeline-content {
-            background: #f8f9fa;
-            padding: 15px;
-            border-radius: 8px;
-            border-left: 3px solid #007bff;
-        }
-
-        .timeline-title {
-            font-size: 14px;
-            font-weight: 600;
-            margin-bottom: 5px;
-        }
-
-        .timeline-description {
-            font-size: 13px;
-            color: #6c757d;
-            margin-bottom: 8px;
-        }
-
-        .timeline-time {
-            font-size: 12px;
-        }
-
-        .card {
-            border-radius: 10px;
+        .glass-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            border-radius: 1.25rem;
+            box-shadow: var(--card-shadow);
             overflow: hidden;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, .1);
-        }
-
-        .table th {
-            color: #6c757d;
-            font-weight: 600;
-        }
-
-        .badge {
-            font-size: 0.75em;
-        }
-
-        .list-group-item {
-            border: none;
-            border-bottom: 1px solid #e9ecef;
-        }
-
-        .list-group-item:last-child {
-            border-bottom: none;
-        }
-
-        /* Timeline optimization styles */
-        .timeline-item-hidden {
-            display: none !important;
-        }
-
-        .timeline-container {
-            max-height: 600px;
-            overflow-y: auto;
-            padding-right: 10px;
-        }
-
-        .timeline-container::-webkit-scrollbar {
-            width: 6px;
-        }
-
-        .timeline-container::-webkit-scrollbar-track {
-            background: #f1f1f1;
-            border-radius: 3px;
-        }
-
-        .timeline-container::-webkit-scrollbar-thumb {
-            background: #c1c1c1;
-            border-radius: 3px;
-        }
-
-        .timeline-container::-webkit-scrollbar-thumb:hover {
-            background: #a8a8a8;
-        }
-
-        /* Smooth transition for show/hide */
-        .timeline-item {
             transition: all 0.3s ease;
         }
 
-        /* Compact timeline for better space usage */
-        .timeline-item {
-            margin-bottom: 15px;
+        .card-header-premium {
+            padding: 1.5rem;
+            background: linear-gradient(to right, #ffffff, #f9fafb);
         }
 
-        .timeline-content {
-            padding: 12px;
+        .info-label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            font-weight: 600;
+            color: #94a3b8;
+            margin-bottom: 0.25rem;
         }
 
-        .timeline-title {
-            font-size: 13px;
-            margin-bottom: 4px;
+        .mini-icon {
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            font-size: 0.9rem;
         }
 
-        .timeline-description {
-            font-size: 12px;
-            margin-bottom: 6px;
-            line-height: 1.4;
+        .bg-soft-blue { background-color: var(--blue-soft); }
+        .text-blue { color: var(--blue-premium); }
+        .bg-soft-green { background-color: var(--green-soft); }
+        .text-green { color: var(--green-premium); }
+        .bg-soft-purple { background-color: var(--purple-soft); }
+        .text-purple { color: var(--purple-premium); }
+
+        /* Timeline Premium */
+        .premium-timeline {
+            position: relative;
+            padding-left: 1.5rem;
         }
 
-        .timeline-time {
-            font-size: 11px;
+        .premium-timeline::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: linear-gradient(to bottom, var(--blue-premium), #e2e8f0);
+            border-radius: 2px;
         }
 
-        /* PDF Preview Modal - Larger size for better readability */
-        .pdf-preview-modal .modal-dialog {
-            max-width: 95% !important;
-            width: 95% !important;
-            margin: 1.75rem auto;
+        .timeline-box {
+            position: relative;
+            margin-bottom: 2rem;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        @media (min-width: 1200px) {
-            .pdf-preview-modal .modal-dialog {
-                max-width: 1400px !important;
-                width: 1400px !important;
-            }
+        .timeline-node {
+            position: absolute;
+            left: -1.5rem;
+            top: 0.25rem;
+            width: 12px;
+            height: 12px;
+            background: white;
+            border: 2px solid var(--blue-premium);
+            border-radius: 50%;
+            transform: translateX(-50%);
+            z-index: 1;
+            box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
         }
 
-        @media (min-width: 992px) and (max-width: 1199px) {
-            .pdf-preview-modal .modal-dialog {
-                max-width: 95% !important;
-                width: 95% !important;
-            }
+        .timeline-info {
+            background: #f8fafc;
+            padding: 1rem;
+            border-radius: 1rem;
+            border: 1px solid #f1f5f9;
         }
 
-        .pdf-preview-container {
-            width: 100%;
-            height: 100%;
+        .timeline-item-hidden {
+            display: none !important;
+            opacity: 0;
+            transform: translateY(10px);
+        }
+
+        .timeline-item-show {
+            display: block !important;
+            animation: slideInUp 0.4s forwards;
+        }
+
+        /* Table Style */
+        .table-premium thead th {
+            background: #f8fafc;
+            border-bottom: 2px solid #f1f5f9;
+            color: #64748b;
+            font-weight: 600;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            padding: 1rem;
+        }
+
+        .table-premium tbody td {
+            padding: 1.25rem 1rem;
+            vertical-align: middle;
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+        .btn-action-circle {
+            width: 36px;
+            height: 36px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: all 0.2s ease;
+        }
+
+        .btn-soft-blue { background: var(--blue-soft); color: var(--blue-premium); border: none; }
+        .btn-soft-green { background: var(--green-soft); color: var(--green-premium); border: none; }
+        .btn-soft-blue:hover { background: var(--blue-premium); color: white; }
+        .btn-soft-green:hover { background: var(--green-premium); color: white; }
+
+        /* Action Bar */
+        .action-footer-bar {
+            position: sticky;
+            bottom: 2rem;
+            z-index: 100;
+        }
+
+        .shadow-premium {
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-blue-premium {
+            background: linear-gradient(135deg, var(--blue-premium), var(--indigo-premium));
+            color: white;
+            border: none;
+            transition: all 0.3s ease;
+        }
+
+        .btn-green-premium {
+            background: linear-gradient(135deg, var(--green-premium), #059669);
+            color: white;
+            border: none;
+            transition: all 0.3s ease;
+        }
+
+        .btn-blue-premium:hover, .btn-green-premium:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+            color: white;
+        }
+
+        .badge-wrapper {
+            padding: 0.5rem 1.25rem;
+            border-radius: 2rem;
+            font-weight: 600;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .status-green { background: var(--green-soft); color: var(--green-premium); border: 1px solid rgba(16, 185, 129, 0.2); }
+        .status-blue { background: var(--blue-soft); color: var(--blue-premium); border: 1px solid rgba(37, 99, 235, 0.2); }
+
+        @keyframes slideInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* PDF Preview Modal */
+        .pdf-preview-modal .modal-content {
+            border-radius: 1.5rem;
+            border: none;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        }
+
+        .pdf-preview-modal .modal-header {
+            background: #f8fafc;
+            border-bottom: 1px solid #e2e8f0;
+            border-radius: 1.5rem 1.5rem 0 0;
+            padding: 1.25rem 1.5rem;
         }
     </style>
 
@@ -688,874 +536,241 @@
             currentPdfUrl = url;
             currentFileName = fileName;
 
-            // Show modal using bootbox (following system pattern)
             $bootbox = bootbox.dialog({
                 title: '<i class="fas fa-file-pdf me-2"></i>Preview: ' + fileName,
-                message: '<div class="text-center"><div class="spinner-border text-secondary" role="status"></div><p class="mt-2">Memuat dokumen...</p></div>',
+                message: '<div class="text-center py-5"><div class="spinner-border text-blue" role="status"></div><p class="mt-3 text-muted">Memuat dokumen...</p></div>',
                 size: 'extra-large',
-                className: 'pdf-preview-modal',
+                className: 'pdf-preview-modal animate__animated animate__zoomIn',
                 buttons: {
-                    cancel: {
-                        label: 'Tutup',
-                        className: 'btn-secondary'
-                    }
+                    cancel: { label: 'Tutup', className: 'btn-soft-dark px-4 rounded-pill' }
                 }
             });
 
-            // Load PDF after modal is shown
-            setTimeout(() => {
-                loadPDFPreview(url, $bootbox);
-            }, 300);
+            setTimeout(() => { loadPDFPreview(url, $bootbox); }, 300);
         }
 
         function loadPDFPreview(url, $bootbox) {
-            // Create PDF viewer content with larger height
             const pdfContent = `
                 <div class="pdf-preview-container">
-                    <iframe id="pdfViewer" 
-                            src="${url}#toolbar=1&navpanes=1&scrollbar=1&view=FitH" 
-                            style="width: 100%; height: calc(100vh - 250px); min-height: 700px; border: 1px solid #dee2e6; border-radius: 5px;"
+                    <iframe id="pdfViewer" src="${url}#toolbar=1&navpanes=1&scrollbar=1&view=FitH" 
+                            style="width: 100%; height: calc(100vh - 250px); min-height: 700px; border: 1px solid #e2e8f0; border-radius: 1rem;"
                             title="PDF Preview">
                     </iframe>
                 </div>
             `;
-
-            // Update modal content
             $bootbox.find('.modal-body').html(pdfContent);
         }
 
-        // Clean up when modal is hidden
         $(document).on('hidden.bs.modal', '.bootbox', function() {
-            // Clear variables
-            currentPdfUrl = '';
-            currentFileName = '';
+            currentPdfUrl = ''; currentFileName = '';
         });
 
-        // Timeline show/hide functionality
         $(document).ready(function() {
             $('#showMoreBtn').on('click', function() {
-                // Show all hidden timeline items
-                $('.timeline-item-hidden').removeClass('timeline-item-hidden').addClass('timeline-item-show');
-
-                // Hide show more button, show show less button
-                $(this).addClass('d-none');
-                $('#showLessBtn').removeClass('d-none');
-
-                // Smooth scroll to bottom of timeline (untuk melihat riwayat lama - index >= 5)
-                setTimeout(() => {
-                    const timelineContainer = document.getElementById('timelineContainer');
-                    timelineContainer.scrollTop = timelineContainer.scrollHeight;
-                }, 100);
-            });
-
-            $('#showLessBtn').on('click', function() {
-                // Hide items beyond the limit (index >= 5) - ini adalah riwayat lama
-                $('.timeline-item[data-index]').each(function() {
-                    const index = parseInt($(this).data('index'));
-                    if (index >= 5) {
-                        $(this).removeClass('timeline-item-show').addClass('timeline-item-hidden');
-                    }
+                $('.timeline-item-hidden').each(function(i) {
+                    const el = $(this);
+                    setTimeout(() => {
+                        el.removeClass('timeline-item-hidden').addClass('timeline-item-show');
+                    }, i * 100);
                 });
-
-                // Hide show less button, show show more button
-                $(this).addClass('d-none');
-                $('#showMoreBtn').removeClass('d-none');
-
-                // Scroll to top of timeline (karena yang terbaru di atas - index 0-4)
-                const timelineContainer = document.getElementById('timelineContainer');
-                timelineContainer.scrollTop = 0;
+                $(this).fadeOut(300);
             });
         });
 
-        // Rate limiting untuk TTE
+        // TTE Processing with SWAL
         let lastTTERequest = 0;
-        const TTE_COOLDOWN = 5000; // 5 detik cooldown (TTE lebih lama)
-
-        // Global variables untuk TTE
+        const TTE_COOLDOWN = 5000;
         let currentAjuanId = null;
         let currentBootbox = null;
 
         function processTTE(ajuanId) {
-            // Rate limiting check
             const now = Date.now();
             if (now - lastTTERequest < TTE_COOLDOWN) {
-                alert('Tunggu sebentar sebelum melakukan aksi lagi.');
+                Swal.fire('Mohon Tunggu', 'Tunggu sebentar sebelum melakukan aksi lagi.', 'warning');
                 return;
             }
             lastTTERequest = now;
-
-            // Simpan ID ajuan untuk digunakan di bootbox
             currentAjuanId = ajuanId;
-
-            // Tampilkan bootbox TTE
             showTTEBootbox();
+        }
+
+        function processTTESekda(ajuanId) {
+            processTTE(ajuanId);
         }
 
         function showTTEBootbox() {
             const tteContent = `
-                <form id="tteForm" autocomplete="off">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                <label for="tte_nik" class="form-label">
-                                    <i class="fas fa-id-card me-1"></i>NIK <span class="text-danger">*</span>
-                                </label>
-                                <input type="text" class="form-control" id="tte_nik"
-                                       placeholder="Masukkan 16 digit NIK" maxlength="16" required 
-                                       inputmode="numeric" pattern="[0-9]{16}"
-                                       autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false"
-                                       data-lpignore="true" data-form-type="other" readonly
-                                       onfocus="this.removeAttribute('readonly');"
-                                       oninput="this.value = this.value.replace(/[^0-9]/g, '')">
-                                <div class="form-text">NIK yang terdaftar di sistem BSrE (16 digit angka)</div>
-                            </div>
+                <form id="tteForm" class="p-2">
+                    <div class="row g-3">
+                        <div class="col-md-6 text-start">
+                            <label class="info-label">NIK (16 Digit)</label>
+                            <input type="text" class="form-control rounded-pill px-3" id="tte_nik" placeholder="0000000000000000" maxlength="16">
                         </div>
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                <label for="tte_password" class="form-label">
-                                    <i class="fas fa-lock me-1"></i>Passphrase TTE <span class="text-danger">*</span>
-                                </label>
-                                <div class="input-group">
-                                    <input type="password" class="form-control" id="tte_password" 
-                                           placeholder="Masukkan passphrase TTE" required
-                                           autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false"
-                                           data-lpignore="true" data-form-type="other" readonly
-                                           onfocus="this.removeAttribute('readonly');">
-                                    <button class="btn btn-outline-secondary" type="button" id="togglePassword" onclick="togglePasswordVisibility()">
-                                        <i class="fas fa-eye" id="togglePasswordIcon"></i>
-                                    </button>
-                                </div>
-                                <div class="form-text">Passphrase untuk mengakses sertifikat TTE</div>
+                        <div class="col-md-6 text-start">
+                            <label class="info-label">Passphrase TTE</label>
+                            <div class="input-group">
+                                <input type="password" class="form-control rounded-pill-start px-3" id="tte_password" placeholder="********">
+                                <button class="btn btn-outline-secondary rounded-pill-end" type="button" onclick="togglePasswordVisibility()"><i class="fas fa-eye" id="togglePasswordIcon"></i></button>
                             </div>
                         </div>
                     </div>
-
-                    <div id="tteVerificationResult"></div>
+                    <div id="tteVerificationResult" class="mt-3"></div>
                 </form>
             `;
 
             currentBootbox = bootbox.dialog({
-                title: '<i class="fas fa-stamp me-2"></i>Proses Tanda Tangan Elektronik (TTE)',
+                title: '<i class="fas fa-stamp me-2 text-blue"></i>Verifikasi Sertifikat BSrE',
                 message: tteContent,
                 size: 'large',
+                className: 'animate__animated animate__fadeInDown',
                 buttons: {
-                    cancel: {
-                        label: '<i class="fas fa-times me-1"></i>Batal',
-                        className: 'btn-secondary'
-                    },
                     verify: {
-                        label: '<i class="fas fa-check-circle me-1"></i>Verifikasi Sertifikat',
-                        className: 'btn-outline-primary',
-                        callback: function() {
-                            verifyTteCertificate();
-                            return false; // Prevent dialog from closing
-                        }
+                        label: 'Cek Sertifikat',
+                        className: 'btn-blue-premium px-4 rounded-pill',
+                        callback: function() { verifyTteCertificate(); return false; }
                     },
                     proceed: {
-                        label: '<i class="fas fa-stamp me-1"></i>Proses TTE',
-                        className: 'btn-success',
+                        label: 'Tanda Tangani',
+                        className: 'btn-green-premium px-4 rounded-pill',
                         id: 'btnProceedTte',
                         style: 'display: none;',
-                        callback: function() {
-                            try {
-                                proceedTTE();
-                            } catch (e) {
-                                alert('Error: ' + e.message);
-                            }
-                            return false; // Prevent dialog from closing
-                        }
+                        callback: function() { proceedTTE(); return false; }
                     }
                 }
             });
         }
 
         function togglePasswordVisibility() {
-            const passwordInput = document.getElementById('tte_password');
-            const toggleIcon = document.getElementById('togglePasswordIcon');
-            
-            if (passwordInput.type === 'password') {
-                passwordInput.type = 'text';
-                toggleIcon.classList.remove('fa-eye');
-                toggleIcon.classList.add('fa-eye-slash');
-            } else {
-                passwordInput.type = 'password';
-                toggleIcon.classList.remove('fa-eye-slash');
-                toggleIcon.classList.add('fa-eye');
-            }
+            const pwd = document.getElementById('tte_password');
+            const ico = document.getElementById('togglePasswordIcon');
+            if (pwd.type === 'password') { pwd.type = 'text'; ico.className = 'fas fa-eye-slash'; }
+            else { pwd.type = 'password'; ico.className = 'fas fa-eye'; }
         }
 
-        // Fungsi verifikasi sertifikat TTE untuk bootbox
         function verifyTteCertificate() {
-            const resultDiv = document.getElementById('tteVerificationResult');
-            const tteNik = document.getElementById('tte_nik')?.value;
-
-            // Validasi NIK
-            if (!tteNik || !/^\d{16}$/.test(tteNik)) {
-                resultDiv.innerHTML = `
-                    <div class="alert alert-danger">
-                        <h5><i class="fas fa-exclamation-triangle me-2"></i>NIK Tidak Valid</h5>
-                        <p class="mb-0">NIK harus terdiri dari 16 digit angka.</p>
-                    </div>`;
-                return false;
-            }
-
-            // Tampilkan loading
-            resultDiv.innerHTML = `
-                <div class="text-center my-4">
-                    <div class="spinner-border text-primary" role="status">
-                        <span class="sr-only">Memeriksa sertifikat...</span>
-                    </div>
-                    <p class="mt-3 mb-0">Sedang memeriksa status sertifikat TTE...</p>
-                </div>`;
-
-            // Sembunyikan tombol proceed di bootbox
-            const proceedBtn = currentBootbox.find('#btnProceedTte');
-            if (proceedBtn.length) {
-                proceedBtn.hide();
-            }
-
-            // Kirim request ke TTEController->cekStatusUser
-            fetch('<?= base_url('api/tte/check-status') ?>', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-Requested-With': 'XMLHttpRequest'
-                    },
-                    body: JSON.stringify({
-                        nik: tteNik
-                    }),
-                    credentials: 'same-origin'
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.status === 'success' && data.data) {
-                        const statusData = data.data;
-                        const statusCode = statusData.status_code;
-                        const message = statusData.message || 'Status sertifikat tidak diketahui';
-                        const isActive = statusData.is_active === true || statusData.is_active === 'true';
-                        
-                        // Status code 1111 = Aktif, Status code 2011 = Tidak Aktif
-                        if (isActive || statusCode === '1111' || statusCode === 1111) {
-                            // Sertifikat aktif
-                            resultDiv.innerHTML = `
-                            <div class="alert alert-success">
-                                <h5><i class="fas fa-check-circle me-2"></i> Status User: <strong>Aktif</strong></h5>
-                                <p class="mb-0">${message}</p>
-                            </div>`;
-
-                            // Tampilkan tombol proceed di bootbox
-                            if (proceedBtn.length) {
-                                proceedBtn.show();
-                            }
-                        } else {
-                            // Sertifikat tidak aktif (status_code 2011 atau lainnya)
-                            resultDiv.innerHTML = `
-                            <div class="alert alert-danger">
-                                <h5><i class="fas fa-times-circle me-2"></i> Status User: <strong>Tidak Aktif</strong></h5>
-                                <p class="mb-2">${message}</p>
-                                <p class="mb-0">
-                                    <a href="https://bsre.bssn.go.id" target="_blank" class="alert-link">
-                                        Kunjungi BSrE untuk memperbarui sertifikat
-                                    </a>
-                                </p>
-                            </div>`;
-                        }
-                    } else {
-                        // Error dari server
-                        resultDiv.innerHTML = `
-                        <div class="alert alert-info" style="background-color: #20c997; border-color: #20c997; color: #fff;">
-                            <h5><i class="fas fa-exclamation-circle me-2"></i> Gagal Memeriksa Sertifikat</h5>
-                            <p class="mb-0">${data.message || 'Terjadi kesalahan saat memeriksa status sertifikat. Silakan coba lagi.'}</p>
-                        </div>`;
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    resultDiv.innerHTML = `
-                    <div class="alert alert-danger">
-                        <h5><i class="fas fa-times-circle me-2"></i> Kesalahan Jaringan</h5>
-                        <p class="mb-0">Tidak dapat terhubung ke server TTE. Pastikan koneksi internet Anda stabil dan coba lagi.</p>
-                    </div>`;
-                });
-        }
-
-        // Fungsi untuk memproses TTE setelah verifikasi - Menggunakan TTEController->signDocument()
-        function proceedTTE() {
-            if (!currentAjuanId) {
-                alert('ID ajuan tidak valid.');
+            const res = document.getElementById('tteVerificationResult');
+            const nik = document.getElementById('tte_nik')?.value;
+            if (!nik || !/^\d{16}$/.test(nik)) {
+                res.innerHTML = '<div class="alert alert-soft-danger border-0 small"><i class="fas fa-exclamation-circle me-2"></i>NIK harus 16 digit angka.</div>';
                 return;
             }
-
-            const nik = document.getElementById('tte_nik').value;
-            const password = document.getElementById('tte_password').value;
-
-            if (!nik || nik.length !== 16) {
-                alert('NIK harus 16 digit!');
-                return;
-            }
-
-            if (!password || password.length < 8) {
-                alert('Passphrase minimal 8 karakter!');
-                return;
-            }
-
-            // Langsung proses tanpa confirm() karena browser memblokir confirm dari callback bootbox
-            // User sudah mengkonfirmasi dengan menekan tombol "Proses TTE"
+            res.innerHTML = '<div class="text-center py-3"><div class="spinner-border spinner-border-sm text-blue"></div><span class="ms-2 small text-muted">Memeriksa BSrE...</span></div>';
             
-            // Show loading message in form
-                const resultDiv = document.getElementById('tteVerificationResult');
-                if (resultDiv) {
-                    resultDiv.innerHTML = `
-                        <div class="alert alert-warning mt-3">
-                            <div class="d-flex align-items-center">
-                                <div class="spinner-border spinner-border-sm text-warning me-3" role="status"></div>
-                                <div>
-                                    <strong>⏳ Memproses TTE...</strong><br>
-                                    <small>Menghubungi server BSrE, mohon tunggu beberapa saat. Jangan tutup halaman ini.</small>
-                                </div>
-                            </div>
-                        </div>`;
-                }
-
-                // Disable tombol jika ada
-                if (currentBootbox) {
-                    try {
-                        currentBootbox.find('button').prop('disabled', true);
-                    } catch (e) {
-                        // Silent fail
-                    }
-                }
-
-                // Tampilkan loading overlay di card TTE result jika ada
-                const tteResultCard = document.getElementById('tteResultCard');
-                if (tteResultCard) {
-                    tteResultCard.style.opacity = '0.6';
-                    tteResultCard.style.pointerEvents = 'none';
-                }
-
-                // Step 1: Ambil id_dokumen FINAL_PARAF terlebih dahulu
-                fetch('<?= base_url('legalisasi/getFinalParafDocument') ?>/' + currentAjuanId, {
-                        method: 'GET',
-                        headers: {
-                            'X-Requested-With': 'XMLHttpRequest'
-                        }
-                    })
-                    .then(response => response.json())
-                    .then(docData => {
-                        if (!docData.success || !docData.id_dokumen) {
-                            throw new Error(docData.message || 'Dokumen FINAL_PARAF tidak ditemukan');
-                        }
-
-                        // Step 2: Kirim request ke TTEController->signDocument
-                        return fetch('<?= base_url('api/tte/sign') ?>', {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json',
-                                'X-Requested-With': 'XMLHttpRequest'
-                            },
-                            body: JSON.stringify({
-                                id_ajuan: currentAjuanId,
-                                nik: nik,
-                                password: password,
-                                id_dokumen: docData.id_dokumen
-                            })
-                        });
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.status === 'success') {
-                            // Show success message dengan SweetAlert
-                            if (typeof Swal !== 'undefined') {
-                                Swal.fire({
-                                    icon: 'success',
-                                    title: 'TTE Berhasil!',
-                                    html: `
-                                        <div class="text-start">
-                                            <p><strong>Nomor Peraturan:</strong> ${data.data?.document_number || 'N/A'}</p>
-                                            <p><strong>ID Ajuan:</strong> ${data.data?.id_ajuan || 'N/A'}</p>
-                                            <hr>
-                                            <p class="mb-0"><strong>Dokumen telah disahkan secara resmi.</strong></p>
-                                        </div>
-                                    `,
-                                    showConfirmButton: false,
-                                    timer: 5000
-                                }).then(() => {
-                                    window.location.reload();
-                                });
-                            } else {
-                                alert('TTE berhasil! Nomor: ' + (data.data?.document_number || 'N/A'));
-                                window.location.reload();
-                            }
-                        } else {
-                            alert('Gagal memproses TTE: ' + (data.message || 'Terjadi kesalahan. Silakan coba lagi.'));
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error:', error);
-                        alert('TTE gagal: ' + (error.message || 'Terjadi kesalahan server BSRE'));
-                    })
-                    .finally(() => {
-                        // Re-enable buttons jika ada
-                        if (currentBootbox) {
-                            try {
-                                currentBootbox.find('button').prop('disabled', false);
-                            } catch (e) {
-                                // Silent fail
-                            }
-                        }
-
-                        // Restore card TTE result jika ada
-                        const tteResultCard = document.getElementById('tteResultCard');
-                        if (tteResultCard) {
-                            tteResultCard.style.opacity = '1';
-                            tteResultCard.style.pointerEvents = 'auto';
-                        }
-                    });
-        }
-
-        // Fungsi khusus untuk TTE Sekda
-        function processTTESekda(ajuanId) {
-            // Rate limiting check
-            const now = Date.now();
-            if (now - lastTTERequest < TTE_COOLDOWN) {
-                alert('Tunggu sebentar sebelum melakukan aksi lagi.');
-                return;
-            }
-            lastTTERequest = now;
-
-            // Simpan ID ajuan untuk digunakan di bootbox
-            currentAjuanId = ajuanId;
-
-            // Tampilkan bootbox TTE Sekda
-            showTTESekdaBootbox();
-        }
-
-        function showTTESekdaBootbox() {
-            // Langsung tampilkan bootbox normal
-            showTTESekdaBootboxNormal();
-        }
-
-        function showTTESekdaBootboxNormal() {
-            // Konsisten dengan dashboard_sekda.php - dengan verifikasi sertifikat
-            const tteContent = `
-                <div class="alert alert-info" role="alert" style="background-color: #20c997; border-color: #20c997; color: #fff;">
-                    <i class="fas fa-exclamation-triangle me-2"></i>
-                    <strong>PERHATIAN:</strong> TTE Sekda akan menghasilkan nomor final dan pengesahan resmi.
-                    Proses ini tidak dapat dibatalkan dan dokumen akan langsung SELESAI.
-                </div>
-
-                <form id="tteSekdaForm" autocomplete="off">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                <label for="tte_sekda_nik" class="form-label">
-                                    <i class="fas fa-id-card me-1"></i>NIK Sekretaris Daerah <span class="text-danger">*</span>
-                                </label>
-                                <input type="text" class="form-control" id="tte_sekda_nik"
-                                    placeholder="Masukkan 16 digit NIK" maxlength="16" required 
-                                    inputmode="numeric" pattern="[0-9]{16}"
-                                    autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false"
-                                    data-lpignore="true" data-form-type="other" readonly
-                                    onfocus="this.removeAttribute('readonly');"
-                                    oninput="this.value = this.value.replace(/[^0-9]/g, '')">
-                                <div class="form-text">NIK yang terdaftar di sistem BSrE (16 digit angka)</div>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                <label for="tte_sekda_password" class="form-label">
-                                    <i class="fas fa-lock me-1"></i>Passphrase Sertifikat <span class="text-danger">*</span>
-                                </label>
-                                <div class="input-group">
-                                    <input type="password" class="form-control" id="tte_sekda_password"
-                                        placeholder="Masukkan passphrase" minlength="8" required
-                                        autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false"
-                                        data-lpignore="true" data-form-type="other" readonly
-                                        onfocus="this.removeAttribute('readonly');">
-                                    <button class="btn btn-outline-secondary" type="button" onclick="toggleSekdaPasswordVisibility()">
-                                        <i class="fas fa-eye" id="toggleSekdaPasswordIcon"></i>
-                                    </button>
-                                </div>
-                                <div class="form-text">Passphrase untuk mengakses sertifikat TTE</div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div id="sekdaVerificationResult"></div>
-                </form>
-            `;
-
-            currentBootbox = bootbox.dialog({
-                title: '<i class="fas fa-stamp me-2"></i>TTE Sekretaris Daerah dengan BSRE',
-                message: tteContent,
-                size: 'large',
-                buttons: {
-                    cancel: {
-                        label: '<i class="fas fa-times me-1"></i>Batal',
-                        className: 'btn-secondary'
-                    },
-                    verify: {
-                        label: '<i class="fas fa-check-circle me-1"></i>Verifikasi Sertifikat',
-                        className: 'btn-outline-primary',
-                        callback: function() {
-                            verifySekdaCertificate();
-                            return false; // Prevent dialog from closing
-                        }
-                    },
-                    proceed: {
-                        label: '<i class="fas fa-stamp me-1"></i>Proses TTE Sekda',
-                        className: 'btn-success',
-                        id: 'btnProceedTteSekda',
-                        callback: function() {
-                            try {
-                                proceedTTESekda();
-                            } catch (e) {
-                                alert('Error: ' + e.message);
-                            }
-                            return false; // Prevent dialog from closing
-                        }
-                    }
+            fetch('<?= base_url('api/tte/check-status') ?>', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ nik: nik })
+            })
+            .then(r => r.json())
+            .then(d => {
+                if (d.status === 'success' && d.data?.is_active) {
+                    res.innerHTML = '<div class="alert alert-soft-success border-0 small"><i class="fas fa-check-circle me-2"></i>Sertifikat Aktif. Silakan masukkan passphrase.</div>';
+                    $('#btnProceedTte').fadeIn();
+                } else {
+                    res.innerHTML = '<div class="alert alert-soft-danger border-0 small"><i class="fas fa-times-circle me-2"></i>' + (d.message || 'Sertifikat tidak aktif.') + '</div>';
                 }
             });
         }
 
-        // Toggle password visibility untuk Sekda
-        function toggleSekdaPasswordVisibility() {
-            const passwordInput = document.getElementById('tte_sekda_password');
-            const toggleIcon = document.getElementById('toggleSekdaPasswordIcon');
-            
-            if (passwordInput.type === 'password') {
-                passwordInput.type = 'text';
-                toggleIcon.classList.remove('fa-eye');
-                toggleIcon.classList.add('fa-eye-slash');
-            } else {
-                passwordInput.type = 'password';
-                toggleIcon.classList.remove('fa-eye-slash');
-                toggleIcon.classList.add('fa-eye');
-            }
-        }
+        function proceedTTE() {
+            const nik = $('#tte_nik').val();
+            const pwd = $('#tte_password').val();
+            if (!pwd) { Swal.fire('Error', 'Passphrase harus diisi!', 'error'); return; }
 
-        // Fungsi verifikasi sertifikat TTE Sekda
-        function verifySekdaCertificate() {
-            const resultDiv = document.getElementById('sekdaVerificationResult');
-            const sekdaNik = document.getElementById('tte_sekda_nik')?.value;
+            Swal.fire({
+                title: 'Konfirmasi TTE',
+                text: 'Dokumen akan ditandatangani secara elektronik. Lanjutkan?',
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#10b981',
+                confirmButtonText: 'Ya, Proses!',
+                cancelButtonText: 'Batal'
+            }).then((res) => {
+                if (res.isConfirmed) {
+                    $('#tteVerificationResult').html('<div class="alert alert-soft-warning border-0 small animation-pulse"><i class="fas fa-spinner fa-spin me-2"></i>Menghubungi Server BSrE...</div>');
+                    $('#btnProceedTte').prop('disabled', true);
 
-            // Validasi NIK
-            if (!sekdaNik || !/^\d{16}$/.test(sekdaNik)) {
-                resultDiv.innerHTML = `
-                    <div class="alert alert-danger">
-                        <h5><i class="fas fa-exclamation-triangle me-2"></i>NIK Tidak Valid</h5>
-                        <p class="mb-0">NIK harus terdiri dari 16 digit angka.</p>
-                    </div>`;
-                return false;
-            }
-
-            // Tampilkan loading
-            resultDiv.innerHTML = `
-                <div class="text-center my-4">
-                    <div class="spinner-border text-primary" role="status">
-                        <span class="sr-only">Memeriksa sertifikat...</span>
-                    </div>
-                    <p class="mt-3 mb-0">Sedang memeriksa status sertifikat TTE Sekda...</p>
-                </div>`;
-
-            // Sembunyikan tombol proceed di bootbox
-            const proceedBtn = currentBootbox.find('#btnProceedTteSekda');
-            if (proceedBtn.length) {
-                proceedBtn.hide();
-            }
-
-            // Kirim request ke API untuk check status sertifikat
-            fetch('<?= base_url('api/tte/check-status') ?>', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-Requested-With': 'XMLHttpRequest'
-                    },
-                    body: JSON.stringify({
-                        nik: sekdaNik
-                    }),
-                    credentials: 'same-origin'
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.status === 'success' && data.data) {
-                        const statusData = data.data;
-                        const statusCode = statusData.status_code;
-                        const message = statusData.message || 'Status sertifikat tidak diketahui';
-                        const isActive = statusData.is_active === true || statusData.is_active === 'true';
-                        
-                        // Status code 1111 = Aktif, Status code 2011 = Tidak Aktif
-                        if (isActive || statusCode === '1111' || statusCode === 1111) {
-                            // Sertifikat aktif
-                            resultDiv.innerHTML = `
-                            <div class="alert alert-success">
-                                <h5><i class="fas fa-check-circle me-2"></i> Status Sertifikat: <strong>Aktif</strong></h5>
-                                <p class="mb-0">${message}</p>
-                            </div>`;
-
-                            // Tampilkan tombol proceed di bootbox
-                            if (proceedBtn.length) {
-                                proceedBtn.show();
-                            }
-                        } else {
-                            // Sertifikat tidak aktif (status_code 2011 atau lainnya)
-                            resultDiv.innerHTML = `
-                            <div class="alert alert-danger">
-                                <h5><i class="fas fa-times-circle me-2"></i> Status Sertifikat: <strong>Tidak Aktif</strong></h5>
-                                <p class="mb-2">${message}</p>
-                                <p class="mb-0">
-                                    <a href="https://bsre.bssn.go.id" target="_blank" class="alert-link">
-                                        Kunjungi BSrE untuk memperbarui sertifikat
-                                    </a>
-                                </p>
-                            </div>`;
-                        }
-                    } else {
-                        // Error dari server
-                        resultDiv.innerHTML = `
-                        <div class="alert alert-info" style="background-color: #20c997; border-color: #20c997; color: #fff;">
-                            <h5><i class="fas fa-exclamation-circle me-2"></i> Gagal Memeriksa Sertifikat</h5>
-                            <p class="mb-0">${data.message || 'Terjadi kesalahan saat memeriksa status sertifikat. Silakan coba lagi.'}</p>
-                        </div>`;
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    resultDiv.innerHTML = `
-                    <div class="alert alert-danger">
-                        <h5><i class="fas fa-times-circle me-2"></i> Kesalahan Jaringan</h5>
-                        <p class="mb-0">Tidak dapat terhubung ke server TTE. Pastikan koneksi internet Anda stabil dan coba lagi.</p>
-                    </div>`;
-                });
-        }
-
-        // Fungsi untuk memproses TTE Sekda - Menggunakan TTEController->signDocument()
-        function proceedTTESekda() {
-            if (!currentAjuanId) {
-                alert('ID ajuan tidak valid.');
-                return;
-            }
-
-            const nik = document.getElementById('tte_sekda_nik').value;
-            const password = document.getElementById('tte_sekda_password').value;
-
-            if (!nik || nik.length !== 16) {
-                alert('NIK harus 16 digit!');
-                return;
-            }
-
-            if (!password || password.length < 8) {
-                alert('Passphrase minimal 8 karakter!');
-                return;
-            }
-
-            // Langsung proses tanpa confirm() karena browser memblokir confirm dari callback bootbox
-            // User sudah mengkonfirmasi dengan menekan tombol "Proses TTE Sekda"
-            
-            // Show loading message in form
-            const resultDiv = document.getElementById('sekdaVerificationResult');
-            
-            if (resultDiv) {
-                resultDiv.innerHTML = `
-                    <div class="alert alert-warning mt-3">
-                        <div class="d-flex align-items-center">
-                            <div class="spinner-border spinner-border-sm text-warning me-3" role="status"></div>
-                            <div>
-                                <strong>⏳ Memproses TTE Sekda...</strong><br>
-                                <small>Menghubungi server BSrE, mohon tunggu beberapa saat. Jangan tutup halaman ini.</small>
-                            </div>
-                        </div>
-                    </div>`;
-            }
-
-            // Disable tombol jika ada
-            if (currentBootbox) {
-                try {
-                    currentBootbox.find('button').prop('disabled', true);
-                } catch (e) {
-                    // Silent fail
-                }
-            }
-
-            // Step 1: Ambil id_dokumen FINAL_PARAF terlebih dahulu
-            fetch('<?= base_url('legalisasi/getFinalParafDocument') ?>/' + currentAjuanId, {
-                    method: 'GET',
-                    headers: {
-                        'X-Requested-With': 'XMLHttpRequest'
-                    }
-                })
-                .then(response => response.json())
-                .then(docData => {
-                    if (!docData.success || !docData.id_dokumen) {
-                        throw new Error(docData.message || 'Dokumen FINAL_PARAF tidak ditemukan');
-                    }
-
-                        // Step 2: Kirim request ke TTEController->signDocument
+                    fetch('<?= base_url('legalisasi/getFinalParafDocument') ?>/' + currentAjuanId)
+                    .then(r => r.json())
+                    .then(doc => {
                         return fetch('<?= base_url('api/tte/sign') ?>', {
                             method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json',
-                                'X-Requested-With': 'XMLHttpRequest'
-                            },
-                            body: JSON.stringify({
-                                id_ajuan: currentAjuanId,
-                                nik: nik,
-                                password: password,
-                                id_dokumen: docData.id_dokumen
-                            })
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ id_ajuan: currentAjuanId, nik: nik, password: pwd, id_dokumen: doc.id_dokumen })
                         });
                     })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.status === 'success') {
-                            // Show success message dengan SweetAlert
-                            if (typeof Swal !== 'undefined') {
-                                Swal.fire({
-                                    icon: 'success',
-                                    title: 'TTE Sekda Berhasil!',
-                                    html: `
-                                        <div class="text-start">
-                                            <p><strong>Nomor Peraturan:</strong> ${data.data?.document_number || 'N/A'}</p>
-                                            <p><strong>ID Ajuan:</strong> ${data.data?.id_ajuan || 'N/A'}</p>
-                                            <hr>
-                                            <p class="mb-0"><strong>Dokumen telah disahkan secara resmi dan SELESAI.</strong></p>
-                                        </div>
-                                    `,
-                                    showConfirmButton: false,
-                                    timer: 5000
-                                }).then(() => {
-                                    window.location.reload();
-                                });
-                            } else {
-                                alert('TTE Sekda berhasil! Nomor: ' + (data.data?.document_number || 'N/A'));
-                                window.location.reload();
-                            }
+                    .then(r => r.json())
+                    .then(d => {
+                        if (d.status === 'success') {
+                            Swal.fire('Berhasil!', 'Dokumen telah ditandatangani.', 'success').then(() => window.location.reload());
                         } else {
-                            alert('Gagal memproses TTE Sekda: ' + (data.message || 'Terjadi kesalahan. Silakan coba lagi.'));
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error:', error);
-                        alert('TTE gagal: ' + (error.message || 'Terjadi kesalahan server BSRE'));
-                    })
-                    .finally(() => {
-                        // Re-enable buttons jika ada
-                        if (currentBootbox) {
-                            try {
-                                currentBootbox.find('button').prop('disabled', false);
-                            } catch (e) {
-                                // Silent fail
-                            }
+                            Swal.fire('Gagal', d.message || 'Error server BSrE', 'error');
+                            $('#btnProceedTte').prop('disabled', false);
                         }
                     });
+                }
+            });
         }
 
-        // Rate limiting untuk mencegah spam
-        let lastParafRequest = 0;
-        const PARAF_COOLDOWN = 3000; // 3 detik cooldown
-
         function processParaf(ajuanId) {
-            // Rate limiting check
-            const now = Date.now();
-            if (now - lastParafRequest < PARAF_COOLDOWN) {
-                alert('Tunggu sebentar sebelum melakukan aksi lagi.');
-                return;
-            }
-            lastParafRequest = now;
+            Swal.fire({
+                title: 'Proses Paraf',
+                text: 'Apakah Anda yakin ingin memberikan paraf pada ajuan ini?',
+                icon: 'info',
+                showCancelButton: true,
+                confirmButtonText: 'Ya, Paraf!',
+                cancelButtonText: 'Batal',
+                customClass: { confirmButton: 'btn btn-blue-premium px-4 rounded-pill' }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    const formData = new FormData();
+                    formData.append('ajuan_id', ajuanId);
+                    formData.append('<?= csrf_token() ?>', '<?= csrf_hash() ?>');
 
-            if (confirm('Apakah Anda yakin ingin memproses paraf untuk ajuan ini?')) {
-                // Disable button untuk mencegah double click
-                const button = event.target;
-                const originalText = button.innerHTML;
-                button.disabled = true;
-                button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Memproses...';
-
-                // Implement paraf processing
-                const formData = new FormData();
-                formData.append('ajuan_id', ajuanId);
-                formData.append('<?= csrf_token() ?>', '<?= csrf_hash() ?>');
-
-                fetch('<?= base_url('legalisasi/processParaf') ?>/' + ajuanId, {
+                    fetch('<?= base_url('legalisasi/processParaf') ?>/' + ajuanId, {
                         method: 'POST',
-                        headers: {
-                            'X-Requested-With': 'XMLHttpRequest'
-                        },
                         body: formData
                     })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.success) {
-                            alert('Paraf berhasil diproses!');
-                            // Kembali ke halaman sebelumnya (dashboard legalisasi)
-                            window.history.back();
+                    .then(r => r.json())
+                    .then(d => {
+                        if (d.success) {
+                            Swal.fire('Berhasil!', 'Paraf telah diproses.', 'success').then(() => window.location.href = '<?= base_url('legalisasi') ?>');
                         } else {
-                            // Generic error message untuk keamanan
-                            alert('Terjadi kesalahan. Silakan coba lagi atau hubungi administrator.');
+                            Swal.fire('Gagal', 'Terjadi kesalahan sistem.', 'error');
                         }
-                    })
-                    .catch(error => {
-                        console.error('Error:', error);
-                        alert('Terjadi kesalahan. Silakan coba lagi atau hubungi administrator.');
-                    })
-                    .finally(() => {
-                        // Re-enable button
-                        button.disabled = false;
-                        button.innerHTML = originalText;
                     });
-            }
+                }
+            });
         }
 
         function revisiKeFinalisasi(ajuanId) {
-            bootbox.prompt({
-                title: "Catatan Revisi",
-                message: "<p>Berikan catatan revisi untuk dikirim kembali ke tahap Finalisasi:</p>",
-                inputType: 'textarea',
-                buttons: {
-                    confirm: {
-                        label: 'Kirim Revisi',
-                        className: 'btn-warning'
-                    },
-                    cancel: {
-                        label: 'Batal',
-                        className: 'btn-secondary'
-                    }
-                },
-                callback: function (result) {
-                    if (result === null) {
-                        return;
-                    }
-                    
-                    if (result.trim() === "") {
-                        alert("Catatan revisi wajib diisi!");
-                        return false;
-                    }
-
+            Swal.fire({
+                title: 'Catatan Revisi',
+                input: 'textarea',
+                inputPlaceholder: 'Berikan alasan revisi...',
+                showCancelButton: true,
+                confirmButtonText: 'Kirim Revisi',
+                confirmButtonColor: '#f59e0b',
+                cancelButtonText: 'Batal'
+            }).then((res) => {
+                if (res.isConfirmed && res.value) {
                     const formData = new FormData();
                     formData.append('ajuan_id', ajuanId);
-                    formData.append('catatan', result);
+                    formData.append('catatan', res.value);
                     formData.append('<?= csrf_token() ?>', '<?= csrf_hash() ?>');
 
                     fetch('<?= base_url('legalisasi/revisiKeFinalisasi') ?>/' + ajuanId, {
-                            method: 'POST',
-                            headers: {
-                                'X-Requested-With': 'XMLHttpRequest'
-                            },
-                            body: formData
-                        })
-                        .then(response => response.json())
-                        .then(data => {
-                            if (data.success) {
-                                alert('Berhasil mengirim revisi ke finalisasi!');
-                                window.history.back();
-                            } else {
-                                alert(data.message || 'Terjadi kesalahan.');
-                            }
-                        })
-                        .catch(error => {
-                            console.error('Error:', error);
-                            alert('Terjadi kesalahan Jaringan.');
-                        });
+                        method: 'POST',
+                        body: formData
+                    })
+                    .then(r => r.json())
+                    .then(d => {
+                        if (d.success) {
+                            Swal.fire('Terkirim!', 'Ajuan dikembalikan ke tahap finalisasi.', 'success').then(() => window.location.href = '<?= base_url('legalisasi') ?>');
+                        } else {
+                            Swal.fire('Gagal', d.message || 'Terjadi kesalahan.', 'error');
+                        }
+                    });
                 }
             });
         }

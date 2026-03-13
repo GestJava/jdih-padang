@@ -1,105 +1,490 @@
 <div class="legalisasi-module">
     <div class="container-fluid">
-        <!-- Header Section -->
-        <div class="d-sm-flex align-items-center justify-content-between mb-4">
-            <h1 class="h3 mb-0 text-gray-800">
-                <i class="fas fa-crown text-info me-2"></i><?= esc($title) ?>
-            </h1>
-            <nav aria-label="breadcrumb">
-                <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="<?= base_url('dashboard') ?>">Dashboard</a></li>
-                    <li class="breadcrumb-item active" aria-current="page">Legalisasi Walikota</li>
-                </ol>
-            </nav>
+        <!-- Premium Welcome Banner -->
+        <div class="premium-welcome-banner mb-5">
+            <div class="banner-content">
+                <div class="banner-text">
+                    <h1 class="banner-title">Dashboard Legalisasi Walikota</h1>
+                    <p class="banner-subtitle">Otoritas Pengesahan Akhir & Tanda Tangan Elektronik Resmi JDIH Kota Padang</p>
+                </div>
+                <div class="banner-visual">
+                    <div class="visual-circle"></div>
+                    <i class="fas fa-crown banner-icon"></i>
+                </div>
+            </div>
+            <div class="banner-footer">
+                <div class="footer-item">
+                    <i class="fas fa-calendar-alt"></i>
+                    <span><?= date('d F Y') ?></span>
+                </div>
+                <div class="footer-item">
+                    <i class="fas fa-clock"></i>
+                    <span id="live-clock"><?= date('H:i') ?></span>
+                </div>
+                <div class="footer-item">
+                    <i class="fas fa-shield-alt text-success"></i>
+                    <span>BSrE Verified</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Glassmorphism Statistics Cards -->
+        <div class="row g-4 mb-5 animate__animated animate__fadeIn">
+            <!-- Pending TTE -->
+            <div class="col-xl-3 col-md-6">
+                <div class="glass-card stat-card border-bottom-danger h-100">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center justify-content-between mb-3">
+                            <div class="stat-icon-wrapper bg-soft-danger">
+                                <i class="fas fa-stamp text-danger"></i>
+                            </div>
+                            <?php if (($stats['pending_walikota_tte'] ?? 0) > 0): ?>
+                                <span class="badge pulse-danger">Pending</span>
+                            <?php endif; ?>
+                        </div>
+                        <h3 class="stat-value"><?= number_format($stats['pending_walikota_tte'] ?? 0) ?></h3>
+                        <p class="stat-label">Menunggu TTE Walikota</p>
+                        <div class="stat-progress">
+                            <div class="progress" style="height: 4px;">
+                                <div class="progress-bar bg-danger" role="progressbar" style="width: 100%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TTE Tahun Ini -->
+            <div class="col-xl-3 col-md-6">
+                <div class="glass-card stat-card border-bottom-success h-100">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center justify-content-between mb-3">
+                            <div class="stat-icon-wrapper bg-soft-success">
+                                <i class="fas fa-check-double text-success"></i>
+                            </div>
+                            <span class="badge bg-soft-success text-success">Tahun Ini</span>
+                        </div>
+                        <h3 class="stat-value"><?= number_format($stats['tte_tahun_ini'] ?? 0) ?></h3>
+                        <p class="stat-label">Dokumen Disahkan (TTE)</p>
+                        <div class="stat-progress">
+                            <div class="progress" style="height: 4px;">
+                                <div class="progress-bar bg-success" role="progressbar" style="width: 100%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Total Selesai -->
+            <div class="col-xl-3 col-md-6">
+                <div class="glass-card stat-card border-bottom-info h-100">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center justify-content-between mb-3">
+                            <div class="stat-icon-wrapper bg-soft-info">
+                                <i class="fas fa-archive text-info"></i>
+                            </div>
+                            <span class="badge bg-soft-info text-info">Global</span>
+                        </div>
+                        <h3 class="stat-value"><?= number_format($stats['selesai'] ?? 0) ?></h3>
+                        <p class="stat-label">Total Dokumen Selesai</p>
+                        <div class="stat-progress">
+                            <div class="progress" style="height: 4px;">
+                                <div class="progress-bar bg-info" role="progressbar" style="width: 100%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Total Ajuan -->
+            <div class="col-xl-3 col-md-6">
+                <div class="glass-card stat-card border-bottom-primary h-100">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center justify-content-between mb-3">
+                            <div class="stat-icon-wrapper bg-soft-primary">
+                                <i class="fas fa-file-invoice text-primary"></i>
+                            </div>
+                            <span class="badge bg-soft-primary text-primary">2024</span>
+                        </div>
+                        <h3 class="stat-value"><?= number_format($stats['total_ajuan'] ?? 0) ?></h3>
+                        <p class="stat-label">Total Pengajuan Masuk</p>
+                        <div class="stat-progress">
+                            <div class="progress" style="height: 4px;">
+                                <div class="progress-bar bg-primary" role="progressbar" style="width: 100%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <!-- Flash Messages -->
         <?php if (session()->getFlashdata('success')): ?>
-            <div class="alert alert-success alert-dismissible fade show" role="alert">
-                <i class="fas fa-check-circle me-2"></i><?= esc(session()->getFlashdata('success')) ?>
+            <div class="alert alert-premium-success alert-dismissible fade show mb-4 animate__animated animate__fadeInDown" role="alert">
+                <div class="d-flex align-items-center">
+                    <div class="alert-icon-wrapper me-3">
+                        <i class="fas fa-check-circle fs-4"></i>
+                    </div>
+                    <div>
+                        <h6 class="alert-heading mb-1">Berhasil!</h6>
+                        <p class="mb-0"><?= esc(session()->getFlashdata('success')) ?></p>
+                    </div>
+                </div>
                 <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
             </div>
         <?php endif; ?>
 
         <?php if (session()->getFlashdata('error')): ?>
-            <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                <i class="fas fa-exclamation-triangle me-2"></i><?= esc(session()->getFlashdata('error')) ?>
+            <div class="alert alert-premium-danger alert-dismissible fade show mb-4 animate__animated animate__fadeInDown" role="alert">
+                <div class="d-flex align-items-center">
+                    <div class="alert-icon-wrapper me-3">
+                        <i class="fas fa-exclamation-circle fs-4"></i>
+                    </div>
+                    <div>
+                        <h6 class="alert-heading mb-1">Terjadi Kesalahan</h6>
+                        <p class="mb-0"><?= esc(session()->getFlashdata('error')) ?></p>
+                    </div>
+                </div>
                 <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
             </div>
         <?php endif; ?>
 
-        <!-- TTE Walikota Section (Final Authority) -->
-        <?php if (!empty($pending_tte)): ?>
-            <div class="card shadow mb-4">
-                <div class="card-header py-3" style="background-color: #20c997; color: #fff;">
-                    <h6 class="m-0 font-weight-bold">
-                        <i class="fas fa-crown me-2"></i>Dokumen Menunggu TTE Walikota (Final Authority)
-                        <span class="badge bg-dark text-white ms-2"><?= count($pending_tte) ?> dokumen</span>
-                    </h6>
-                </div>
-                <div class="card-body">
-                    
-                    <div class="table-responsive">
-                        <table id="tte-walikota-table" class="table table-striped table-hover">
-                            <thead class="table-dark">
-                                <tr>
-                                    <th>No</th>
-                                    <th>Judul Peraturan</th>
-                                    <th>Jenis</th>
-                                    <th>Instansi</th>
-                                    <th>Tgl Pengajuan</th>
-                                    <th>Status</th>
-                                    <th>Aksi</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php $no = 1;
-                                foreach ($pending_tte as $item): ?>
-                                    <tr>
-                                        <td><?= $no++ ?></td>
-                                        <td>
-                                            <div class="fw-bold text-info"><?= esc($item['judul_peraturan']) ?></div>
-                                            
-                                        </td>
-                                        <td>
-                                            <span class="badge text-white" style="background-color: #20c997;">
-                                                <?= esc($item['nama_jenis']) ?>
-                                            </span>
-                                        </td>
-                                        <td><?= esc($item['nama_instansi'] ?? 'N/A') ?></td>
-                                        <td>
-                                            <i class="fas fa-calendar me-1"></i>
-                                            <?= date('d/m/Y', strtotime($item['tanggal_pengajuan'])) ?>
-                                        </td>
-                                        <td>
-                                            <span class="badge bg-danger text-white">
-                                                <i class="fas fa-crown me-1"></i>Menunggu TTE Walikota
-                                            </span>
-                                        </td>
-                                        <td>
-                                            <a href="<?= base_url('legalisasi/detail/' . $item['id']) ?>" class="btn btn-sm btn-info" title="Detail"><i class="fas fa-eye"></i> Detail</a>
-                                        </td>
-                                    </tr>
-                                <?php endforeach; ?>
-                            </tbody>
-                        </table>
+        <!-- Main Content Table -->
+        <div class="glass-card mb-4 animate__animated animate__fadeInUp">
+            <div class="card-header-premium">
+                <div class="d-flex align-items-center justify-content-between">
+                    <div class="header-left">
+                        <h5 class="mb-0">Daftar Dokumen Menunggu TTE Walikota</h5>
+                        <p class="text-muted small mb-0">Verifikasi akhir dan pengesahan digital menggunakan sertifikat BSrE</p>
+                    </div>
+                    <div class="header-right">
+                        <button class="btn btn-premium-refresh" onclick="location.reload()">
+                            <i class="fas fa-sync-alt"></i>
+                        </button>
                     </div>
                 </div>
             </div>
-        <?php else: ?>
-            <!-- Empty State -->
-            <div class="card shadow">
-                <div class="card-body text-center py-5">
-                    <i class="fas fa-crown fa-3x text-info mb-3"></i>
-                    <h5 class="text-muted">Tidak Ada Dokumen untuk TTE</h5>
-                    <p class="text-muted">Saat ini tidak ada dokumen yang memerlukan TTE Walikota.</p>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table id="tte-walikota-table" class="table table-premium mb-0">
+                        <thead>
+                            <tr>
+                                <th width="50" class="text-center">No</th>
+                                <th>Informasi Dokumen</th>
+                                <th>Jenis & Instansi</th>
+                                <th class="text-center">Tanggal Pengajuan</th>
+                                <th class="text-center">Status Keamanan</th>
+                                <th class="text-center">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php if (!empty($pending_tte)): ?>
+                                <?php $no = 1; foreach ($pending_tte as $item): ?>
+                                    <tr>
+                                        <td class="text-center text-muted"><?= $no++ ?></td>
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                <div class="file-icon-wrapper me-3">
+                                                    <i class="fas fa-file-pdf text-danger fs-4"></i>
+                                                </div>
+                                                <div>
+                                                    <div class="fw-bold text-dark mb-1"><?= esc($item['judul_peraturan']) ?></div>
+                                                    <div class="text-muted small">
+                                                        <i class="fas fa-user-edit me-1"></i><?= esc($item['nama_pemohon'] ?? 'N/A') ?>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="mb-1">
+                                                <span class="badge bg-soft-info text-info">
+                                                    <?= esc($item['nama_jenis']) ?>
+                                                </span>
+                                            </div>
+                                            <div class="text-muted small">
+                                                <i class="fas fa-building me-1"></i><?= esc($item['nama_instansi'] ?? 'N/A') ?>
+                                            </div>
+                                        </td>
+                                        <td class="text-center">
+                                            <div class="text-dark font-outfit"><?= date('d M Y', strtotime($item['tanggal_pengajuan'])) ?></div>
+                                            <div class="text-muted small"><?= date('H:i', strtotime($item['tanggal_pengajuan'])) ?> WIB</div>
+                                        </td>
+                                        <td class="text-center">
+                                            <span class="badge bg-soft-danger text-danger">
+                                                <i class="fas fa-shield-alt me-1"></i>Authority Pass Required
+                                            </span>
+                                        </td>
+                                        <td class="text-center">
+                                            <div class="btn-group-premium">
+                                                <a href="<?= base_url('legalisasi/detail/' . $item['id_ajuan']) ?>" class="btn btn-premium-action btn-view" title="Detail & Proses">
+                                                    <i class="fas fa-eye me-1"></i> Detail
+                                                </a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            <?php else: ?>
+                                <tr>
+                                    <td colspan="6" class="text-center py-5">
+                                        <div class="empty-state">
+                                            <i class="fas fa-check-double fa-3x text-premium-muted mb-3"></i>
+                                            <h6 class="text-muted">Semua Dokumen Telah Diproses</h6>
+                                            <p class="text-premium-muted small mb-0">Tidak ada pengajuan legalisasi baru yang menunggu tanda tangan Anda.</p>
+                                        </div>
+                                    </td>
+                                </tr>
+                            <?php endif; ?>
+                        </tbody>
+                    </table>
                 </div>
             </div>
-        <?php endif; ?>
+        </div>
     </div>
 </div>
 
-<!-- TTE Processing menggunakan Bootbox -->
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@400;500;600;700&display=swap');
+
+    :root {
+        --premium-primary: #dc3545; /* Walikota Red-Crimson theme */
+        --premium-secondary: #ffc107;
+        --premium-success: #198754;
+        --premium-info: #0dcaf0;
+        --premium-glass: rgba(255, 255, 255, 0.9);
+        --premium-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+        --font-main: 'Inter', sans-serif;
+        --font-heading: 'Outfit', sans-serif;
+    }
+
+    body {
+        font-family: var(--font-main);
+        background-color: #f6f9fc;
+    }
+
+    .font-outfit { font-family: var(--font-heading); }
+
+    /* Welcome Banner */
+    .premium-welcome-banner {
+        background: linear-gradient(135deg, #8b0000 0%, #dc3545 100%);
+        border-radius: 20px;
+        padding: 40px;
+        position: relative;
+        overflow: hidden;
+        color: white;
+        box-shadow: 0 15px 35px rgba(220, 53, 69, 0.2);
+    }
+
+    .banner-content {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        position: relative;
+        z-index: 2;
+    }
+
+    .banner-title {
+        font-family: var(--font-heading);
+        font-weight: 700;
+        font-size: 2.2rem;
+        margin-bottom: 10px;
+        letter-spacing: -0.5px;
+    }
+
+    .banner-subtitle {
+        font-size: 1.1rem;
+        opacity: 0.9;
+        max-width: 600px;
+        line-height: 1.5;
+    }
+
+    .visual-circle {
+        position: absolute;
+        top: -50px;
+        right: -50px;
+        width: 250px;
+        height: 250px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 50%;
+        z-index: -1;
+    }
+
+    .banner-icon {
+        font-size: 6rem;
+        opacity: 0.2;
+        transform: rotate(15deg);
+    }
+
+    .banner-footer {
+        margin-top: 30px;
+        display: flex;
+        gap: 25px;
+        padding-top: 25px;
+        border-top: 1px solid rgba(255, 255, 255, 0.15);
+        z-index: 2;
+    }
+
+    .footer-item {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 0.9rem;
+        background: rgba(255, 255, 255, 0.1);
+        padding: 8px 15px;
+        border-radius: 30px;
+    }
+
+    /* Glass Cards */
+    .glass-card {
+        background: var(--premium-glass);
+        backdrop-filter: blur(10px);
+        border-radius: 16px;
+        border: 1px solid rgba(255, 255, 255, 0.5);
+        box-shadow: var(--premium-shadow);
+        transition: all 0.3s ease;
+    }
+
+    .glass-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.12);
+    }
+
+    .stat-card {
+        padding: 10px;
+    }
+
+    .stat-icon-wrapper {
+        width: 50px;
+        height: 50px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+    }
+
+    .bg-soft-danger { background-color: rgba(220, 53, 69, 0.1); }
+    .bg-soft-success { background-color: rgba(25, 135, 84, 0.1); }
+    .bg-soft-info { background-color: rgba(13, 202, 240, 0.1); }
+    .bg-soft-primary { background-color: rgba(13, 110, 253, 0.1); }
+
+    .stat-value {
+        font-family: var(--font-heading);
+        font-weight: 700;
+        font-size: 1.8rem;
+        color: #2c3e50;
+        margin-bottom: 5px;
+    }
+
+    .stat-label {
+        color: #6c757d;
+        font-weight: 500;
+        font-size: 0.95rem;
+        margin-bottom: 15px;
+    }
+
+    /* Table Styling */
+    .table-premium thead th {
+        background-color: #f8f9fa;
+        color: #495057;
+        font-family: var(--font-heading);
+        font-weight: 600;
+        font-size: 0.85rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        border-top: none;
+        padding: 20px 15px;
+    }
+
+    .table-premium tbody td {
+        padding: 18px 15px;
+        vertical-align: middle;
+        border-color: #f1f4f8;
+    }
+
+    .file-icon-wrapper {
+        width: 45px;
+        height: 45px;
+        background: #fff;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+    }
+
+    .card-header-premium {
+        padding: 25px 30px;
+        border-bottom: 1px solid #f1f4f8;
+    }
+
+    .btn-premium-action {
+        padding: 8px 20px;
+        border-radius: 10px;
+        font-weight: 600;
+        font-size: 0.85rem;
+        transition: all 0.3s ease;
+    }
+
+    .btn-view {
+        background-color: var(--premium-primary);
+        color: white;
+        border: none;
+    }
+
+    .btn-view:hover {
+        background-color: #8b0000;
+        color: white;
+        transform: scale(1.05);
+    }
+
+    /* Badges */
+    .badge {
+        padding: 8px 14px;
+        border-radius: 8px;
+        font-weight: 600;
+    }
+
+    /* Animations */
+    .pulse-danger {
+        background-color: rgba(220, 53, 69, 0.1);
+        color: #dc3545;
+        animation: pulse-danger 2s infinite;
+    }
+
+    @keyframes pulse-danger {
+        0% { box-shadow: 0 0 0 0 rgba(220, 53, 69, 0.4); }
+        70% { box-shadow: 0 0 0 10px rgba(220, 53, 69, 0); }
+        100% { box-shadow: 0 0 0 0 rgba(220, 53, 69, 0); }
+    }
+
+    .animate__animated {
+        animation-duration: 0.8s;
+    }
+
+    /* Alert Enhancements */
+    .alert-premium-success {
+        background: #d1e7dd;
+        border: none;
+        border-left: 5px solid #198754;
+        color: #0f5132;
+    }
+
+    .alert-premium-danger {
+        background: #f8d7da;
+        border: none;
+        border-left: 5px solid #dc3545;
+        color: #842029;
+    }
+
+    .alert-icon-wrapper {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.3);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+</style>
 
 <script>
     $(document).ready(function() {
@@ -110,258 +495,22 @@
                 language: {
                     url: 'https://cdn.datatables.net/plug-ins/1.13.7/i18n/id.json'
                 },
-                order: [
-                    [4, 'asc']
-                ], // Sort by tanggal pengajuan (oldest first)
+                order: [[3, 'asc']],
                 pageLength: 25,
-                columnDefs: [{
-                        targets: [5, 6],
-                        orderable: false
-                    }, // Status dan aksi tidak bisa diurutkan
-                    {
-                        targets: [0, 5, 6],
-                        className: 'text-center'
-                    }
-                ]
+                columnDefs: [
+                    { targets: [0, 4, 5], orderable: false },
+                    { targets: [0, 3, 4, 5], className: 'text-center' }
+                ],
+                dom: '<"d-flex justify-content-between align-items-center p-3"<"length-menu"l><"search-box"f>>rt<"d-flex justify-content-between align-items-center p-3"<"info"i><"pagination"p>>'
             });
         }
+
+        // Live Clock
+        setInterval(function() {
+            const now = new Date();
+            const timeStr = now.getHours().toString().padStart(2, '0') + ':' + 
+                          now.getMinutes().toString().padStart(2, '0');
+            $('#live-clock').text(timeStr);
+        }, 60000);
     });
-
-    // Rate limiting untuk mencegah spam
-    let lastTTERequest = 0;
-    const TTE_COOLDOWN = 5000; // 5 detik cooldown
-
-    // Global variables untuk TTE
-    let currentAjuanId = null;
-    let currentBootbox = null;
-
-    function processTTE(ajuan_id, type) {
-        // Rate limiting check
-        const now = Date.now();
-        if (now - lastTTERequest < TTE_COOLDOWN) {
-            alert('Tunggu sebentar sebelum melakukan aksi lagi.');
-            return;
-        }
-        lastTTERequest = now;
-
-        // Simpan ID ajuan untuk digunakan di bootbox
-        currentAjuanId = ajuan_id;
-
-        // Get ajuan data untuk preview nomor
-        $.get('<?= base_url('legalisasi/getAjuanData') ?>/' + ajuan_id)
-            .done(function(data) {
-                showTTEBootbox(data);
-            })
-            .fail(function() {
-                alert('Gagal mengambil data ajuan');
-            });
-    }
-
-    function showTTEBootbox(data) {
-            const tteContent = `
-            <div class="alert alert-info" role="alert" style="background-color: #20c997; border-color: #20c997; color: #fff;">
-                <i class="fas fa-exclamation-triangle me-2"></i>
-                <strong>PERHATIAN:</strong> TTE Walikota akan menghasilkan nomor final dan pengesahan resmi.
-                Proses ini tidak dapat dibatalkan.
-            </div>
-
-            <form id="tteWalikotaForm">
-                <div class="mb-3">
-                    <label for="walikota_nik" class="form-label">
-                        <i class="fas fa-id-card me-1"></i>NIK Walikota <span class="text-danger">*</span>
-                    </label>
-                    <input type="text" class="form-control" id="walikota_nik" name="nik"
-                        maxlength="16" pattern="[0-9]{16}" required>
-                    <div class="form-text">Masukkan 16 digit NIK Walikota untuk sertifikat digital BSRE</div>
-                </div>
-                <div class="mb-3">
-                    <label for="walikota_passphrase" class="form-label">
-                        <i class="fas fa-lock me-1"></i>Passphrase Sertifikat Walikota <span class="text-danger">*</span>
-                    </label>
-                    <input type="password" class="form-control" id="walikota_passphrase" name="passphrase"
-                        minlength="8" required>
-                    <div class="form-text">Passphrase untuk sertifikat digital BSRE Walikota</div>
-                </div>
-
-                <div class="mb-3">
-                    <div class="card" style="border-color: #20c997;">
-                        <div class="card-header text-white" style="background-color: #20c997;">
-                            <h6 class="mb-0">
-                                <i class="fas fa-list-ol me-2"></i>Nomor yang Akan Digenerate
-                            </h6>
-                        </div>
-                        <div class="card-body">
-                            <div id="nomor-preview">
-                                <p class="mb-0"><strong>Jenis:</strong> <span id="preview-jenis">${data.jenis_peraturan}</span></p>
-                                <p class="mb-0"><strong>Nomor:</strong> <code id="preview-nomor">${data.preview_nomor}</code></p>
-                                <small class="text-muted">Nomor akan diurutkan berdasarkan waktu TTE</small>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="mb-3">
-                    <div class="alert alert-info">
-                        <i class="fas fa-info-circle me-2"></i>
-                        <strong>Proses TTE BSRE:</strong>
-                        <ul class="mb-0 mt-2">
-                            <li>Sistem akan generate <strong>nomor peraturan otomatis</strong></li>
-                            <li>Dokumen akan diberi nomor dan dikirim ke <strong>server BSRE</strong></li>
-                            <li>TTE akan menggunakan <strong>sertifikat digital resmi</strong></li>
-                            <li>Hasil TTE akan disimpan dengan <strong>audit trail lengkap</strong></li>
-                        </ul>
-                    </div>
-                </div>
-            </form>
-        `;
-
-        currentBootbox = bootbox.dialog({
-            title: '<i class="fas fa-crown me-2"></i>TTE Walikota dengan BSRE',
-            message: tteContent,
-            size: 'large',
-            buttons: {
-                cancel: {
-                    label: '<i class="fas fa-times me-1"></i>Batal',
-                    className: 'btn-secondary'
-                },
-                proceed: {
-                    label: '<i class="fas fa-crown me-1"></i>Proses TTE Walikota',
-                    className: 'btn-info',
-                    callback: function() {
-                        submitTTEWalikota();
-                        return false; // Prevent dialog from closing
-                    }
-                }
-            }
-        });
-    }
-
-    function submitTTEWalikota() {
-        if (!currentAjuanId) {
-            alert('ID ajuan tidak valid.');
-            return;
-        }
-
-        const nik = document.getElementById('walikota_nik').value;
-        const passphrase = document.getElementById('walikota_passphrase').value;
-
-        if (!nik || nik.length !== 16) {
-            alert('NIK harus 16 digit!');
-            return;
-        }
-
-        if (!passphrase || passphrase.length < 8) {
-            alert('Passphrase minimal 8 karakter!');
-            return;
-        }
-
-        if (confirm('Apakah Anda yakin akan memproses TTE Walikota? Nomor peraturan akan digenerate otomatis dan dokumen akan disahkan secara resmi.')) {
-            // Disable button untuk mencegah double click
-            const proceedBtn = currentBootbox.find('.btn-info');
-            const originalText = proceedBtn.html();
-            proceedBtn.prop('disabled', true);
-            proceedBtn.html('<i class="fas fa-spinner fa-spin"></i> Memproses TTE dengan BSRE...');
-
-            // Process TTE dengan BSRE
-            const formData = new FormData();
-            formData.append('nik', nik);
-            formData.append('passphrase', passphrase);
-            formData.append('authority', 'walikota');
-            formData.append('<?= csrf_token() ?>', '<?= csrf_hash() ?>');
-
-            fetch('<?= base_url('legalisasi/processTTE') ?>/' + currentAjuanId, {
-                    method: 'POST',
-                    headers: {
-                        'X-Requested-With': 'XMLHttpRequest'
-                    },
-                    body: formData
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        // Tutup bootbox dan reload halaman
-                        // Show success message
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'TTE Walikota Berhasil!',
-                            html: `
-                                <div class="text-start">
-                                    <p><strong>Nomor Peraturan:</strong> ${data.nomor_peraturan}</p>
-                                    <p><strong>Jenis:</strong> ${data.jenis_peraturan}</p>
-                                    <p><strong>Urutan:</strong> ${data.urutan_dalam_jenis}</p>
-                                    <hr>
-                                    <p class="mb-0"><strong>Dokumen telah disahkan secara resmi.</strong></p>
-                                </div>
-                            `,
-                            showConfirmButton: false,
-                            timer: 5000
-                        }).then(() => {
-                            location.reload();
-                        });
-                    } else {
-                        alert('Error: ' + data.message);
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    alert('TTE gagal: Terjadi kesalahan server BSRE');
-                })
-                .finally(() => {
-                    // Re-enable button
-                    proceedBtn.prop('disabled', false);
-                    proceedBtn.html(originalText);
-                });
-        }
-    }
-
-    function refreshData() {
-        location.reload();
-    }
-</script>
-
-<style>
-    /* Walikota-specific styling */
-    .progress-timeline {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 2px;
-    }
-
-    .progress-timeline .badge {
-        font-size: 0.7rem;
-        padding: 0.25rem 0.5rem;
-    }
-
-    /* Enhanced card styling for walikota */
-    .bg-gradient-info {
-        background: linear-gradient(135deg, #20c997 0%, #17a2b8 100%);
-    }
-
-    /* Authority-specific colors */
-    .border-left-info {
-        border-left: 4px solid #20c997 !important;
-    }
-
-    /* Bootbox enhancements */
-
-    #nomor-preview code {
-        background-color: #d1f2eb;
-        color: #0c5460;
-        padding: 0.5rem;
-        border-radius: 4px;
-        display: block;
-        margin-top: 0.5rem;
-    }
-
-    /* Responsive timeline */
-    @media (max-width: 768px) {
-        .progress-timeline {
-            justify-content: center;
-        }
-
-        .progress-timeline .badge {
-            font-size: 0.6rem;
-            padding: 0.2rem 0.4rem;
-        }
-    }
-</style>
+</script>
