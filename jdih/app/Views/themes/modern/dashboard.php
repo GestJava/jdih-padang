@@ -113,7 +113,7 @@
                         <div class="stat-icon-premium">
                             <i class="material-icons">new_releases</i>
                         </div>
-                        <div class="badge bg-white bg-opacity-20 text-white px-3 py-1 rounded-pill small">Aktual</div>
+                        <div class="glass-badge px-3 py-1 rounded-pill small fw-bold text-white">Aktual</div>
                     </div>
                     <div class="stat-content">
                         <h2 class="display-6 fw-800 text-white mb-1"><?= !empty($dokumen_bulan_ini ?? 0) ? number_format($dokumen_bulan_ini) : 0 ?></h2>
@@ -485,6 +485,7 @@
 
     .bg-emerald-soft { background-color: rgba(16, 185, 129, 0.2); color: #4ade80; }
     .bg-rose-soft { background-color: rgba(244, 63, 94, 0.2); color: #fb7185; }
+    .glass-badge { background-color: rgba(255, 255, 255, 0.15); backdrop-filter: blur(4px); border: 1px solid rgba(255, 255, 255, 0.1); }
     .growth-badge {
         padding: 4px 10px;
         border-radius: 10px;
