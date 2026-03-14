@@ -84,8 +84,8 @@ class HarmonisasiAjax extends BaseController
             $builder->where('ha.id_user_pemohon', $user['id_user']);
         }
 
-        // FILTER: Exclude status SELESAI (14) dan DITOLAK (15)
-        $builder->whereNotIn('ha.id_status_ajuan', [14, 15]);
+        // Hitung total record (hanya dengan base filter & permission, TANPA custom filters/search)
+        $recordsTotal = (clone $builder)->countAllResults(false);
 
         // CUSTOM FILTERS (from AJAX data)
         $customFilters = $request->getPost('custom_filters');
@@ -104,9 +104,6 @@ class HarmonisasiAjax extends BaseController
             }
         }
 
-        // Hitung total record (dengan base filter, tanpa search/limit)
-        $recordsTotal = (clone $builder)->countAllResults(false);
-
         // SEARCH
         if ($search !== '') {
             $builder->groupStart()
@@ -117,7 +114,7 @@ class HarmonisasiAjax extends BaseController
                 ->groupEnd();
         }
 
-        // Hitung filtered record (setelah search) – tetap pakai builder tapi hanya COUNT(*)
+        // Hitung filtered record (setelah filters + search)
         $recordsFiltered = (clone $builder)->countAllResults(false);
 
         // ORDER & LIMIT

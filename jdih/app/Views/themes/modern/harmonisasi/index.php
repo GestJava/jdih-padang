@@ -97,7 +97,7 @@
                                 $colorClass = 'bg-' . $status['color'];
                                 $icon = $status['icon'] ?? 'circle';
                             ?>
-                                <div class="status-item-premium mb-4">
+                                <div class="status-item-premium mb-4 quick-filter shadow-sm-hover" data-status="<?= $status['id'] ?>" style="cursor: pointer;">
                                     <div class="d-flex justify-content-between align-items-center mb-2">
                                         <div class="d-flex align-items-center">
                                             <div class="status-icon bg-light-premium text-<?= esc($status['color']) ?> rounded-circle me-3">
@@ -150,7 +150,7 @@
                                 $colorClass = 'bg-' . $status['color'];
                                 $icon = $status['icon'] ?? 'circle';
                             ?>
-                                <div class="status-item-premium mb-4">
+                                <div class="status-item-premium mb-4 quick-filter shadow-sm-hover" data-status="<?= $status['id'] ?>" style="cursor: pointer;">
                                     <div class="d-flex justify-content-between align-items-center mb-2">
                                         <div class="d-flex align-items-center">
                                             <div class="status-icon bg-light-premium text-<?= esc($status['color']) ?> rounded-circle me-3">
