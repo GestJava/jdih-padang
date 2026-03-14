@@ -63,8 +63,8 @@ def generate_qr_code(data, output_path, size=100, logo_path=None):
                     logo = Image.open(logo_path)
                     print(f"Logo opened successfully. Format: {logo.format}, Mode: {logo.mode}, Size: {logo.size}")
                     
-                    # Resize logo menjadi 50% dari QR code size (diperbesar dari 30% agar lebih terlihat)
-                    logo_size = int(size * 0.50)
+                    # Resize logo menjadi 25% dari QR code size (standar aman agar QR tetap bisa di-scan)
+                    logo_size = int(size * 0.25)
                     print(f"Resizing logo to {logo_size}x{logo_size}px")
                     logo = logo.resize((logo_size, logo_size), Image.Resampling.LANCZOS)
                     

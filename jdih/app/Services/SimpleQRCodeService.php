@@ -292,9 +292,9 @@ class SimpleQRCodeService
                 ->margin(10)
                 ->roundBlockSizeMode(\Endroid\QrCode\RoundBlockSizeMode::Margin);
             
-            // Tambahkan logo jika ada (50% dari size untuk lebih terlihat)
+            // Tambahkan logo jika ada (25% dari size untuk keamanan scanning)
             if ($logoPath) {
-                $logoSize = (int)($size * 0.50); // 50% dari QR size (diperbesar dari 30% agar lebih terlihat)
+                $logoSize = (int)($size * 0.25); // 25% dari QR size (standar aman agar QR tetap bisa di-scan)
                 $builder->logoPath($logoPath)
                         ->logoResizeToWidth($logoSize);
                 
