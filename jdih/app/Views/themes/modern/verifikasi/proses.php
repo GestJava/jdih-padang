@@ -300,7 +300,7 @@
                                         <?= esc($item['keterangan'] ?: 'Tidak ada keterangan') ?>
                                     </p>
                                     <div class="stepper-meta">
-                                        <span><i class="far fa-calendar-alt me-1"></i><?= isset($item['tanggal_formatted']) ? esc($item['tanggal_formatted']) : date('d M Y H:i', strtotime($item['tanggal_aksi'] ?? $item['created_at'])) ?></span>
+                                        <span><i class="far fa-calendar-alt me-1"></i><?= esc($item['tanggal_formatted']) ?></span>
                                         <span>&bull;</span>
                                         <span><i class="far fa-user me-1"></i><?= esc($item['nama_user']) ?></span>
                                     </div>

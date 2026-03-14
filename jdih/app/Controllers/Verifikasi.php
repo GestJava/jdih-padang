@@ -183,7 +183,19 @@ class Verifikasi extends BaseController
         $this->data['title'] = 'Proses Verifikasi Ajuan';
         $this->data['ajuan'] = $ajuan;
         $this->data['dokumen'] = $this->harmonisasiDokumenModel->getDokumenByAjuan($id);
-        $this->data['histori'] = $this->harmonisasiHistoriModel->getHistoryByAjuan($id);
+        
+        // Format histori dates (consistent with Harmonisasi controller)
+        $histori = $this->harmonisasiHistoriModel->getHistoryByAjuan($id);
+        foreach ($histori as &$item) {
+            $tanggal = $item['tanggal_aksi'] ?? null;
+            if ($tanggal && strtotime($tanggal) !== false) {
+                $item['tanggal_formatted'] = date('d F Y H:i', strtotime($tanggal));
+            } else {
+                $item['tanggal_formatted'] = 'Tanggal tidak valid';
+            }
+        }
+        $this->data['histori'] = $histori;
+        
         $this->data['validation'] = \Config\Services::validation();
         $this->data['user'] = $user;
         return $this->view('verifikasi/proses', $this->data);
