@@ -449,69 +449,17 @@ class TTEController extends BaseController
                     $nomorPeraturan['tanggal_pengesahan'] ?? date('Y-m-d')
                 );
                 
-                // Get document URL - SELALU prioritaskan URL file langsung jika file TTE sudah ada di filesystem
-                $documentUrl = null;
+                // Generate URL file TTE yang baru akan dibuat untuk embedding di QR Code
+                // Karena kita sedang akan menandatangani ulang/baru dokumen ini,
+                // file PDF yang lama sudah tidak relevan dan file TTE baru akan dibuat
+                $currentTime = time();
+                $currentUniqid = uniqid();
+                $predictedFilename = 'tte_' . $idAjuan . '_' . $currentTime . '_' . $currentUniqid . '.pdf';
+                $relativePath = 'jdih/writable/uploads/harmonisasi/tte/' . $predictedFilename;
+                $documentUrl = rtrim($this->baseURL, '/') . '/' . $relativePath;
                 
-                // PRIORITAS 1: Cek filesystem untuk file TTE yang sudah ada (paling akurat)
-                $possibleTteFile = WRITEPATH . 'uploads/harmonisasi/tte/tte_' . $idAjuan . '_*.pdf';
-                $tteFiles = glob($possibleTteFile);
-                if (!empty($tteFiles)) {
-                    // Gunakan file TTE terbaru (file terakhir biasanya terbaru)
-                    $latestTteFile = $tteFiles[count($tteFiles) - 1];
-                    // Pastikan path relatif mengandung 'writable/' untuk URL yang benar
-                    // Format: jdih/writable/uploads/harmonisasi/tte/tte_xxx.pdf
-                    $relativePath = str_replace(WRITEPATH, '', $latestTteFile);
-                    // Jika relativePath tidak mengandung 'writable/', tambahkan
-                    if (strpos($relativePath, 'writable/') === false) {
-                        $relativePath = 'writable/' . ltrim($relativePath, '/');
-                    }
-                    $documentUrl = rtrim($this->baseURL, '/') . '/jdih/' . $relativePath;
-                    log_message('info', 'TTE SignDocument - Found TTE file in filesystem, using direct file URL: ' . $documentUrl);
-                }
-                // PRIORITAS 2: Jika tidak ada di filesystem, cek tte_file_path di database
-                elseif (!empty($nomorPeraturan['tte_file_path'])) {
-                    // Gunakan path file TTE langsung dari database
-                    $tteFilePath = $nomorPeraturan['tte_file_path'];
-                    // Pastikan path sudah benar (tambah jdih/ jika belum ada)
-                    if (strpos($tteFilePath, 'jdih/') === false && strpos($tteFilePath, 'writable/') === 0) {
-                        $documentUrl = rtrim($this->baseURL, '/') . '/jdih/' . $tteFilePath;
-                    } else {
-                        $documentUrl = rtrim($this->baseURL, '/') . '/' . ltrim($tteFilePath, '/');
-                    }
-                    log_message('info', 'TTE SignDocument - Using TTE file path from database: ' . $documentUrl);
-                }
-                // PRIORITAS 3: Gunakan document_url dari database (jika bukan route download)
-                elseif (!empty($nomorPeraturan['document_url'])) {
-                    $documentUrl = $nomorPeraturan['document_url'];
-                    // Fix URL jika masih mengandung /jdih/legalisasi (route download)
-                    if (strpos($documentUrl, '/jdih/legalisasi') !== false) {
-                        $documentUrl = str_replace('/jdih/legalisasi', '/legalisasi', $documentUrl);
-                    }
-                    // Jika masih route download, abaikan dan gunakan fallback
-                    if (strpos($documentUrl, '/legalisasi/download/') !== false) {
-                        log_message('warning', 'TTE SignDocument - document_url is route download, will use fallback');
-                        $documentUrl = null; // Reset untuk gunakan fallback
-                    } else {
-                        log_message('info', 'TTE SignDocument - Using document_url from database: ' . $documentUrl);
-                    }
-                }
-                
-                // PRIORITAS 4: Buat URL file TTE yang akan dibuat (format sama seperti saveSignedDocument)
-                // Ini memastikan QR code menggunakan URL file langsung, bukan route download
-                // Simpan filename untuk digunakan di saveSignedDocument nanti
-                $predictedFilename = null;
-                if (empty($documentUrl)) {
-                    // Generate filename dengan format yang sama seperti saveSignedDocument
-                    // Format: tte_{idAjuan}_{timestamp}_{uniqid}.pdf
-                    // Gunakan timestamp dan uniqid yang sama untuk konsistensi
-                    $currentTime = time();
-                    $currentUniqid = uniqid();
-                    $predictedFilename = 'tte_' . $idAjuan . '_' . $currentTime . '_' . $currentUniqid . '.pdf';
-                    $relativePath = 'jdih/writable/uploads/harmonisasi/tte/' . $predictedFilename;
-                    $documentUrl = rtrim($this->baseURL, '/') . '/' . $relativePath;
-                    log_message('info', 'TTE SignDocument - Using predicted TTE file URL for QR code: ' . $documentUrl);
-                    log_message('info', 'TTE SignDocument - Predicted filename: ' . $predictedFilename);
-                }
+                log_message('info', 'TTE SignDocument - Using predicted NEW TTE file URL for QR code: ' . $documentUrl);
+                log_message('info', 'TTE SignDocument - Predicted filename: ' . $predictedFilename);
                 
                 log_message('debug', 'TTE SignDocument - Final document URL for QR code: ' . $documentUrl);
                 
