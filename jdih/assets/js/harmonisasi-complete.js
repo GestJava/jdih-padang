@@ -432,21 +432,6 @@
                             return JDIHModules.Harmonisasi.getActionButtons(data, row[5]);
                         }
                     }
-                            var id = data;
-                            var statusId = row[5];
-                            var baseUrl = JDIHModules.Harmonisasi.config.baseUrl;
-                            var detailUrl = baseUrl + 'harmonisasi/show/' + id;
-                            
-                            var actions = '<a href="' + detailUrl + '" class="btn btn-outline-info btn-sm" title="Detail"><i class="fas fa-eye"></i></a>';
-                            
-                            if (statusId == 5) {
-                                var revisiUrl = baseUrl + 'harmonisasi/showRevisiForm/' + id;
-                                actions += ' <a href="' + revisiUrl + '" class="btn btn-outline-warning btn-sm" title="Revisi"><i class="fas fa-edit"></i></a>';
-                            }
-                            
-                            return actions.replace(/\\"/g,'"');
-                        }
-                    }
                 ],
                 pageLength: 10,
                 deferRender: true,
