@@ -1018,10 +1018,10 @@
         // ============================================================
         getStatusBadge: function(statusId) {
             var statusColors = {
-                1: 'bg-secondary', 2: 'bg-warning', 3: 'bg-info', 4: 'bg-primary',
-                5: 'bg-warning', 6: 'bg-info', 7: 'bg-primary', 8: 'bg-primary',
-                9: 'bg-primary', 11: 'bg-primary', 12: 'bg-primary', 13: 'bg-primary',
-                14: 'bg-success', 15: 'bg-danger'
+                1: 'secondary', 2: 'warning', 3: 'info', 4: 'primary',
+                5: 'warning', 6: 'info', 7: 'primary', 8: 'primary',
+                9: 'primary', 11: 'primary', 12: 'primary', 13: 'primary',
+                14: 'success', 15: 'danger'
             };
 
             var statusTexts = {
@@ -1031,25 +1031,23 @@
                 13: 'Menunggu TTE Walikota', 14: 'Selesai', 15: 'Ditolak'
             };
 
-            var color = statusColors[statusId] || 'bg-secondary';
+            var color = statusColors[statusId] || 'secondary';
             var text = statusTexts[statusId] || 'Status';
 
-            // Special handling for draft status
-            if (statusId === 1) {
-                return '<span class="badge badge-status-draft" data-bs-toggle="tooltip" data-bs-placement="top" title="Draft belum diajukan. Klik untuk mengajukan draft ini.">' + text + '</span>';
-            }
-
-            return '<span class="badge ' + color + '">' + text + '</span>';
+            return '<span class="badge-pill-premium badge-soft-' + color + '" data-bs-toggle="tooltip" title="' + text + '">' + text + '</span>';
         },
 
         getActionButtons: function(id, statusId) {
             var baseUrl = this.config.baseUrl;
-            var buttons = '<a href="' + baseUrl + 'harmonisasi/show/' + id + '" class="btn btn-outline-info btn-sm" title="Detail"><i class="fas fa-eye"></i></a>';
+            var buttons = '<div class="d-flex justify-content-center gap-2">';
+            
+            buttons += '<a href="' + baseUrl + 'harmonisasi/show/' + id + '" class="action-btn-pill" title="Lihat Detail"><i class="fas fa-eye fa-sm"></i></a>';
 
             if (statusId == 5) {
-                buttons += ' <a href="' + baseUrl + 'harmonisasi/showRevisiForm/' + id + '" class="btn btn-outline-warning btn-sm" title="Revisi"><i class="fas fa-edit"></i></a>';
+                buttons += '<a href="' + baseUrl + 'harmonisasi/showRevisiForm/' + id + '" class="action-btn-pill text-warning" title="Revisi Berkas"><i class="fas fa-edit fa-sm"></i></a>';
             }
 
+            buttons += '</div>';
             return buttons;
         },
 
@@ -1124,14 +1122,13 @@
 
         getStatusColorClass: function(statusId) {
             var statusColors = {
-                1: 'bg-secondary text-white', 2: 'bg-warning text-dark', 3: 'bg-info text-white',
-                4: 'bg-primary text-white', 5: 'bg-warning text-dark', 6: 'bg-info text-white',
-                7: 'bg-primary text-white', 8: 'bg-primary text-white', 9: 'bg-primary text-white',
-                11: 'bg-primary text-white', 12: 'bg-primary text-white', 13: 'bg-primary text-white',
-                14: 'bg-success text-white', 15: 'bg-danger text-white'
+                1: 'secondary', 2: 'warning', 3: 'info', 4: 'primary',
+                5: 'warning', 6: 'info', 7: 'primary', 8: 'primary',
+                9: 'primary', 11: 'primary', 12: 'primary', 13: 'primary',
+                14: 'success', 15: 'danger'
             };
             
-            return statusColors[statusId] || 'bg-secondary text-white';
+            return statusColors[statusId] || 'secondary';
         }
     };
 
@@ -1163,11 +1160,19 @@
     // INITIALIZATION WHEN DOCUMENT IS READY
     // ============================================================
     $(document).ready(function() {
-        // Final cleanup check
-        // removeOldScriptTags(); // This function is no longer needed
-        
         $('body').addClass('harmonisasi-module');
         JDIHModules.Harmonisasi.init();
+
+        // Table Row Click Handler
+        $(document).on('click', '#harmonisasi-table tbody tr', function(e) {
+            if ($(e.target).closest('.action-btn-pill, .badge-pill-premium, button, a').length) return;
+            
+            var rowData = $('#harmonisasi-table').DataTable().row(this).data();
+            if (rowData && rowData[6]) {
+                var baseUrl = JDIHModules.Harmonisasi.config.baseUrl;
+                window.location.href = baseUrl + 'harmonisasi/show/' + rowData[6];
+            }
+        });
 
         $('.btn').on('click', function() {
             var $btn = $(this);

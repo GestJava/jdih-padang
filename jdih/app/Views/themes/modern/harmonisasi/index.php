@@ -195,6 +195,44 @@
         </div>
     <?php endif; ?>
 
+    <!-- Premium Filter Bar -->
+    <div class="glass-card shadow-premium mb-4 animate__animated animate__fadeInUp">
+        <div class="card-body p-4">
+            <div class="row align-items-end g-3">
+                <div class="col-md-3">
+                    <label class="form-label x-small fw-bold text-muted text-uppercase mb-2"><i class="fas fa-filter me-1"></i>Status Ajuan</label>
+                    <select id="statusFilter" class="form-select border-light-premium rounded-3">
+                        <option value="">Semua Status</option>
+                        <option value="1">Draft</option>
+                        <option value="4">Proses Validasi</option>
+                        <option value="6">Proses Finalisasi</option>
+                        <option value="13">Menunggu TTE</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label x-small fw-bold text-muted text-uppercase mb-2"><i class="fas fa-list me-1"></i>Jenis Peraturan</label>
+                    <select id="jenisFilter" class="form-select border-light-premium rounded-3">
+                        <option value="">Semua Jenis</option>
+                        <!-- Options populated via AJAX -->
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label x-small fw-bold text-muted text-uppercase mb-2"><i class="fas fa-calendar-alt me-1"></i>Rentang Tanggal</label>
+                    <div class="input-group">
+                        <input type="date" id="startDate" class="form-control border-light-premium rounded-start-3" placeholder="Mulai">
+                        <span class="input-group-text bg-white border-light-premium">-</span>
+                        <input type="date" id="endDate" class="form-control border-light-premium rounded-end-3" placeholder="Selesai">
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <button id="applyFilter" class="btn btn-blue-premium w-100 rounded-3">
+                        <i class="fas fa-search me-1"></i>Filter
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Main Data Table Card -->
     <div class="glass-card shadow-premium mb-5 overflow-hidden">
         <div class="card-header-premium p-4 d-flex justify-content-between align-items-center flex-wrap gap-3">
@@ -360,14 +398,57 @@
 		box-shadow: 0 7px 14px rgba(37, 99, 235, 0.2) !important;
 	}
 
+    /* Soft Badges Styles */
+    .badge-soft-primary { background-color: rgba(37, 99, 235, 0.1) !important; color: #2563eb !important; border: 1px solid rgba(37, 99, 235, 0.2); }
+    .badge-soft-success { background-color: rgba(34, 197, 94, 0.1) !important; color: #16a34a !important; border: 1px solid rgba(34, 197, 94, 0.2); }
+    .badge-soft-warning { background-color: rgba(245, 158, 11, 0.1) !important; color: #d97706 !important; border: 1px solid rgba(245, 158, 11, 0.2); }
+    .badge-soft-danger { background-color: rgba(239, 68, 68, 0.1) !important; color: #dc2626 !important; border: 1px solid rgba(239, 68, 68, 0.2); }
+    .badge-soft-info { background-color: rgba(6, 182, 212, 0.1) !important; color: #0891b2 !important; border: 1px solid rgba(6, 182, 212, 0.2); }
+    .badge-soft-secondary { background-color: rgba(100, 116, 139, 0.1) !important; color: #475569 !important; border: 1px solid rgba(100, 116, 139, 0.2); }
+
+    .badge-pill-premium {
+        padding: 6px 14px;
+        font-weight: 600;
+        border-radius: 50px;
+        font-size: 0.75rem;
+    }
+
     .bg-light-premium {
         background-color: #f8fafc;
         border: 1px solid #f1f5f9;
     }
 
-	.shadow-hover:hover {
-		box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    /* Interactive Table Improvements */
+    .custom-modern-table tbody tr {
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+
+	.custom-modern-table tbody tr:hover {
+		background-color: #f8faff !important;
+        box-shadow: inset 4px 0 0 #2563eb;
 	}
+
+    .action-btn-pill {
+        width: 34px;
+        height: 34px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        transition: all 0.2s ease;
+        border: 1px solid #e2e8f0;
+        background: white;
+        color: #64748b;
+    }
+
+    .action-btn-pill:hover {
+        transform: translateY(-2px);
+        background: #2563eb;
+        color: white;
+        border-color: #2563eb;
+        box-shadow: 0 4px 8px rgba(37, 99, 235, 0.2);
+    }
 
 	/* Utility Colors & Layout */
 	.bg-soft-blue { background-color: #f0f7ff; }
