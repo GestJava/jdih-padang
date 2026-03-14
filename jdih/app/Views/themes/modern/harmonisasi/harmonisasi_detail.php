@@ -29,13 +29,13 @@
     <div class="row">
         <div class="col-lg-8">
             <!-- Detail Ajuan -->
-            <div class="card shadow mb-4">
-                <div class="card-header bg-primary text-white py-3">
-                    <h6 class="m-0 font-weight-bold">
-                        <i class="fas fa-info-circle me-2"></i>Informasi Pengajuan
+            <div class="glass-card shadow-premium mb-4 overflow-hidden">
+                <div class="card-header-premium bg-soft-blue py-3 border-bottom">
+                    <h6 class="m-0 fw-bold text-dark tracking-wider text-uppercase">
+                        <i class="fas fa-info-circle text-blue-premium me-2"></i>Informasi Pengajuan
                     </h6>
                 </div>
-                <div class="card-body">
+                <div class="card-body p-4">
                     <div class="row">
                         <div class="col-md-6">
                             <table class="table table-borderless">
@@ -102,14 +102,14 @@
             </div>
 
             <!-- Daftar Dokumen -->
-            <div class="card shadow mb-4">
-                <div class="card-header bg-success text-white py-3">
-                    <h6 class="m-0 font-weight-bold">
-                        <i class="fas fa-paperclip me-2"></i>Dokumen Terlampir
-                        <span class="badge bg-light text-dark ms-2"><?= count($dokumen) ?> file</span>
+            <div class="glass-card shadow-premium mb-4 overflow-hidden">
+                <div class="card-header-premium bg-soft-green py-3 border-bottom d-flex justify-content-between align-items-center">
+                    <h6 class="m-0 fw-bold text-dark tracking-wider text-uppercase">
+                        <i class="fas fa-paperclip text-success me-2"></i>Dokumen Terlampir
                     </h6>
+                    <span class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25 rounded-pill px-3"><?= count($dokumen) ?> file</span>
                 </div>
-                <div class="card-body">
+                <div class="card-body p-4">
                     <?php if (!empty($dokumen)): ?>
                         <div class="list-group list-group-flush">
                             <?php foreach ($dokumen as $doc) : ?>
@@ -144,13 +144,13 @@
 
             <!-- Data TTE Result -->
             <?php if (isset($tte_data) && !empty($tte_data) && !empty($tte_data['tte_file_path'])): ?>
-                <div class="card shadow mb-4" id="tteResultCard">
-                    <div class="card-header bg-primary text-white py-3">
-                        <h6 class="m-0 font-weight-bold">
-                            <i class="fas fa-stamp me-2"></i>Hasil Tanda Tangan Elektronik (TTE)
+                <div class="glass-card shadow-premium mb-4 overflow-hidden" id="tteResultCard">
+                    <div class="card-header-premium bg-soft-blue py-3 border-bottom">
+                        <h6 class="m-0 fw-bold text-dark tracking-wider text-uppercase">
+                            <i class="fas fa-stamp text-blue-premium me-2"></i>Hasil Tanda Tangan Elektronik (TTE)
                         </h6>
                     </div>
-                    <div class="card-body">
+                    <div class="card-body p-4">
                         <div class="row">
                             <div class="col-md-6">
                                 <table class="table table-borderless">
@@ -216,34 +216,49 @@
 
         <div class="col-lg-4">
             <!-- Histori Ajuan -->
-            <div class="card shadow mb-4">
-                <div class="card-header bg-warning text-dark py-3">
-                    <h6 class="m-0 font-weight-bold">
-                        <i class="fas fa-history me-2"></i>Riwayat Proses
+            <div class="glass-card shadow-premium mb-4 h-100 overflow-hidden">
+                <div class="card-header-premium bg-soft-orange py-3 border-bottom">
+                    <h6 class="m-0 fw-bold text-dark tracking-wider text-uppercase">
+                        <i class="fas fa-history text-warning me-2"></i>Riwayat Proses
                     </h6>
                 </div>
-                <div class="card-body">
+                <div class="card-body p-4">
                     <?php if (!empty($histori)): ?>
-                        <div class="timeline-container">
+                        <ul class="stepper-timeline">
                             <?php foreach ($histori as $item) : ?>
-                                <div class="timeline-item">
-                                    <div class="timeline-marker bg-primary"></div>
-                                    <div class="timeline-content">
-                                        <h6 class="timeline-title text-primary">
+                                <?php
+                                    // Tentukan warna marker berdasarkan nama status
+                                    $markerColor = '#6c757d'; // Default (Secondary/Draft)
+                                    $statusName = strtolower($item['status_sekarang'] ?? '');
+                                    
+                                    if (strpos($statusName, 'validasi') !== false) {
+                                        $markerColor = '#17a2b8'; // Info
+                                    } elseif (strpos($statusName, 'paraf') !== false) {
+                                        $markerColor = '#fd7e14'; // Orange
+                                    } elseif (strpos($statusName, 'selesai') !== false || strpos($statusName, 'tte') !== false) {
+                                        $markerColor = '#28a745'; // Success
+                                    } elseif (strpos($statusName, 'revisi') !== false || strpos($statusName, 'ditolak') !== false) {
+                                        $markerColor = '#dc3545'; // Danger
+                                    }
+                                ?>
+                                <li class="stepper-item">
+                                    <div class="stepper-marker" style="border-color: <?= $markerColor ?>;"></div>
+                                    <div class="stepper-content">
+                                        <h6 class="stepper-title" style="color: <?= $markerColor ?>;">
                                             <?= esc($item['status_sekarang']) ?>
                                         </h6>
-                                        <p class="timeline-description">
-                                            <?= esc($item['keterangan']) ?>
+                                        <p class="stepper-desc">
+                                            <?= esc($item['keterangan'] ?: 'Tidak ada keterangan') ?>
                                         </p>
-                                        <small class="timeline-time text-muted">
-                                            <i class="fas fa-clock me-1"></i>
-                                            <?= esc($item['tanggal_formatted']) ?>
-                                            oleh <?= esc($item['nama_user']) ?>
-                                        </small>
+                                        <div class="stepper-meta">
+                                            <span><i class="fas fa-calendar-alt text-muted me-1"></i><?= esc($item['tanggal_formatted']) ?></span>
+                                            <span>&bull;</span>
+                                            <span><i class="fas fa-user text-muted me-1"></i><?= esc($item['nama_user']) ?></span>
+                                        </div>
                                     </div>
-                                </div>
+                                </li>
                             <?php endforeach; ?>
-                        </div>
+                        </ul>
                     <?php else: ?>
                         <div class="text-center py-4">
                             <i class="fas fa-history fa-3x text-muted mb-3"></i>
@@ -258,17 +273,17 @@
     <!-- Action Buttons -->
     <div class="row">
         <div class="col-12">
-            <div class="card shadow mb-4">
-                <div class="card-body">
-                    <div class="d-flex flex-wrap gap-2">
+            <div class="glass-card shadow-premium border-0 mb-4 overflow-hidden">
+                <div class="card-body p-4">
+                    <div class="d-flex flex-wrap gap-3 justify-content-center">
                         <!-- Back Button -->
                         <?php if (isset($from_penugasan) && $from_penugasan): ?>
-                            <a href="<?= base_url('penugasan') ?>" class="btn btn-secondary">
-                                <i class="fas fa-arrow-left me-1"></i> Kembali ke Penugasan
+                            <a href="<?= base_url('penugasan') ?>" class="btn btn-outline-secondary rounded-pill px-4 fw-medium shadow-sm-hover">
+                                <i class="fas fa-arrow-left me-2"></i>Kembali ke Penugasan
                             </a>
                         <?php else: ?>
-                            <a href="<?= base_url('harmonisasi') ?>" class="btn btn-secondary">
-                                <i class="fas fa-arrow-left me-1"></i> Kembali ke Dashboard
+                            <a href="<?= base_url('harmonisasi') ?>" class="btn btn-outline-secondary rounded-pill px-4 fw-medium shadow-sm-hover">
+                                <i class="fas fa-arrow-left me-2"></i>Kembali ke Dashboard
                             </a>
                         <?php endif; ?>
 
@@ -281,9 +296,9 @@
                         ): ?>
                             <form action="<?= base_url('harmonisasi/ajukan/' . $ajuan['id']) ?>" method="post" class="d-inline">
                                 <?= csrf_field() ?>
-                                <button type="submit" class="btn btn-primary"
+                                <button type="submit" class="btn btn-blue-premium rounded-pill px-4 fw-medium shadow-hover"
                                     onclick="return confirm('Apakah Anda yakin ingin mengajukan draft ini?')">
-                                    <i class="fas fa-paper-plane me-1"></i> Ajukan Draft
+                                    <i class="fas fa-paper-plane me-2"></i>Ajukan Draft
                                 </button>
                             </form>
                         <?php endif; ?>
@@ -294,30 +309,30 @@
                             ) && $user_actions['can_edit']
                             && !in_array($ajuan['id_status_ajuan'], [5, 14, 15])
                         ): ?>
-                            <a href="<?= base_url('harmonisasi/edit/' . $ajuan['id']) ?>" class="btn btn-warning">
-                                <i class="fas fa-edit me-1"></i> Edit Draft
+                            <a href="<?= base_url('harmonisasi/edit/' . $ajuan['id']) ?>" class="btn btn-warning text-dark rounded-pill px-4 fw-medium shadow-sm-hover">
+                                <i class="fas fa-edit me-2"></i>Edit Draft
                             </a>
                         <?php endif; ?>
 
                         <?php if (isset($user_actions['can_assign']) && $user_actions['can_assign']): ?>
-                            <a href="<?= base_url('penugasan/tugaskan/' . $ajuan['id']) ?>" class="btn btn-info">
-                                <i class="fas fa-user-plus me-1"></i> Tugaskan Verifikator
+                            <a href="<?= base_url('penugasan/tugaskan/' . $ajuan['id']) ?>" class="btn btn-info text-white rounded-pill px-4 fw-medium shadow-sm-hover">
+                                <i class="fas fa-user-plus me-2"></i>Tugaskan Verifikator
                             </a>
                         <?php endif; ?>
 
                         <?php if (isset($user_actions['can_complete_verification']) && $user_actions['can_complete_verification']): ?>
                             <form action="<?= base_url('harmonisasi/verifikasi-selesai/' . $ajuan['id']) ?>" method="post" class="d-inline">
                                 <?= csrf_field() ?>
-                                <button type="submit" class="btn btn-success"
+                                <button type="submit" class="btn btn-success rounded-pill px-4 fw-medium shadow-hover"
                                     onclick="return confirm('Apakah Anda yakin ingin menandai verifikasi selesai?')">
-                                    <i class="fas fa-check-circle me-1"></i> Verifikasi Selesai
+                                    <i class="fas fa-check-circle me-2"></i>Verifikasi Selesai
                                 </button>
                             </form>
                         <?php endif; ?>
 
                         <?php if (isset($user_actions['can_submit_revisi']) && $user_actions['can_submit_revisi'] && ($ajuan['nama_status'] === 'Revisi' || $ajuan['id_status_ajuan'] == 5)): ?>
-                            <a href="<?= base_url('harmonisasi/submitRevisi/' . $ajuan['id']) ?>" class="btn btn-warning">
-                                <i class="fas fa-upload me-1"></i> Upload Revisi
+                            <a href="<?= base_url('harmonisasi/submitRevisi/' . $ajuan['id']) ?>" class="btn btn-warning text-dark rounded-pill px-4 fw-medium shadow-sm-hover">
+                                <i class="fas fa-upload me-2"></i>Upload Revisi
                             </a>
                         <?php endif; ?>
                     </div>
@@ -327,66 +342,4 @@
     </div>
 </div>
 
-<style>
-    .timeline {
-        list-style: none;
-        padding: 0;
-        position: relative;
-    }
-
-    .timeline:before {
-        top: 0;
-        bottom: 0;
-        position: absolute;
-        content: " ";
-        width: 3px;
-        background-color: #eeeeee;
-        left: 0;
-        margin-left: -1.5px;
-    }
-
-    .timeline>li {
-        margin-bottom: 20px;
-        position: relative;
-        padding-left: 20px;
-    }
-
-    .timeline>li:before,
-    .timeline>li:after {
-        content: " ";
-        display: table;
-    }
-
-    .timeline>li:after {
-        clear: both;
-    }
-
-    .timeline>li>.timeline-panel {
-        width: 100%;
-        float: left;
-        border: 1px solid #d4d4d4;
-        border-radius: 2px;
-        padding: 20px;
-        position: relative;
-        box-shadow: 0 1px 6px rgba(0, 0, 0, 0.175);
-    }
-
-    .timeline>li>.timeline-badge {
-        color: #fff;
-        width: 24px;
-        height: 24px;
-        line-height: 50px;
-        font-size: 1.4em;
-        text-align: center;
-        position: absolute;
-        top: 16px;
-        left: 0px;
-        margin-left: -12px;
-        background-color: #999999;
-        z-index: 100;
-        border-top-right-radius: 50%;
-        border-top-left-radius: 50%;
-        border-bottom-right-radius: 50%;
-        border-bottom-left-radius: 50%;
-    }
-</style>
+ 

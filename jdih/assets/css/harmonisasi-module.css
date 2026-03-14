@@ -712,3 +712,87 @@
         .harmonisasi-module .tooltip.bs-tooltip-end .tooltip-arrow::before {
             border-right-color: #ffc107;
         }
+
+/* ============================================================
+   VERTICAL STEPPER TIMELINE - MODERNIZED
+   ============================================================ */
+.harmonisasi-module .stepper-timeline {
+    position: relative;
+    padding-left: 2rem;
+    margin-bottom: 0;
+    list-style: none;
+}
+
+.harmonisasi-module .stepper-timeline::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 9px;
+    height: 100%;
+    width: 2px;
+    background: #e9ecef;
+    border-radius: 1px;
+}
+
+.harmonisasi-module .stepper-item {
+    position: relative;
+    margin-bottom: 1.5rem;
+}
+
+.harmonisasi-module .stepper-item:last-child {
+    margin-bottom: 0;
+}
+
+.harmonisasi-module .stepper-marker {
+    position: absolute;
+    left: -2rem;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: #fff;
+    border: 3px solid #007bff;
+    box-shadow: 0 0 0 3px #fff;
+    z-index: 2;
+    transition: all 0.3s ease;
+}
+
+.harmonisasi-module .stepper-item:hover .stepper-marker {
+    transform: scale(1.2);
+    box-shadow: 0 0 0 4px rgba(0, 123, 255, 0.2);
+}
+
+.harmonisasi-module .stepper-content {
+    background: rgba(255,255,255,0.7);
+    border: 1px solid rgba(255,255,255,0.9);
+    border-radius: 0.5rem;
+    padding: 1rem;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.harmonisasi-module .stepper-item:hover .stepper-content {
+    transform: translateX(5px);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+}
+
+.harmonisasi-module .stepper-title {
+    font-size: 0.95rem;
+    font-weight: 700;
+    margin-bottom: 0.25rem;
+    color: #2c3e50;
+}
+
+.harmonisasi-module .stepper-desc {
+    font-size: 0.85rem;
+    color: #6c757d;
+    margin-bottom: 0.5rem;
+    line-height: 1.4;
+}
+
+.harmonisasi-module .stepper-meta {
+    font-size: 0.75rem;
+    color: #a0aec0;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
