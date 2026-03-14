@@ -33,6 +33,9 @@ class Validasi extends BaseController
         $this->harmonisasiHistoriModel = new HarmonisasiHistoriModel();
         helper(['form', 'url', 'filesystem']);
 
+        // Add Harmonisasi Module CSS for standardized V2 Ultra Premium Design System
+        $this->addStyle(base_url('jdih/assets/css/harmonisasi-module.css?v=' . time()));
+
         // Add DataTables Buttons extension scripts (tanpa data-tables.js karena sudah ada inisialisasi manual di view)
         $this->addJs(base_url('vendors/datatables/extensions/Buttons/js/dataTables.buttons.min.js'));
         $this->addJs(base_url('vendors/datatables/extensions/Buttons/js/buttons.bootstrap5.min.js'));
@@ -132,7 +135,19 @@ class Validasi extends BaseController
         $this->data['title'] = 'Proses Validasi Ajuan';
         $this->data['ajuan'] = $ajuan;
         $this->data['dokumen'] = $this->harmonisasiDokumenModel->getDokumenByAjuan($id);
-        $this->data['histori'] = $this->harmonisasiHistoriModel->getHistoryByAjuan($id);
+        
+        // Format histori dates (consistent with Harmonisasi controller)
+        $histori = $this->harmonisasiHistoriModel->getHistoryByAjuan($id);
+        foreach ($histori as &$item) {
+            $tanggal = $item['tanggal_aksi'] ?? null;
+            if ($tanggal && strtotime($tanggal) !== false) {
+                $item['tanggal_formatted'] = date('d F Y H:i', strtotime($tanggal));
+            } else {
+                $item['tanggal_formatted'] = 'Tanggal tidak valid';
+            }
+        }
+        $this->data['histori'] = $histori;
+        
         $this->data['validation'] = \Config\Services::validation();
         $this->data['user'] = $user;
 
