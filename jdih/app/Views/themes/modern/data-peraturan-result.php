@@ -117,47 +117,157 @@ if (!empty($body_class)) {
 </script>
 
 <style>
-	/* Enhanced styling untuk konsistensi dengan modul harmonisasi */
-	.card {
-		border: none;
-		box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+	/* --- Premium Data Peraturan Styles --- */
+	
+	/* Glass Card Container */
+	.glass-card {
+		background: rgba(255, 255, 255, 0.95);
+		backdrop-filter: blur(10px);
+		-webkit-backdrop-filter: blur(10px);
+		border: 1px solid rgba(255, 255, 255, 0.3);
+		border-radius: 20px;
+		overflow: hidden;
+		transition: transform 0.3s ease, box-shadow 0.3s ease;
+	}
+	
+	.shadow-premium {
+		box-shadow: 0 15px 35px rgba(0, 0, 0, 0.05), 0 5px 15px rgba(0, 0, 0, 0.03) !important;
 	}
 
-	.card-header {
+	/* Card Header */
+	.card-header-premium {
+		background: transparent;
 		border-bottom: none;
 	}
 
-	.table th {
-		background-color: #f8f9fa;
-		border-color: #dee2e6;
-		font-weight: 600;
-		color: #495057;
+	.icon-box {
+		width: 45px;
+		height: 45px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		font-size: 1.25rem;
 	}
 
-	.table td {
-		vertical-align: middle;
+	/* Table Styling */
+	.table-container-premium {
+		background: #fcfcfd;
+		border-radius: 15px;
+		border: 1px solid #f1f3f9;
+		overflow: hidden;
 	}
 
-	.btn-xs {
-		padding: 0.25rem 0.5rem;
+	.custom-modern-table {
+		margin-bottom: 0 !important;
+		border-collapse: separate !important;
+		border-spacing: 0 !important;
+	}
+
+	.custom-modern-table thead th {
+		background-color: #f8faff !important;
+		color: #5d6e82;
+		font-weight: 700;
+		text-transform: uppercase;
 		font-size: 0.75rem;
+		letter-spacing: 0.5px;
+		padding: 18px 15px !important;
+		border-bottom: 2px solid #edf2f9 !important;
+		border-top: none !important;
 	}
 
-	/* Enhanced alert styling */
-	.alert {
+	.custom-modern-table tbody tr {
+		transition: background-color 0.2s ease;
+	}
+
+	.custom-modern-table tbody tr:hover {
+		background-color: #f8faff !important;
+	}
+
+	.custom-modern-table td {
+		padding: 15px !important;
+		border-bottom: 1px solid #f1f3f9 !important;
+		color: #334155;
+		font-size: 0.875rem;
+	}
+
+	/* Premium Buttons */
+	.btn-blue-premium {
+		background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+		color: white !important;
 		border: none;
-		border-radius: 0.375rem;
+		font-weight: 600;
+		letter-spacing: 0.3px;
 	}
 
-	/* Responsive improvements */
+	.btn-blue-premium:hover {
+		background: linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%);
+		transform: translateY(-2px);
+		box-shadow: 0 7px 14px rgba(37, 99, 235, 0.2) !important;
+	}
+
+	.btn-light-premium {
+		background: #ffffff;
+		border: 1px solid #e2e8f0;
+		color: #64748b;
+	}
+
+	.btn-light-premium:hover {
+		background: #f8faff;
+		color: #2563eb;
+		border-color: #2563eb;
+	}
+
+	.btn-icon-round {
+		width: 40px;
+		height: 40px;
+		padding: 0;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		border-radius: 50%;
+	}
+
+	.shadow-hover:hover {
+		box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+	}
+
+	/* Utility */
+	.bg-soft-blue {
+		background-color: #f0f7ff;
+	}
+
+	.text-blue-premium {
+		color: #2563eb;
+	}
+
+	.rounded-pill {
+		border-radius: 50rem !important;
+	}
+
+	/* DataTables Override */
+	.dataTables_wrapper .dataTables_length select,
+	.dataTables_wrapper .dataTables_filter input {
+		border-radius: 8px;
+		border: 1px solid #e2e8f0;
+		padding: 6px 12px;
+	}
+
+	.dataTables_wrapper .dataTables_paginate .paginate_button.current {
+		background: #2563eb !important;
+		color: white !important;
+		border: none !important;
+		border-radius: 8px !important;
+	}
+
 	@media (max-width: 768px) {
 		.d-sm-flex {
 			flex-direction: column;
-			align-items: flex-start !important;
+			gap: 1.5rem;
 		}
-
-		.breadcrumb {
-			margin-top: 1rem;
+		
+		.actions-group {
+			width: 100%;
+			justify-content: flex-start;
 		}
 	}
 </style>
