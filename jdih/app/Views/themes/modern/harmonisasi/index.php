@@ -1,11 +1,15 @@
-<div class="container-fluid">
-    <!-- Header Section -->
-    <div class="d-sm-flex align-items-center justify-content-between mb-4">
-        <h1 class="h3 mb-0 text-gray-800">
-            <i class="fas fa-balance-scale text-primary me-2"></i><?= esc($title) ?>
-        </h1>
+<div class="container-fluid animate__animated animate__fadeIn">
+    <!-- Modern Header Section -->
+    <div class="d-sm-flex align-items-center justify-content-between mb-5">
+        <div class="header-content">
+            <h1 class="h2 fw-bold text-dark mb-1">
+                <i class="fas fa-balance-scale text-blue-premium me-3 mb-2"></i><?= esc($title) ?>
+            </h1>
+            <p class="text-muted mb-0">Monitor dan kelola seluruh tahapan proses harmonisasi produk hukum daerah.</p>
+        </div>
         <nav aria-label="breadcrumb">
-            <ol class="breadcrumb">
+            <ol class="breadcrumb bg-soft-blue px-4 py-2 rounded-pill shadow-sm mb-0">
+                <li class="breadcrumb-item"><a href="<?= base_url('dashboard') ?>" class="text-blue-premium text-decoration-none"><i class="fas fa-home me-1"></i>Dashboard</a></li>
                 <li class="breadcrumb-item active" aria-current="page">Harmonisasi</li>
             </ol>
         </nav>
@@ -13,34 +17,43 @@
 
     <!-- Flash Messages -->
     <?php if (session()->getFlashdata('success')): ?>
-        <div class="alert alert-success alert-dismissible fade show" role="alert">
-            <i class="fas fa-check-circle me-2"></i><?= esc(session()->getFlashdata('success')) ?>
+        <div class="alert alert-success border-0 shadow-sm animate__animated animate__slideInDown mb-4">
+            <div class="d-flex align-items-center">
+                <i class="fas fa-check-circle fs-4 me-3"></i>
+                <div><?= esc(session()->getFlashdata('success')) ?></div>
+            </div>
             <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
         </div>
     <?php endif; ?>
 
     <?php if (session()->getFlashdata('error')): ?>
-        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-            <i class="fas fa-exclamation-triangle me-2"></i><?= esc(session()->getFlashdata('error')) ?>
+        <div class="alert alert-danger border-0 shadow-sm animate__animated animate__slideInDown mb-4">
+            <div class="d-flex align-items-center">
+                <i class="fas fa-exclamation-triangle fs-4 me-3"></i>
+                <div><?= esc(session()->getFlashdata('error')) ?></div>
+            </div>
             <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
         </div>
     <?php endif; ?>
 
     <!-- Statistics Summary Card -->
-    <div class="row mb-4">
-        <div class="col-12 mb-3">
-            <div class="card shadow border-0">
-                <div class="card-body">
-                    <div class="d-flex justify-content-between align-items-center mb-3">
-                        <div>
-                            <h5 class="card-title mb-1">
-                                <i class="fas fa-chart-bar text-primary me-2"></i>Statistik Ajuan Harmonisasi
-                            </h5>
-                            <small class="text-muted">Tahun <?= date('Y') ?></small>
+    <div class="row mb-5">
+        <div class="col-12">
+            <div class="glass-card shadow-premium border-start border-blue-premium border-4">
+                <div class="card-body p-4">
+                    <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+                        <div class="d-flex align-items-center">
+                            <div class="icon-box bg-blue-premium text-white rounded-3 me-3 p-3 shadow-sm">
+                                <i class="fas fa-chart-line fs-4"></i>
+                            </div>
+                            <div>
+                                <h5 class="m-0 fw-bold text-dark">Ikhtisar Harmonisasi</h5>
+                                <p class="text-muted mb-0 small">Data akumulasi tahun <?= date('Y') ?></p>
+                            </div>
                         </div>
-                        <div class="text-end">
-                            <h3 class="mb-0 text-primary"><?= number_format($statistics['total_ajuan'] ?? 0) ?></h3>
-                            <small class="text-muted">Total Ajuan</small>
+                        <div class="text-end bg-soft-blue px-4 py-3 rounded-4 shadow-sm">
+                            <h2 class="mb-0 fw-black text-blue-premium"><?= number_format($statistics['total_ajuan'] ?? 0) ?></h2>
+                            <span class="text-uppercase small fw-bold text-muted tracking-wider">Total Seluruh Ajuan</span>
                         </div>
                     </div>
                 </div>
@@ -48,40 +61,34 @@
         </div>
     </div>
 
-    <!-- Status Statistics dengan Progress Bar - Semua 15 Status -->
+    <!-- Status Statistics dengan Progress Bar -->
     <?php if (!empty($statistics['status_details'])): ?>
         <?php
-        // Hitung total untuk progress bar
-        $totalAjuan = $statistics['total_ajuan'] ?? 1; // Avoid division by zero
+        $totalAjuan = $statistics['total_ajuan'] ?? 1;
         
-        // Group status berdasarkan kategori workflow untuk tampilan 2 kolom
-        // Kolom 1: Draft sampai Finalisasi (ID 1-6)
-        // Kolom 2: Paraf sampai TTE Walikota (ID 7-13), EXCLUDE Selesai (14) dan Ditolak (15)
         $leftColumnStatuses = array_filter($statistics['status_details'], function($status) {
             return in_array($status['id'], [1, 2, 3, 4, 5, 6]);
         });
         
         $rightColumnStatuses = array_filter($statistics['status_details'], function($status) {
-            // Exclude Selesai (14) dan Ditolak (15)
             return in_array($status['id'], [7, 8, 9, 10, 11, 12, 13]);
         });
         
-        // Sort berdasarkan ID untuk urutan yang benar
         usort($leftColumnStatuses, function($a, $b) { return $a['id'] <=> $b['id']; });
         usort($rightColumnStatuses, function($a, $b) { return $a['id'] <=> $b['id']; });
         ?>
         
-        <div class="row mb-4">
+        <div class="row g-4 mb-5">
             <!-- Kolom Kiri: Draft sampai Finalisasi -->
-            <div class="col-lg-6 mb-4">
-                <div class="card shadow border-0 h-100">
-                    <div class="card-header bg-light border-0 py-2">
-                        <h6 class="mb-0 fw-bold text-uppercase">
-                            <i class="fas fa-file-edit text-primary me-2"></i>Draft & Proses Harmonisasi
+            <div class="col-lg-6">
+                <div class="glass-card shadow-premium h-100 overflow-hidden">
+                    <div class="card-header-premium p-4 border-bottom bg-soft-blue">
+                        <h6 class="mb-0 fw-bold text-dark text-uppercase tracking-wider">
+                            <i class="fas fa-pen-nib text-blue-premium me-2"></i>Draft & Proses Validasi
                         </h6>
                     </div>
-                    <div class="card-body">
-                        <div class="status-list">
+                    <div class="card-body p-4">
+                        <div class="status-list modern-scrollbar">
                             <?php 
                             $leftTotal = 0;
                             foreach ($leftColumnStatuses as $status): 
@@ -90,16 +97,18 @@
                                 $colorClass = 'bg-' . $status['color'];
                                 $icon = $status['icon'] ?? 'circle';
                             ?>
-                                <div class="status-item mb-3">
-                                    <div class="d-flex justify-content-between align-items-center mb-1">
-                                        <div class="d-flex align-items-center flex-grow-1">
-                                            <i class="fas fa-<?= esc($icon) ?> text-<?= esc($status['color']) ?> me-2" style="width: 20px; text-align: center;"></i>
-                                            <span class="status-name fw-medium"><?= esc($status['nama_status']) ?></span>
+                                <div class="status-item-premium mb-4">
+                                    <div class="d-flex justify-content-between align-items-center mb-2">
+                                        <div class="d-flex align-items-center">
+                                            <div class="status-icon bg-light-premium text-<?= esc($status['color']) ?> rounded-circle me-3">
+                                                <i class="fas fa-<?= esc($icon) ?>"></i>
+                                            </div>
+                                            <span class="fw-semibold text-dark small-plus"><?= esc($status['nama_status']) ?></span>
                                         </div>
-                                        <span class="badge bg-<?= esc($status['color']) ?> ms-2"><?= number_format($status['count']) ?></span>
+                                        <span class="badge rounded-pill bg-<?= esc($status['color']) ?> px-3"><?= number_format($status['count']) ?></span>
                                     </div>
-                                    <div class="progress" style="height: 8px;">
-                                        <div class="progress-bar <?= esc($colorClass) ?>" 
+                                    <div class="progress progress-premium" style="height: 6px;">
+                                        <div class="progress-bar <?= esc($colorClass) ?> shadow-sm" 
                                              role="progressbar" 
                                              style="width: <?= number_format($percentage, 1) ?>%" 
                                              aria-valuenow="<?= $status['count'] ?>" 
@@ -107,33 +116,32 @@
                                              aria-valuemax="<?= $totalAjuan ?>">
                                         </div>
                                     </div>
-                                    <small class="text-muted"><?= number_format($percentage, 1) ?>% dari total</small>
-                                </div>
-                            <?php endforeach; ?>
-                            
-                            <?php if ($leftTotal > 0): ?>
-                                <div class="mt-3 pt-3 border-top">
-                                    <div class="d-flex justify-content-between align-items-center">
-                                        <span class="fw-bold text-muted">Subtotal:</span>
-                                        <span class="badge bg-primary fs-6"><?= number_format($leftTotal) ?> ajuan</span>
+                                    <div class="d-flex justify-content-end mt-1">
+                                        <small class="text-muted x-small fw-bold"><?= number_format($percentage, 1) ?>% Proporsi</small>
                                     </div>
                                 </div>
-                            <?php endif; ?>
+                            <?php endforeach; ?>
                         </div>
                     </div>
+                    <?php if ($leftTotal > 0): ?>
+                        <div class="card-footer bg-light border-0 p-3 px-4 d-flex justify-content-between align-items-center">
+                            <span class="x-small fw-bold text-muted text-uppercase tracking-wider">Subtotal Workflow</span>
+                            <span class="badge bg-blue-premium rounded-pill px-3 py-2"><?= number_format($leftTotal) ?> Berkas</span>
+                        </div>
+                    <?php endif; ?>
                 </div>
             </div>
 
-            <!-- Kolom Kanan: Paraf & TTE (tanpa Selesai dan Ditolak) -->
-            <div class="col-lg-6 mb-4">
-                <div class="card shadow border-0 h-100">
-                    <div class="card-header bg-light border-0 py-2">
-                        <h6 class="mb-0 fw-bold text-uppercase">
-                            <i class="fas fa-stamp text-success me-2"></i>Paraf & TTE
+            <!-- Kolom Kanan: Paraf & TTE -->
+            <div class="col-lg-6">
+                <div class="glass-card shadow-premium h-100 overflow-hidden">
+                    <div class="card-header-premium p-4 border-bottom bg-soft-green">
+                        <h6 class="mb-0 fw-bold text-dark text-uppercase tracking-wider">
+                            <i class="fas fa-file-signature text-success me-2"></i>Tahap Penandatanganan
                         </h6>
                     </div>
-                    <div class="card-body">
-                        <div class="status-list">
+                    <div class="card-body p-4">
+                        <div class="status-list modern-scrollbar">
                             <?php 
                             $rightTotal = 0;
                             foreach ($rightColumnStatuses as $status): 
@@ -142,16 +150,18 @@
                                 $colorClass = 'bg-' . $status['color'];
                                 $icon = $status['icon'] ?? 'circle';
                             ?>
-                                <div class="status-item mb-3">
-                                    <div class="d-flex justify-content-between align-items-center mb-1">
-                                        <div class="d-flex align-items-center flex-grow-1">
-                                            <i class="fas fa-<?= esc($icon) ?> text-<?= esc($status['color']) ?> me-2" style="width: 20px; text-align: center;"></i>
-                                            <span class="status-name fw-medium"><?= esc($status['nama_status']) ?></span>
+                                <div class="status-item-premium mb-4">
+                                    <div class="d-flex justify-content-between align-items-center mb-2">
+                                        <div class="d-flex align-items-center">
+                                            <div class="status-icon bg-light-premium text-<?= esc($status['color']) ?> rounded-circle me-3">
+                                                <i class="fas fa-<?= esc($icon) ?>"></i>
+                                            </div>
+                                            <span class="fw-semibold text-dark small-plus"><?= esc($status['nama_status']) ?></span>
                                         </div>
-                                        <span class="badge bg-<?= esc($status['color']) ?> ms-2"><?= number_format($status['count']) ?></span>
+                                        <span class="badge rounded-pill bg-<?= esc($status['color']) ?> px-3"><?= number_format($status['count']) ?></span>
                                     </div>
-                                    <div class="progress" style="height: 8px;">
-                                        <div class="progress-bar <?= esc($colorClass) ?>" 
+                                    <div class="progress progress-premium" style="height: 6px;">
+                                        <div class="progress-bar <?= esc($colorClass) ?> shadow-sm" 
                                              role="progressbar" 
                                              style="width: <?= number_format($percentage, 1) ?>%" 
                                              aria-valuenow="<?= $status['count'] ?>" 
@@ -159,61 +169,70 @@
                                              aria-valuemax="<?= $totalAjuan ?>">
                                         </div>
                                     </div>
-                                    <small class="text-muted"><?= number_format($percentage, 1) ?>% dari total</small>
-                                </div>
-                            <?php endforeach; ?>
-                            
-                            <?php if ($rightTotal > 0): ?>
-                                <div class="mt-3 pt-3 border-top">
-                                    <div class="d-flex justify-content-between align-items-center">
-                                        <span class="fw-bold text-muted">Subtotal:</span>
-                                        <span class="badge bg-success fs-6"><?= number_format($rightTotal) ?> ajuan</span>
+                                    <div class="d-flex justify-content-end mt-1">
+                                        <small class="text-muted x-small fw-bold"><?= number_format($percentage, 1) ?>% Proporsi</small>
                                     </div>
                                 </div>
-                            <?php endif; ?>
+                            <?php endforeach; ?>
                         </div>
                     </div>
+                    <?php if ($rightTotal > 0): ?>
+                        <div class="card-footer bg-light border-0 p-3 px-4 d-flex justify-content-between align-items-center">
+                            <span class="x-small fw-bold text-muted text-uppercase tracking-wider">Subtotal Workflow</span>
+                            <span class="badge bg-success rounded-pill px-3 py-2"><?= number_format($rightTotal) ?> Berkas</span>
+                        </div>
+                    <?php endif; ?>
                 </div>
             </div>
         </div>
     <?php else: ?>
-        <div class="alert alert-info">
-            <i class="fas fa-info-circle me-2"></i>Data statistik belum tersedia.
+        <div class="glass-card shadow-premium p-5 mb-5 text-center">
+            <div class="icon-box bg-soft-blue text-blue-premium rounded-circle m-auto mb-3" style="width: 80px; height: 80px;">
+                <i class="fas fa-info-circle fs-1"></i>
+            </div>
+            <h5 class="fw-bold">Statistik Belum Tersedia</h5>
+            <p class="text-muted">Data akan muncul setelah Anda memiliki ajuan dalam sistem.</p>
         </div>
     <?php endif; ?>
 
     <!-- Main Data Table Card -->
-    <div class="card shadow mb-4">
-        <div class="card-header bg-primary text-white py-3 d-flex justify-content-between align-items-center">
-            <h6 class="m-0 font-weight-bold">
-                <i class="fas fa-table me-2"></i>Daftar Ajuan Harmonisasi
-                <span class="badge bg-light text-dark ms-2"><?= $statistics['total_ajuan'] ?? 0 ?> ajuan</span>
-            </h6>
+    <div class="glass-card shadow-premium mb-5 overflow-hidden">
+        <div class="card-header-premium p-4 d-flex justify-content-between align-items-center flex-wrap gap-3">
+            <div class="d-flex align-items-center">
+                <div class="icon-box bg-blue-premium text-white rounded-3 me-3 p-2 shadow-sm">
+                    <i class="fas fa-table"></i>
+                </div>
+                <div>
+                    <h5 class="m-0 fw-bold text-dark tracking-tight">Daftar Ajuan Harmonisasi</h5>
+                    <span class="badge bg-soft-blue text-blue-premium rounded-pill px-3 mt-1"><?= $statistics['total_ajuan'] ?? 0 ?> Berkas Terdata</span>
+                </div>
+            </div>
 
             <?php if (in_array('create', $user_actions ?? [])): ?>
-                <a href="<?= base_url('harmonisasi/new') ?>" class="btn btn-light btn-sm">
-                    <i class="fas fa-plus me-1"></i>Tambah Ajuan Baru
+                <a href="<?= base_url('harmonisasi/new') ?>" class="btn btn-blue-premium px-4 rounded-pill shadow-hover">
+                    <i class="fas fa-plus-circle me-2"></i>Tambah Ajuan Baru
                 </a>
             <?php endif; ?>
         </div>
 
-        <div class="card-body">
-            <!-- Table selalu ditampilkan; DataTables server-side akan mengisi tbody via AJAX -->
-            <div class="table-responsive">
-                <table id="harmonisasi-table" class="table table-striped table-hover" style="width:100%">
-                    <thead class="table-dark">
-                        <tr>
-                            <th width="5%">No</th>
-                            <th width="35%">Judul Rancangan</th>
-                            <th width="12%">Jenis</th>
-                            <th width="15%">Instansi Pemohon</th>
-                            <th width="12%">Tgl. Pengajuan</th>
-                            <th width="10%">Status</th>
-                            <th width="11%">Aksi</th>
-                        </tr>
-                    </thead>
-                    <tbody></tbody>
-                </table>
+        <div class="card-body p-4 pt-0">
+            <div class="table-container-premium">
+                <div class="table-responsive">
+                    <table id="harmonisasi-table" class="table table-hover align-middle custom-modern-table" style="width:100%">
+                        <thead>
+                            <tr>
+                                <th width="50">No</th>
+                                <th width="35%">Judul Rancangan</th>
+                                <th width="150">Jenis</th>
+                                <th>Instansi Pemohon</th>
+                                <th width="150">Tgl. Pengajuan</th>
+                                <th width="120">Status</th>
+                                <th width="120" class="text-center">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
@@ -228,202 +247,145 @@
 </script>
 
 <style>
-    /* Enhanced styling for all harmonisasi pages */
-    .border-left-primary {
-        border-left: 4px solid #007bff !important;
+	/* --- Premium Harmonisasi Styles --- */
+	
+    /* Typography & Hierarchy */
+    .tracking-tight { letter-spacing: -0.5px; }
+    .tracking-wider { letter-spacing: 0.5px; }
+    .small-plus { font-size: 0.95rem; }
+    .x-small { font-size: 0.75rem; }
+    .fw-black { font-weight: 900; }
+
+	/* Glass Card Container */
+	.glass-card {
+		background: rgba(255, 255, 255, 0.95);
+		backdrop-filter: blur(10px);
+		-webkit-backdrop-filter: blur(10px);
+		border: 1px solid rgba(255, 255, 255, 0.3);
+		border-radius: 20px;
+		transition: transform 0.3s ease, box-shadow 0.3s ease;
+	}
+	
+	.shadow-premium {
+		box-shadow: 0 15px 35px rgba(0, 0, 0, 0.05), 0 5px 15px rgba(0, 0, 0, 0.03) !important;
+	}
+
+	/* Card Header */
+	.card-header-premium {
+		background: transparent;
+		border-bottom: none;
+	}
+
+	.icon-box {
+		width: 48px;
+		height: 48px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+
+    .status-icon {
+        width: 32px;
+        height: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.85rem;
     }
 
-    .border-left-warning {
-        border-left: 4px solid #ffc107 !important;
-    }
+	/* Table Styling */
+	.table-container-premium {
+		background: #fcfcfd;
+		border-radius: 15px;
+		border: 1px solid #f1f3f9;
+		overflow: hidden;
+	}
 
-    .border-left-info {
-        border-left: 4px solid #17a2b8 !important;
-    }
+	.custom-modern-table {
+		margin-bottom: 0 !important;
+		border-collapse: separate !important;
+		border-spacing: 0 !important;
+	}
 
-    .border-left-success {
-        border-left: 4px solid #28a745 !important;
-    }
+	.custom-modern-table thead th {
+		background-color: #f8faff !important;
+		color: #5d6e82;
+		font-weight: 700;
+		text-transform: uppercase;
+		font-size: 0.75rem;
+		letter-spacing: 0.5px;
+		padding: 18px 15px !important;
+		border-bottom: 2px solid #edf2f9 !important;
+		border-top: none !important;
+	}
 
-    .table-hover tbody tr:hover {
-        background-color: #f8f9fa;
-        transform: scale(1.01);
-        transition: all 0.2s ease;
-    }
+	.custom-modern-table td {
+		padding: 18px 15px !important;
+		border-bottom: 1px solid #f1f3f9 !important;
+		color: #334155;
+		font-size: 0.875rem;
+	}
 
-    .card {
-        transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
-    }
+	.custom-modern-table tbody tr:hover {
+		background-color: #f8faff !important;
+        transform: none; /* Disable old transform scale */
+	}
 
-    .card:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.12) !important;
-    }
-
-    .btn-group .btn {
-        transition: all 0.2s ease;
-    }
-
-    .btn-group .btn:hover {
-        transform: translateY(-1px);
-        z-index: 1;
-    }
-
-    .badge {
-        padding: 0.5em 0.75em;
-        font-size: 0.75rem;
-    }
-
-    /* Responsive design */
-    @media (max-width: 768px) {
-        .btn-group {
-            flex-direction: column;
-            width: 100%;
-        }
-
-        .btn-group .btn {
-            margin-bottom: 0.25rem;
-            font-size: 0.75rem;
-        }
-
-        .table-responsive .btn-group {
-            min-width: 100px;
-        }
-    }
-
-    /* Loading animation for buttons */
-    .btn:active {
-        transform: scale(0.98);
-    }
-
-    /* Enhanced statistics cards */
-    .h5 {
-        font-size: 1.75rem;
-        font-weight: 700;
-    }
-
-    .text-xs {
-        font-size: 0.7rem;
-    }
-
-    /* DataTable buttons styling */
-    .dt-buttons {
-        margin-bottom: 1rem;
-    }
-
-    .dt-buttons .btn {
-        margin-right: 0.5rem;
-    }
-
-    /* Page-specific enhancements */
-    .harmonisasi-header {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        color: white;
-        padding: 1rem;
-        border-radius: 0.5rem;
-        margin-bottom: 1.5rem;
-    }
-
-    .statistics-card {
-        border-radius: 0.75rem;
+	/* Premium Progress Bars */
+    .progress-premium {
+        background-color: #f1f5f9;
+        border-radius: 50px;
         overflow: hidden;
     }
 
-    .statistics-card .card-body {
-        padding: 1.5rem;
+    .status-item-premium {
+        transition: transform 0.2s ease;
     }
 
-    .main-content-card {
-        border-radius: 0.75rem;
-        overflow: hidden;
+    .status-item-premium:hover {
+        transform: translateX(5px);
     }
 
-    .main-content-card .card-header {
-        background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
-        border-bottom: none;
+	/* Premium Buttons */
+	.btn-blue-premium {
+		background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+		color: white !important;
+		border: none;
+		font-weight: 600;
+	}
+
+	.btn-blue-premium:hover {
+		background: linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%);
+		transform: translateY(-2px);
+		box-shadow: 0 7px 14px rgba(37, 99, 235, 0.2) !important;
+	}
+
+    .bg-light-premium {
+        background-color: #f8fafc;
+        border: 1px solid #f1f5f9;
     }
 
-    .table-dark {
-        background: linear-gradient(135deg, #343a40 0%, #495057 100%);
-    }
+	.shadow-hover:hover {
+		box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+	}
 
-    /* Empty state styling */
-    .empty-state {
-        text-align: center;
-        padding: 3rem 1rem;
-    }
+	/* Utility Colors & Layout */
+	.bg-soft-blue { background-color: #f0f7ff; }
+    .bg-soft-green { background-color: #f0fdf4; }
+	.text-blue-premium { color: #2563eb; }
+    .border-blue-premium { border-color: #2563eb !important; }
 
-    .empty-state i {
-        font-size: 4rem;
-        color: #6c757d;
-        margin-bottom: 1rem;
-    }
+    .rounded-4 { border-radius: 1rem !important; }
 
-    .empty-state h5 {
-        color: #6c757d;
-        margin-bottom: 0.5rem;
-    }
+    /* Custom Scrollbar */
+    .modern-scrollbar::-webkit-scrollbar { width: 4px; }
+    .modern-scrollbar::-webkit-scrollbar-track { background: #f1f5f9; }
+    .modern-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
 
-    .empty-state p {
-        color: #6c757d;
-        margin-bottom: 1.5rem;
-    }
-
-    /* Status Statistics Styling */
-    .status-list {
-        max-height: 500px;
-        overflow-y: auto;
-    }
-
-    .status-item {
-        padding: 0.75rem;
-        border-radius: 6px;
-        transition: background-color 0.2s ease;
-    }
-
-    .status-item:hover {
-        background-color: #f8f9fa;
-    }
-
-    .status-name {
-        font-size: 0.9rem;
-        color: #495057;
-        flex: 1;
-    }
-
-    .status-item .progress {
-        background-color: #e9ecef;
-        border-radius: 4px;
-    }
-
-    .status-item .progress-bar {
-        border-radius: 4px;
-        transition: width 0.6s ease;
-    }
-
-    /* Custom scrollbar untuk status list */
-    .status-list::-webkit-scrollbar {
-        width: 6px;
-    }
-
-    .status-list::-webkit-scrollbar-track {
-        background: #f1f1f1;
-        border-radius: 3px;
-    }
-
-    .status-list::-webkit-scrollbar-thumb {
-        background: #888;
-        border-radius: 3px;
-    }
-
-    .status-list::-webkit-scrollbar-thumb:hover {
-        background: #555;
-    }
-
-    /* Responsive adjustments */
-    @media (max-width: 992px) {
-        .status-list {
-            max-height: 400px;
-        }
-    }
-</style>
+	@media (max-width: 768px) {
+		.d-sm-flex {
+			flex-direction: column;
+			gap: 1.5rem;
+		}
+	}
+</style>
