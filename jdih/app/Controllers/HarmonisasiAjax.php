@@ -87,6 +87,23 @@ class HarmonisasiAjax extends BaseController
         // FILTER: Exclude status SELESAI (14) dan DITOLAK (15)
         $builder->whereNotIn('ha.id_status_ajuan', [14, 15]);
 
+        // CUSTOM FILTERS (from AJAX data)
+        $customFilters = $request->getPost('custom_filters');
+        if ($customFilters) {
+            if (!empty($customFilters['status'])) {
+                $builder->where('ha.id_status_ajuan', $customFilters['status']);
+            }
+            if (!empty($customFilters['jenis'])) {
+                $builder->where('ha.id_jenis_peraturan', $customFilters['jenis']);
+            }
+            if (!empty($customFilters['start_date'])) {
+                $builder->where('ha.tanggal_pengajuan >=', $customFilters['start_date'] . ' 00:00:00');
+            }
+            if (!empty($customFilters['end_date'])) {
+                $builder->where('ha.tanggal_pengajuan <=', $customFilters['end_date'] . ' 23:59:59');
+            }
+        }
+
         // Hitung total record (dengan base filter, tanpa search/limit)
         $recordsTotal = (clone $builder)->countAllResults(false);
 
