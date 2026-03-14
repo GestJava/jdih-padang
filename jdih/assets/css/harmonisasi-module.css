@@ -8,6 +8,127 @@
    ============================================================ */
 .harmonisasi-module {
     /* Container for all harmonisasi elements */
+    position: relative;
+    padding-bottom: 2rem;
+}
+
+/* ============================================================
+   ULTRA PREMIUM V2 DESIGN SYSTEM
+   ============================================================ */
+:root {
+    --premium-blue: #0061ff;
+    --premium-blue-light: #60efff;
+    --glass-bg: rgba(255, 255, 255, 0.7);
+    --glass-border: rgba(255, 255, 255, 0.4);
+    --mesh-grad-1: rgba(0, 97, 255, 0.03);
+    --mesh-grad-2: rgba(96, 239, 255, 0.03);
+}
+
+.mesh-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    background: 
+        radial-gradient(at 0% 0%, var(--mesh-grad-1) 0, transparent 50%), 
+        radial-gradient(at 100% 0%, var(--mesh-grad-2) 0, transparent 50%),
+        radial-gradient(at 100% 100%, var(--mesh-grad-1) 0, transparent 50%),
+        radial-gradient(at 0% 100%, var(--mesh-grad-2) 0, transparent 50%);
+    background-color: #f8faff;
+}
+
+.glass-panel-light {
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    border-radius: 1.25rem;
+}
+
+.glass-panel-deep {
+    background: rgba(255, 255, 255, 0.6);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 1.5rem;
+}
+
+/* ============================================================
+   HERO STATUS SECTION
+   ============================================================ */
+.hero-status-card {
+    background: linear-gradient(135deg, #ffffff 0%, #f0f4ff 100%);
+    border-radius: 2rem;
+    padding: 2.5rem;
+    position: relative;
+    overflow: hidden;
+    border: 1px solid rgba(0, 97, 255, 0.1);
+    box-shadow: 0 10px 40px rgba(0, 97, 255, 0.05);
+}
+
+.hero-status-card::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -20%;
+    width: 300px;
+    height: 300px;
+    background: radial-gradient(circle, rgba(0, 97, 255, 0.05) 0%, transparent 70%);
+    border-radius: 50%;
+}
+
+.hero-title {
+    font-size: 1.75rem;
+    font-weight: 800;
+    color: #1a202c;
+    line-height: 1.3;
+    letter-spacing: -0.5px;
+}
+
+.hero-subtitle {
+    font-size: 1rem;
+    color: #718096;
+    font-weight: 500;
+}
+
+/* ============================================================
+   INFO SLOT GRID
+   ============================================================ */
+.info-slot {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    padding: 1rem;
+    transition: all 0.3s ease;
+}
+
+.info-slot-icon {
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+    background: rgba(0, 97, 255, 0.08);
+    color: #0061ff;
+    font-size: 1.25rem;
+}
+
+.info-slot-content .label {
+    display: block;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #a0aec0;
+    margin-bottom: 2px;
+    font-weight: 600;
+}
+
+.info-slot-content .value {
+    display: block;
+    font-weight: 700;
+    color: #2d3748;
+    font-size: 1rem;
 }
 
 /* ============================================================
@@ -746,19 +867,35 @@
 .harmonisasi-module .stepper-marker {
     position: absolute;
     left: -2rem;
-    width: 20px;
-    height: 20px;
+    width: 24px;
+    height: 24px;
     border-radius: 50%;
     background: #fff;
-    border: 3px solid #007bff;
-    box-shadow: 0 0 0 3px #fff;
+    border: 4px solid #e2e8f0;
+    box-shadow: 0 0 0 2px #fff;
     z-index: 2;
-    transition: all 0.3s ease;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.harmonisasi-module .stepper-item.completed .stepper-marker {
+    background: #28a745;
+    border-color: #28a745;
+}
+
+.harmonisasi-module .stepper-item.active .stepper-marker {
+    background: #fff;
+    border-color: #fd7e14;
+    animation: marker-pulse 2s infinite;
+}
+
+@keyframes marker-pulse {
+    0% { box-shadow: 0 0 0 0 rgba(253, 126, 20, 0.4); }
+    70% { box-shadow: 0 0 0 10px rgba(253, 126, 20, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(253, 126, 20, 0); }
 }
 
 .harmonisasi-module .stepper-item:hover .stepper-marker {
-    transform: scale(1.2);
-    box-shadow: 0 0 0 4px rgba(0, 123, 255, 0.2);
+    transform: scale(1.15);
 }
 
 .harmonisasi-module .stepper-content {
