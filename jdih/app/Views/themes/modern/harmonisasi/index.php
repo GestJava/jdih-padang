@@ -458,6 +458,10 @@
 
     .rounded-4 { border-radius: 1rem !important; }
 
+    .shadow-sm-hover:hover {
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    }
+
     /* Custom Scrollbar */
     .modern-scrollbar::-webkit-scrollbar { width: 4px; }
     .modern-scrollbar::-webkit-scrollbar-track { background: #f1f5f9; }
