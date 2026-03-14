@@ -45,6 +45,9 @@ class Legalisasi extends BaseController
         $this->addJs(base_url('vendors/datatables/extensions/Buttons/js/buttons.bootstrap5.min.js'));
         $this->addStyle(base_url('vendors/datatables/extensions/Buttons/css/buttons.bootstrap5.min.css'));
 
+        // Load Standardized Ultra Premium CSS
+        $this->addStyle(base_url('jdih/assets/css/harmonisasi-module.css?v=' . time()));
+
         // Setup visible dashboards per user (RBAC for views and guards)
         try {
             // Ensure user data is available
