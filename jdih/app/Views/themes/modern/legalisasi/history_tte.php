@@ -418,6 +418,12 @@
 
 <script>
     $(document).ready(function() {
+        // Teleportation: Move modal to body root to escape any stacking context
+        const modalEl = document.getElementById('detailModal');
+        if (modalEl) {
+            document.body.appendChild(modalEl);
+        }
+
         const table = $('#history-tte-table').DataTable({
             responsive: true,
             language: { url: 'https://cdn.datatables.net/plug-ins/1.13.7/i18n/id.json' },
