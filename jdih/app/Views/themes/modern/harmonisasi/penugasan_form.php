@@ -69,15 +69,15 @@
             <!-- INFORMASI AJUAN -->
             <div class="glass-panel-light shadow-sm mb-4 p-4" style="animation: fadeInUp 0.5s ease;">
                 <h6 class="fw-bold text-uppercase mb-3" style="font-size: 0.8rem; letter-spacing: 1.5px; color: #a0aec0;">
-                    <i class="fas fa-info-circle me-2" style="color: #0061ff;"></i>Informasi Ajuan
+                    <i class="fas fa-info-circle me-2" style="color: #0061ff;"></i>Informasi Pengajuan
                 </h6>
                 <div class="row g-0">
                     <div class="col-md-6">
                         <div class="info-slot">
-                            <div class="info-slot-icon"><i class="fas fa-file-alt"></i></div>
+                            <div class="info-slot-icon"><i class="fas fa-gavel"></i></div>
                             <div class="info-slot-content">
-                                <span class="label">Judul Rancangan</span>
-                                <span class="value"><?= esc($ajuan['judul_peraturan']) ?></span>
+                                <span class="label">Jenis Peraturan</span>
+                                <span class="value"><?= esc($ajuan['nama_jenis']) ?></span>
                             </div>
                         </div>
                     </div>
@@ -101,16 +101,15 @@
                     </div>
                     <div class="col-md-6">
                         <div class="info-slot">
-                            <div class="info-slot-icon" style="background: rgba(108,117,125,0.08); color: #6c757d;"><i class="fas fa-calendar-alt"></i></div>
+                            <div class="info-slot-icon" style="background: rgba(108,117,125,0.08); color: #6c757d;"><i class="fas fa-user-shield"></i></div>
                             <div class="info-slot-content">
-                                <span class="label">Tanggal Pengajuan</span>
+                                <span class="label">Petugas Verifikasi</span>
                                 <span class="value">
-                                    <?php
-                                    $tanggal_tampil = !empty($ajuan['tanggal_pengajuan']) && $ajuan['tanggal_pengajuan'] != '0000-00-00 00:00:00'
-                                        ? $ajuan['tanggal_pengajuan']
-                                        : $ajuan['created_at'];
-                                    echo date('d/m/Y H:i', strtotime($tanggal_tampil));
-                                    ?>
+                                    <?php if (!empty($ajuan['nama_verifikator'])): ?>
+                                        <?= esc($ajuan['nama_verifikator']) ?>
+                                    <?php else: ?>
+                                        <span style="color: #cbd5e0; font-style: italic;">Belum Ditugaskan</span>
+                                    <?php endif; ?>
                                 </span>
                             </div>
                         </div>
