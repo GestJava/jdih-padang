@@ -287,27 +287,6 @@
     </div>
 </div>
 
-<!-- Premium Detail Modal -->
-<div class="modal fade" id="detailModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-lg modal-dialog-centered">
-        <div class="modal-content border-0 shadow-lg overflow-hidden" style="border-radius: 2rem;">
-            <div class="modal-header header-premium-blue text-white border-0 py-4 px-5 position-relative overflow-hidden" style="background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);">
-                <div class="position-relative z-1">
-                    <h5 class="modal-title font-outfit fw-bold"><i class="fas fa-info-circle me-3 opacity-75"></i>Detail Log Aktivitas</h5>
-                </div>
-                <button type="button" class="btn-close btn-close-white z-1 ms-auto" data-bs-dismiss="modal" aria-label="Close"></button>
-                <div class="position-absolute end-0 top-0 p-4 opacity-10"><i class="fas fa-fingerprint fa-6x rotate-12"></i></div>
-            </div>
-            <div class="modal-body p-0" id="detailModalBody">
-                <!-- Content injected via JS -->
-            </div>
-            <div class="modal-footer border-0 p-4 px-5 bg-light">
-                <button type="button" class="btn btn-outline-secondary rounded-pill px-4 fw-bold" data-bs-dismiss="modal">Tutup</button>
-                <div id="modalFooterActions"></div>
-            </div>
-        </div>
-    </div>
-</div>
 
 <style>
     :root {
@@ -414,6 +393,28 @@
         pointer-events: auto !important;
     }
 </style>
+
+<!-- Premium Detail Modal -->
+<div class="modal fade" id="detailModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg overflow-hidden" style="border-radius: 2rem;">
+            <div class="modal-header header-premium-blue text-white border-0 py-4 px-5 position-relative overflow-hidden" style="background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);">
+                <div class="position-relative z-1">
+                    <h5 class="modal-title font-outfit fw-bold"><i class="fas fa-info-circle me-3 opacity-75"></i>Detail Log Aktivitas</h5>
+                </div>
+                <button type="button" class="btn-close btn-close-white z-1 ms-auto" data-bs-dismiss="modal" aria-label="Close"></button>
+                <div class="position-absolute end-0 top-0 p-4 opacity-10"><i class="fas fa-fingerprint fa-6x rotate-12"></i></div>
+            </div>
+            <div class="modal-body p-0" id="detailModalBody">
+                <!-- Content injected via JS -->
+            </div>
+            <div class="modal-footer border-0 p-4 px-5 bg-light">
+                <button type="button" class="btn btn-outline-secondary rounded-pill px-4 fw-bold" data-bs-dismiss="modal">Tutup</button>
+                <div id="modalFooterActions"></div>
+            </div>
+        </div>
+    </div>
+</div>
 
 <script>
     $(document).ready(function() {
