@@ -61,6 +61,51 @@
                 <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
             </div>
         <?php endif; ?>
+        
+        <?php
+        $documentTTE = null;
+        if (isset($dokumen) && is_array($dokumen)) {
+            foreach ($dokumen as $doc) {
+                if ($doc['tipe_dokumen'] === 'FINAL_TTE') {
+                    $documentTTE = $doc;
+                    break;
+                }
+            }
+        }
+        ?>
+
+        <?php if ($documentTTE): ?>
+            <!-- TTE Result Card -->
+            <div class="glass-card mb-5 border-start border-green border-4 animate__animated animate__fadeIn">
+                <div class="card-body p-4">
+                    <div class="d-flex align-items-center justify-content-between flex-wrap gap-4">
+                        <div class="d-flex align-items-center gap-4">
+                            <div class="tte-result-icon bg-soft-green text-green rounded-circle d-flex align-items-center justify-content-center" style="width: 70px; height: 70px; font-size: 2rem;">
+                                <i class="fas fa-file-signature"></i>
+                            </div>
+                            <div>
+                                <h4 class="fw-bold text-dark mb-1">Dokumen Telah Ditandatangani</h4>
+                                <p class="text-muted mb-0">Dokumen ini telah melalui proses TTE dan saat ini bersifat resmi/final.</p>
+                                <?php 
+                                $nomorPeraturan = $documentTTE['document_number'] ?? $ajuan['document_number'] ?? $ajuan['document_number_final'] ?? null;
+                                if ($nomorPeraturan): ?>
+                                    <div class="mt-2">
+                                        <span class="badge bg-green-premium px-3 py-2 rounded-pill shadow-sm">
+                                            <i class="fas fa-hashtag me-2"></i>Nomor: <?= esc($nomorPeraturan) ?>
+                                        </span>
+                                    </div>
+                                <?php endif; ?>
+                            </div>
+                        </div>
+                        <div class="tte-result-actions">
+                            <a href="<?= base_url('legalisasi/download/' . $ajuan['id']) ?>" class="btn btn-green-premium btn-lg px-5 rounded-pill shadow-hover">
+                                <i class="fas fa-download me-2"></i>Download Dokumen Hasil TTE
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        <?php endif; ?>
 
         <?php if (!isset($ajuan) || !is_array($ajuan)): ?>
             <div class="glass-card text-center py-5">
