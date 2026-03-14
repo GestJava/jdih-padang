@@ -288,13 +288,7 @@
                                 d[JDIHModules.Harmonisasi.config.csrfName] = JDIHModules.Harmonisasi.config.csrfToken;
                             }
                             
-                            // Add custom filters
-                            d.custom_filters = {
-                                status: $('#statusFilter').val(),
-                                jenis: $('#jenisFilter').val(),
-                                start_date: $('#startDate').val(),
-                                end_date: $('#endDate').val()
-                            };
+                            // Filter functionality removed
                             
                             return d;
                         },
@@ -359,13 +353,7 @@
                                 d[JDIHModules.Harmonisasi.config.csrfName] = JDIHModules.Harmonisasi.config.csrfToken;
                             }
 
-                            // Add custom filters
-                            d.custom_filters = {
-                                status: $('#statusFilter').val(),
-                                jenis: $('#jenisFilter').val(),
-                                start_date: $('#startDate').val(),
-                                end_date: $('#endDate').val()
-                            };
+                            // Filter functionality removed
 
                             return d;
                         },
@@ -459,17 +447,7 @@
                             d[JDIHModules.Harmonisasi.config.csrfName] = JDIHModules.Harmonisasi.config.csrfToken;
                         }
                         
-                        // Add custom filters
-                        var statusFilter = $('#statusFilter').val();
-                        var jenisFilter = $('#jenisFilter').val();
-                        var startDate = $('#startDate').val();
-                        var endDate = $('#endDate').val();
-                        
-                        d.custom_filters = d.custom_filters || {};
-                        if (statusFilter) d.custom_filters.status = statusFilter;
-                        if (jenisFilter) d.custom_filters.jenis = jenisFilter;
-                        if (startDate) d.custom_filters.start_date = startDate;
-                        if (endDate) d.custom_filters.end_date = endDate;
+                        // Filter functionality removed
                         
                         return d;
                     },
@@ -528,8 +506,8 @@
             // Store DataTable instance for external access
             window.harmonisasiTable = dataTable;
             
-            // Initialize filter functionality
-            this.initFilterFunctionality(dataTable);
+            // Filter functionality removed per user request
+            // this.initFilterFunctionality(dataTable);
             
             // Add error recovery mechanism
             dataTable.on('error.dt', function(e, settings, techNote, message) {

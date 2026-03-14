@@ -97,7 +97,7 @@
                                 $colorClass = 'bg-' . $status['color'];
                                 $icon = $status['icon'] ?? 'circle';
                             ?>
-                                <div class="status-item-premium mb-4 quick-filter shadow-sm-hover" data-status="<?= $status['id'] ?>" style="cursor: pointer;">
+                                <div class="status-item-premium mb-4 shadow-sm-hover">
                                     <div class="d-flex justify-content-between align-items-center mb-2">
                                         <div class="d-flex align-items-center">
                                             <div class="status-icon bg-light-premium text-<?= esc($status['color']) ?> rounded-circle me-3">
@@ -150,7 +150,7 @@
                                 $colorClass = 'bg-' . $status['color'];
                                 $icon = $status['icon'] ?? 'circle';
                             ?>
-                                <div class="status-item-premium mb-4 quick-filter shadow-sm-hover" data-status="<?= $status['id'] ?>" style="cursor: pointer;">
+                                <div class="status-item-premium mb-4 shadow-sm-hover">
                                     <div class="d-flex justify-content-between align-items-center mb-2">
                                         <div class="d-flex align-items-center">
                                             <div class="status-icon bg-light-premium text-<?= esc($status['color']) ?> rounded-circle me-3">
@@ -194,44 +194,6 @@
             <p class="text-muted">Data akan muncul setelah Anda memiliki ajuan dalam sistem.</p>
         </div>
     <?php endif; ?>
-
-    <!-- Premium Filter Bar -->
-    <div class="glass-card shadow-premium mb-4 animate__animated animate__fadeInUp">
-        <div class="card-body p-4">
-            <div class="row align-items-end g-3">
-                <div class="col-md-3">
-                    <label class="form-label x-small fw-bold text-muted text-uppercase mb-2"><i class="fas fa-filter me-1"></i>Status Ajuan</label>
-                    <select id="statusFilter" class="form-select border-light-premium rounded-3">
-                        <option value="">Semua Status</option>
-                        <option value="1">Draft</option>
-                        <option value="4">Proses Validasi</option>
-                        <option value="6">Proses Finalisasi</option>
-                        <option value="13">Menunggu TTE</option>
-                    </select>
-                </div>
-                <div class="col-md-3">
-                    <label class="form-label x-small fw-bold text-muted text-uppercase mb-2"><i class="fas fa-list me-1"></i>Jenis Peraturan</label>
-                    <select id="jenisFilter" class="form-select border-light-premium rounded-3">
-                        <option value="">Semua Jenis</option>
-                        <!-- Options populated via AJAX -->
-                    </select>
-                </div>
-                <div class="col-md-4">
-                    <label class="form-label x-small fw-bold text-muted text-uppercase mb-2"><i class="fas fa-calendar-alt me-1"></i>Rentang Tanggal</label>
-                    <div class="input-group">
-                        <input type="date" id="startDate" class="form-control border-light-premium rounded-start-3" placeholder="Mulai">
-                        <span class="input-group-text bg-white border-light-premium">-</span>
-                        <input type="date" id="endDate" class="form-control border-light-premium rounded-end-3" placeholder="Selesai">
-                    </div>
-                </div>
-                <div class="col-md-2">
-                    <button id="applyFilter" class="btn btn-blue-premium w-100 rounded-3">
-                        <i class="fas fa-search me-1"></i>Filter
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
 
     <!-- Main Data Table Card -->
     <div class="glass-card shadow-premium mb-5 overflow-hidden">
