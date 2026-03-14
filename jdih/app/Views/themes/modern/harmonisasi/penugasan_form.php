@@ -1,35 +1,24 @@
 <div class="container-fluid">
-    <div class="d-sm-flex align-items-center justify-content-between mb-4">
-        <h1 class="h3 mb-0 text-gray-800">
-            <i class="fas fa-user-plus text-primary me-2"></i><?= esc($title) ?>
-        </h1>
-        <nav aria-label="breadcrumb">
-            <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="<?= base_url('harmonisasi') ?>">Harmonisasi</a></li>
-                <li class="breadcrumb-item"><a href="<?= base_url('penugasan') ?>">Penugasan</a></li>
-                <li class="breadcrumb-item active" aria-current="page">Tugaskan Verifikator</li>
-            </ol>
-        </nav>
-    </div>
+    <!-- Mesh Background -->
+    <div class="mesh-background"></div>
 
     <!-- Flash Messages -->
     <?php if (session()->getFlashdata('success')): ?>
-        <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <div class="alert alert-success alert-dismissible fade show shadow-sm border-0 rounded-4" role="alert" style="animation: fadeInDown 0.5s ease;">
             <i class="fas fa-check-circle me-2"></i><?= esc(session()->getFlashdata('success')) ?>
             <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
         </div>
     <?php endif; ?>
 
     <?php if (session()->getFlashdata('error')): ?>
-        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <div class="alert alert-danger alert-dismissible fade show shadow-sm border-0 rounded-4" role="alert" style="animation: fadeInDown 0.5s ease;">
             <i class="fas fa-exclamation-triangle me-2"></i><?= esc(session()->getFlashdata('error')) ?>
             <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
         </div>
     <?php endif; ?>
 
-    <!-- Validation Errors -->
     <?php if (isset($validation) && $validation->getErrors()): ?>
-        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <div class="alert alert-danger alert-dismissible fade show shadow-sm border-0 rounded-4" role="alert" style="animation: fadeInDown 0.5s ease;">
             <i class="fas fa-exclamation-triangle me-2"></i>
             <strong>Terdapat kesalahan:</strong>
             <ul class="mb-0 mt-2">
@@ -41,269 +30,263 @@
         </div>
     <?php endif; ?>
 
-    <div class="row">
-        <div class="col-lg-8">
-            <!-- Form Card -->
-            <div class="card shadow mb-4">
-                <div class="card-header bg-primary text-white py-3">
-                    <h6 class="m-0 font-weight-bold">
-                        <i class="fas fa-edit me-2"></i>Formulir Penugasan Verifikator
-                    </h6>
+    <!-- ============================================================
+         HERO HEADER
+         ============================================================ -->
+    <div class="hero-status-card mb-4" style="animation: fadeInUp 0.4s ease;">
+        <div class="row align-items-center">
+            <div class="col-lg-8">
+                <nav aria-label="breadcrumb" class="mb-2">
+                    <ol class="breadcrumb mb-0" style="font-size: 0.8rem;">
+                        <li class="breadcrumb-item"><a href="<?= base_url('harmonisasi') ?>" class="text-decoration-none" style="color: #0061ff;">Harmonisasi</a></li>
+                        <li class="breadcrumb-item"><a href="<?= base_url('penugasan') ?>" class="text-decoration-none" style="color: #0061ff;">Penugasan</a></li>
+                        <li class="breadcrumb-item active text-muted" aria-current="page">Tugaskan Verifikator</li>
+                    </ol>
+                </nav>
+                <h2 class="hero-title mb-2">
+                    <i class="fas fa-user-plus me-2" style="color: #0061ff;"></i><?= esc($title) ?>
+                </h2>
+                <p class="hero-subtitle mb-0"><?= esc($ajuan['judul_peraturan']) ?></p>
+            </div>
+            <div class="col-lg-4 mt-3 mt-lg-0">
+                <div class="d-flex flex-column gap-2 align-items-lg-end">
+                    <span class="badge rounded-pill px-3 py-2 fw-semibold" style="background: rgba(0,97,255,0.1); color: #0061ff; font-size: 0.85rem;">
+                        <i class="fas fa-gavel me-1"></i><?= esc($ajuan['nama_jenis']) ?>
+                    </span>
+                    <span class="badge rounded-pill px-3 py-2 fw-semibold" style="background: rgba(255,193,7,0.15); color: #d39e00; font-size: 0.85rem; border: 1px solid rgba(255,193,7,0.3);">
+                        <i class="fas fa-hourglass-half me-1"></i><?= esc($ajuan['nama_status']) ?>
+                    </span>
                 </div>
-                <div class="card-body">
-                    <?= form_open('penugasan/assign', ['id' => 'assignmentForm']) ?>
-                    <?= csrf_field() ?>
-                    <input type="hidden" name="id_ajuan" value="<?= esc($ajuan['id_ajuan']) ?>">
+            </div>
+        </div>
+    </div>
 
-                    <!-- Ajuan Information -->
-                    <div class="row mb-4">
-                        <div class="col-12">
-                            <h6 class="text-primary mb-3">
-                                <i class="fas fa-info-circle me-1"></i>Informasi Ajuan
-                            </h6>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                <label class="form-label text-muted">Judul Rancangan</label>
-                                <div class="form-control-plaintext bg-light p-2 rounded">
-                                    <strong><?= esc($ajuan['judul_peraturan']) ?></strong>
-                                </div>
-                            </div>
-                            <div class="mb-3">
-                                <label class="form-label text-muted">Jenis Peraturan</label>
-                                <div class="form-control-plaintext">
-                                    <span class="badge bg-info text-white fs-6">
-                                        <?= esc($ajuan['nama_jenis']) ?>
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                <label class="form-label text-muted">Instansi Pemohon</label>
-                                <div class="form-control-plaintext">
-                                    <i class="fas fa-building me-1 text-muted"></i>
-                                    <?= esc($ajuan['nama_instansi']) ?>
-                                </div>
-                            </div>
-                            <div class="mb-3">
-                                <label class="form-label text-muted">User Pemohon</label>
-                                <div class="form-control-plaintext">
-                                    <i class="fas fa-user me-1 text-muted"></i>
-                                    <?= esc($ajuan['nama_pemohon']) ?>
-                                </div>
+    <div class="row">
+        <!-- ============================================================
+             LEFT COLUMN - FORM
+             ============================================================ -->
+        <div class="col-lg-8">
+            <!-- INFORMASI AJUAN -->
+            <div class="glass-panel-light shadow-sm mb-4 p-4" style="animation: fadeInUp 0.5s ease;">
+                <h6 class="fw-bold text-uppercase mb-3" style="font-size: 0.8rem; letter-spacing: 1.5px; color: #a0aec0;">
+                    <i class="fas fa-info-circle me-2" style="color: #0061ff;"></i>Informasi Ajuan
+                </h6>
+                <div class="row g-0">
+                    <div class="col-md-6">
+                        <div class="info-slot">
+                            <div class="info-slot-icon"><i class="fas fa-file-alt"></i></div>
+                            <div class="info-slot-content">
+                                <span class="label">Judul Rancangan</span>
+                                <span class="value"><?= esc($ajuan['judul_peraturan']) ?></span>
                             </div>
                         </div>
                     </div>
-
-                    <!-- Additional Information -->
-                    <div class="row mb-4">
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                <label class="form-label text-muted">Tanggal Pengajuan</label>
-                                <div class="form-control-plaintext">
-                                    <i class="fas fa-calendar me-1 text-muted"></i>
+                    <div class="col-md-6">
+                        <div class="info-slot">
+                            <div class="info-slot-icon" style="background: rgba(40,167,69,0.08); color: #28a745;"><i class="fas fa-building"></i></div>
+                            <div class="info-slot-content">
+                                <span class="label">Instansi Pemohon</span>
+                                <span class="value"><?= esc($ajuan['nama_instansi']) ?></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="info-slot">
+                            <div class="info-slot-icon" style="background: rgba(253,126,20,0.08); color: #fd7e14;"><i class="fas fa-user"></i></div>
+                            <div class="info-slot-content">
+                                <span class="label">User Pemohon</span>
+                                <span class="value"><?= esc($ajuan['nama_pemohon']) ?></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="info-slot">
+                            <div class="info-slot-icon" style="background: rgba(108,117,125,0.08); color: #6c757d;"><i class="fas fa-calendar-alt"></i></div>
+                            <div class="info-slot-content">
+                                <span class="label">Tanggal Pengajuan</span>
+                                <span class="value">
                                     <?php
                                     $tanggal_tampil = !empty($ajuan['tanggal_pengajuan']) && $ajuan['tanggal_pengajuan'] != '0000-00-00 00:00:00'
                                         ? $ajuan['tanggal_pengajuan']
                                         : $ajuan['created_at'];
                                     echo date('d/m/Y H:i', strtotime($tanggal_tampil));
                                     ?>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                <label class="form-label text-muted">Status Saat Ini</label>
-                                <div class="form-control-plaintext">
-                                    <span class="badge bg-warning text-dark">
-                                        <?= esc($ajuan['nama_status']) ?>
-                                    </span>
-                                </div>
+                                </span>
                             </div>
                         </div>
                     </div>
-
-                    <!-- Daftar Dokumen -->
-                    <?php if (!empty($dokumen)): ?>
-                        <div class="card shadow mb-4">
-                            <div class="card-header bg-success text-white py-3">
-                                <h6 class="m-0 font-weight-bold">
-                                    <i class="fas fa-paperclip me-2"></i>Dokumen Terlampir
-                                    <span class="badge bg-light text-dark ms-2"><?= count($dokumen) ?> file</span>
-                                </h6>
-                            </div>
-                            <div class="card-body">
-                                <div class="list-group list-group-flush">
-                                    <?php foreach ($dokumen as $doc) : ?>
-                                        <div class="list-group-item d-flex justify-content-between align-items-start">
-                                            <div class="ms-2 me-auto">
-                                                <div class="fw-bold text-primary">
-                                                    <i class="fas fa-file-alt me-1"></i>
-                                                    <?= esc(ucwords(str_replace('_', ' ', $doc['tipe_dokumen']))) ?>
-                                                </div>
-                                                <p class="mb-1"><?= esc($doc['nama_file_original']) ?></p>
-                                                <small class="text-muted">
-                                                    <i class="fas fa-clock me-1"></i>
-                                                    Diunggah: <?= date('d F Y H:i', strtotime($doc['created_at'])) ?>
-                                                </small>
-                                            </div>
-                                            <a href="<?= base_url('harmonisasi/download/' . $doc['id']) ?>"
-                                                class="btn btn-success btn-sm"
-                                                title="Unduh Dokumen"
-                                                target="_blank">
-                                                <i class="fas fa-download"></i> Unduh
-                                            </a>
-                                        </div>
-                                    <?php endforeach; ?>
-                                </div>
-                            </div>
-                        </div>
-                    <?php else: ?>
-                        <div class="card shadow mb-4">
-                            <div class="card-header bg-warning text-dark py-3">
-                                <h6 class="m-0 font-weight-bold">
-                                    <i class="fas fa-exclamation-triangle me-2"></i>Dokumen Belum Tersedia
-                                </h6>
-                            </div>
-                            <div class="card-body">
-                                <div class="alert alert-warning mb-0">
-                                    <i class="fas fa-info-circle me-1"></i>
-                                    <strong>Perhatian:</strong> Belum ada dokumen yang diunggah oleh pemohon.
-                                    Anda dapat melanjutkan penugasan atau menunggu pemohon mengunggah dokumen terlebih dahulu.
-                                </div>
-                            </div>
-                        </div>
-                    <?php endif; ?>
-
-                    <hr>
-
-                    <!-- Verifikator Selection -->
-                    <div class="row">
-                        <div class="col-12">
-                            <h6 class="text-primary mb-3">
-                                <i class="fas fa-users me-1"></i>Pilih Verifikator
-                            </h6>
-                        </div>
-                        <div class="col-12">
-                            <div class="mb-4">
-                                <label for="id_user_verifikator" class="form-label">
-                                    Petugas Verifikator <span class="text-danger">*</span>
-                                </label>
-                                <select class="form-select form-select-lg"
-                                    id="id_user_verifikator"
-                                    name="id_user_verifikator"
-                                    required>
-                                    <option value="">-- Pilih Petugas Verifikator --</option>
-                                    <?php if (!empty($verifikator_list)): ?>
-                                        <?php foreach ($verifikator_list as $verifikator): ?>
-                                            <option value="<?= esc($verifikator['id']) ?>">
-                                                <i class="fas fa-user me-1"></i>
-                                                <?= esc($verifikator['nama']) ?>
-                                            </option>
-                                        <?php endforeach; ?>
-                                    <?php else: ?>
-                                        <option value="" disabled>Tidak ada verifikator tersedia</option>
-                                    <?php endif; ?>
-                                </select>
-                                <div class="form-text">
-                                    <i class="fas fa-info-circle me-1"></i>
-                                    Pilih salah satu petugas verifikator yang akan menangani ajuan ini
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Action Buttons -->
-                    <div class="d-flex gap-2 justify-content-end">
-                        <a href="<?= base_url('penugasan') ?>" class="btn btn-secondary">
-                            <i class="fas fa-arrow-left me-1"></i>Kembali ke Penugasan
-                        </a>
-                        <button type="submit"
-                            class="btn btn-primary"
-                            id="submitBtn"
-                            <?= empty($verifikator_list) ? 'disabled' : '' ?>>
-                            <i class="fas fa-user-plus me-1"></i>
-                            <span class="btn-text">Tugaskan Sekarang</span>
-                        </button>
-                    </div>
-                    <?= form_close() ?>
                 </div>
+            </div>
+
+            <!-- DOKUMEN TERLAMPIR -->
+            <div class="glass-panel-light shadow-sm mb-4 p-4" style="animation: fadeInUp 0.6s ease;">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h6 class="fw-bold text-uppercase mb-0" style="font-size: 0.8rem; letter-spacing: 1.5px; color: #a0aec0;">
+                        <i class="fas fa-paperclip me-2" style="color: #28a745;"></i>Dokumen Terlampir
+                    </h6>
+                    <?php if (!empty($dokumen)): ?>
+                        <span class="badge rounded-pill px-3 py-1" style="background: rgba(40,167,69,0.1); color: #28a745; font-weight: 600;"><?= count($dokumen) ?> file</span>
+                    <?php endif; ?>
+                </div>
+                <?php if (!empty($dokumen)): ?>
+                    <div class="d-flex flex-column gap-3">
+                        <?php foreach ($dokumen as $doc) : ?>
+                            <?php
+                                $ext = strtolower(pathinfo($doc['nama_file_original'], PATHINFO_EXTENSION));
+                                $fileIcon = 'fa-file-alt'; $fileColor = '#6c757d'; $fileBg = 'rgba(108,117,125,0.08)';
+                                if ($ext === 'pdf') { $fileIcon = 'fa-file-pdf'; $fileColor = '#dc3545'; $fileBg = 'rgba(220,53,69,0.08)'; }
+                                elseif (in_array($ext, ['doc', 'docx'])) { $fileIcon = 'fa-file-word'; $fileColor = '#0061ff'; $fileBg = 'rgba(0,97,255,0.08)'; }
+                                elseif (in_array($ext, ['xls', 'xlsx'])) { $fileIcon = 'fa-file-excel'; $fileColor = '#28a745'; $fileBg = 'rgba(40,167,69,0.08)'; }
+                            ?>
+                            <div class="d-flex align-items-center p-3 rounded-4" style="background: rgba(248,250,255,0.8); border: 1px solid rgba(0,0,0,0.04); transition: all 0.3s ease;" onmouseover="this.style.transform='translateX(5px)'; this.style.boxShadow='0 4px 15px rgba(0,0,0,0.06)';" onmouseout="this.style.transform='none'; this.style.boxShadow='none';">
+                                <div class="rounded-3 d-flex align-items-center justify-content-center me-3" style="width: 48px; height: 48px; background: <?= $fileBg ?>; flex-shrink: 0;">
+                                    <i class="fas <?= $fileIcon ?> fa-lg" style="color: <?= $fileColor ?>;"></i>
+                                </div>
+                                <div class="flex-grow-1 me-3">
+                                    <div class="fw-bold mb-0" style="font-size: 0.85rem; color: #2d3748;"><?= esc(ucwords(str_replace('_', ' ', $doc['tipe_dokumen']))) ?></div>
+                                    <div style="font-size: 0.8rem; color: #718096;"><?= esc($doc['nama_file_original']) ?></div>
+                                    <small style="font-size: 0.7rem; color: #a0aec0;"><i class="far fa-clock me-1"></i>Diunggah: <?= date('d M Y H:i', strtotime($doc['created_at'])) ?></small>
+                                </div>
+                                <a href="<?= base_url('harmonisasi/download/' . $doc['id']) ?>"
+                                   class="btn btn-sm rounded-pill px-3 fw-semibold"
+                                   style="background: rgba(0,97,255,0.1); color: #0061ff; border: none; transition: all 0.3s ease;"
+                                   onmouseover="this.style.background='#0061ff'; this.style.color='#fff';"
+                                   onmouseout="this.style.background='rgba(0,97,255,0.1)'; this.style.color='#0061ff';"
+                                   target="_blank" title="Unduh Dokumen">
+                                    <i class="fas fa-download me-1"></i>Unduh
+                                </a>
+                            </div>
+                        <?php endforeach; ?>
+                    </div>
+                <?php else: ?>
+                    <div class="text-center py-4 rounded-4" style="background: rgba(255,193,7,0.05); border: 1px dashed rgba(255,193,7,0.3);">
+                        <i class="fas fa-exclamation-triangle fa-2x mb-2" style="color: #ffc107;"></i>
+                        <p class="mb-1 fw-semibold" style="color: #856404; font-size: 0.9rem;">Dokumen Belum Tersedia</p>
+                        <small style="color: #a0aec0;">Anda dapat melanjutkan penugasan atau menunggu pemohon mengunggah dokumen.</small>
+                    </div>
+                <?php endif; ?>
+            </div>
+
+            <!-- ============================================================
+                 FORM PENUGASAN VERIFIKATOR
+                 ============================================================ -->
+            <div class="glass-panel-light shadow-sm mb-4 p-4" style="animation: fadeInUp 0.7s ease; border: 2px solid rgba(0, 97, 255, 0.1);">
+                <h6 class="fw-bold text-uppercase mb-4" style="font-size: 0.8rem; letter-spacing: 1.5px; color: #a0aec0;">
+                    <i class="fas fa-users me-2" style="color: #6f42c1;"></i>Pilih Verifikator
+                </h6>
+
+                <?= form_open('penugasan/assign', ['id' => 'assignmentForm']) ?>
+                <?= csrf_field() ?>
+                <input type="hidden" name="id_ajuan" value="<?= esc($ajuan['id_ajuan']) ?>">
+
+                <div class="mb-4">
+                    <label for="id_user_verifikator" class="form-label fw-semibold" style="color: #2d3748;">
+                        Petugas Verifikator <span class="text-danger">*</span>
+                    </label>
+                    <select class="form-select form-select-lg rounded-4"
+                        id="id_user_verifikator"
+                        name="id_user_verifikator"
+                        required
+                        style="border: 2px solid #e2e8f0; padding: 0.875rem 1.25rem; font-size: 1rem; transition: all 0.3s ease;">
+                        <option value="">-- Pilih Petugas Verifikator --</option>
+                        <?php if (!empty($verifikator_list)): ?>
+                            <?php foreach ($verifikator_list as $verifikator): ?>
+                                <option value="<?= esc($verifikator['id']) ?>">
+                                    <?= esc($verifikator['nama']) ?>
+                                </option>
+                            <?php endforeach; ?>
+                        <?php else: ?>
+                            <option value="" disabled>Tidak ada verifikator tersedia</option>
+                        <?php endif; ?>
+                    </select>
+                    <div class="form-text mt-2" style="color: #a0aec0; font-size: 0.8rem;">
+                        <i class="fas fa-info-circle me-1"></i>
+                        Pilih salah satu petugas verifikator yang akan menangani ajuan ini
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="d-flex gap-3 justify-content-end pt-3" style="border-top: 1px solid rgba(0,0,0,0.05);">
+                    <a href="<?= base_url('penugasan') ?>" class="btn btn-outline-secondary rounded-pill px-4 fw-medium">
+                        <i class="fas fa-arrow-left me-2"></i>Kembali
+                    </a>
+                    <button type="submit"
+                        class="btn rounded-pill px-4 fw-semibold text-white"
+                        id="submitBtn"
+                        style="background: linear-gradient(135deg, #0061ff 0%, #60efff 100%); border: none; box-shadow: 0 4px 15px rgba(0,97,255,0.3); transition: all 0.3s ease;"
+                        <?= empty($verifikator_list) ? 'disabled' : '' ?>>
+                        <i class="fas fa-user-plus me-2"></i>
+                        <span class="btn-text">Tugaskan Sekarang</span>
+                    </button>
+                </div>
+                <?= form_close() ?>
             </div>
         </div>
 
+        <!-- ============================================================
+             RIGHT COLUMN - SIDEBAR
+             ============================================================ -->
         <div class="col-lg-4">
-            <!-- Information Card -->
-            <div class="card shadow mb-4">
-                <div class="card-header bg-info text-white py-3">
-                    <h6 class="m-0 font-weight-bold">
-                        <i class="fas fa-lightbulb me-2"></i>Informasi
-                    </h6>
-                </div>
-                <div class="card-body">
-                    <div class="mb-3">
-                        <h6 class="text-info">Proses Penugasan</h6>
-                        <p class="small text-muted">
-                            Setelah memilih verifikator dan menekan tombol "Tugaskan Sekarang", status ajuan akan berubah menjadi <strong>"Proses Verifikasi"</strong> dan akan muncul di dashboard verifikator yang bersangkutan.
-                        </p>
-                    </div>
+            <!-- Info Guide -->
+            <div class="glass-panel-light shadow-sm mb-4 p-4" style="animation: fadeInUp 0.5s ease;">
+                <h6 class="fw-bold text-uppercase mb-3" style="font-size: 0.8rem; letter-spacing: 1.5px; color: #a0aec0;">
+                    <i class="fas fa-lightbulb me-2" style="color: #ffc107;"></i>Panduan
+                </h6>
 
-                    <div class="mb-3">
-                        <h6 class="text-info">Langkah Selanjutnya</h6>
-                        <ol class="small text-muted">
-                            <li>Verifikator akan menerima notifikasi penugasan</li>
-                            <li>Verifikator dapat memproses ajuan di dashboard mereka</li>
-                            <li>Status akan diperbarui sesuai dengan proses verifikasi</li>
-                        </ol>
+                <div class="mb-4">
+                    <div class="d-flex align-items-start gap-3 mb-3">
+                        <div class="rounded-circle d-flex align-items-center justify-content-center flex-shrink-0" style="width: 32px; height: 32px; background: rgba(0,97,255,0.1); font-size: 0.8rem; font-weight: 700; color: #0061ff;">1</div>
+                        <div>
+                            <p class="mb-0 fw-semibold" style="font-size: 0.85rem; color: #2d3748;">Pilih Verifikator</p>
+                            <small style="color: #a0aec0;">Pilih petugas dari daftar dropdown di bawah</small>
+                        </div>
                     </div>
-
-                    <?php if (!empty($dokumen)): ?>
-                        <div class="mb-3">
-                            <h6 class="text-success">
-                                <i class="fas fa-file-alt me-1"></i>Dokumen Tersedia
-                            </h6>
-                            <p class="small text-muted mb-2">
-                                <?= count($dokumen) ?> dokumen telah diunggah oleh pemohon dan dapat diunduh untuk review.
-                            </p>
-                            <div class="alert alert-info small">
-                                <i class="fas fa-info-circle me-1"></i>
-                                <strong>Tips:</strong> Review dokumen sebelum menugaskan verifikator untuk memastikan kelengkapan berkas.
-                            </div>
+                    <div class="d-flex align-items-start gap-3 mb-3">
+                        <div class="rounded-circle d-flex align-items-center justify-content-center flex-shrink-0" style="width: 32px; height: 32px; background: rgba(40,167,69,0.1); font-size: 0.8rem; font-weight: 700; color: #28a745;">2</div>
+                        <div>
+                            <p class="mb-0 fw-semibold" style="font-size: 0.85rem; color: #2d3748;">Klik "Tugaskan"</p>
+                            <small style="color: #a0aec0;">Status akan berubah menjadi <strong>"Proses Verifikasi"</strong></small>
                         </div>
-                    <?php else: ?>
-                        <div class="mb-3">
-                            <h6 class="text-warning">
-                                <i class="fas fa-exclamation-triangle me-1"></i>Dokumen Belum Tersedia
-                            </h6>
-                            <p class="small text-muted mb-2">
-                                Belum ada dokumen yang diunggah oleh pemohon.
-                            </p>
-                            <div class="alert alert-warning small">
-                                <i class="fas fa-info-circle me-1"></i>
-                                <strong>Catatan:</strong> Anda dapat melanjutkan penugasan atau menunggu pemohon mengunggah dokumen.
-                            </div>
+                    </div>
+                    <div class="d-flex align-items-start gap-3">
+                        <div class="rounded-circle d-flex align-items-center justify-content-center flex-shrink-0" style="width: 32px; height: 32px; background: rgba(253,126,20,0.1); font-size: 0.8rem; font-weight: 700; color: #fd7e14;">3</div>
+                        <div>
+                            <p class="mb-0 fw-semibold" style="font-size: 0.85rem; color: #2d3748;">Verifikator Bekerja</p>
+                            <small style="color: #a0aec0;">Ajuan akan muncul di dashboard verifikator</small>
                         </div>
-                    <?php endif; ?>
+                    </div>
                 </div>
+
+                <?php if (!empty($dokumen)): ?>
+                <div class="rounded-4 p-3" style="background: rgba(40,167,69,0.05); border: 1px solid rgba(40,167,69,0.15);">
+                    <div class="d-flex align-items-center gap-2 mb-1">
+                        <i class="fas fa-check-circle" style="color: #28a745;"></i>
+                        <span class="fw-semibold" style="font-size: 0.85rem; color: #28a745;">Dokumen Siap</span>
+                    </div>
+                    <small style="color: #718096;"><?= count($dokumen) ?> dokumen tersedia untuk dipilih dan di-review oleh verifikator.</small>
+                </div>
+                <?php else: ?>
+                <div class="rounded-4 p-3" style="background: rgba(255,193,7,0.05); border: 1px solid rgba(255,193,7,0.15);">
+                    <div class="d-flex align-items-center gap-2 mb-1">
+                        <i class="fas fa-exclamation-triangle" style="color: #ffc107;"></i>
+                        <span class="fw-semibold" style="font-size: 0.85rem; color: #856404;">Dokumen Belum Ada</span>
+                    </div>
+                    <small style="color: #718096;">Anda tetap bisa melanjutkan penugasan tanpa dokumen.</small>
+                </div>
+                <?php endif; ?>
             </div>
 
-            <!-- Quick Stats Card -->
-            <div class="card shadow">
-                <div class="card-header bg-success text-white py-3">
-                    <h6 class="m-0 font-weight-bold">
-                        <i class="fas fa-chart-pie me-2"></i>Statistik Cepat
-                    </h6>
-                </div>
-                <div class="card-body">
-                    <div class="row text-center">
-                        <div class="col-12">
-                            <div class="mb-2">
-                                <i class="fas fa-users fa-2x text-success mb-2"></i>
-                                <h4 class="text-success"><?= count($verifikator_list) ?></h4>
-                                <small class="text-muted">Verifikator Tersedia</small>
-                            </div>
-                        </div>
+            <!-- Verifikator Stats -->
+            <div class="glass-panel-light shadow-sm p-4" style="animation: fadeInUp 0.6s ease;">
+                <h6 class="fw-bold text-uppercase mb-3" style="font-size: 0.8rem; letter-spacing: 1.5px; color: #a0aec0;">
+                    <i class="fas fa-chart-pie me-2" style="color: #28a745;"></i>Statistik
+                </h6>
+                <div class="text-center py-3">
+                    <div class="rounded-circle d-inline-flex align-items-center justify-content-center mx-auto mb-2" style="width: 64px; height: 64px; background: rgba(40,167,69,0.08);">
+                        <i class="fas fa-users fa-lg" style="color: #28a745;"></i>
                     </div>
+                    <h3 class="fw-black mb-0" style="color: #28a745;"><?= count($verifikator_list) ?></h3>
+                    <small class="text-uppercase fw-bold" style="color: #a0aec0; letter-spacing: 1px; font-size: 0.7rem;">Verifikator Tersedia</small>
                 </div>
             </div>
         </div>
@@ -316,112 +299,53 @@
         const submitBtn = document.getElementById('submitBtn');
         const btnText = submitBtn.querySelector('.btn-text');
 
-        // Form submission with loading state
         form.addEventListener('submit', function(e) {
-            if (submitBtn.disabled) {
-                e.preventDefault();
-                return false;
-            }
-
-            // Show loading state
+            if (submitBtn.disabled) { e.preventDefault(); return false; }
             submitBtn.disabled = true;
             btnText.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i>Memproses...';
-
-            // Add visual feedback
-            submitBtn.classList.add('disabled');
+            submitBtn.style.opacity = '0.7';
         });
 
-        // Verifikator selection validation
         const verifikatorSelect = document.getElementById('id_user_verifikator');
         verifikatorSelect.addEventListener('change', function() {
             if (this.value) {
                 submitBtn.disabled = false;
-                submitBtn.classList.remove('disabled');
+                submitBtn.style.opacity = '1';
             } else {
                 submitBtn.disabled = true;
-                submitBtn.classList.add('disabled');
+                submitBtn.style.opacity = '0.5';
             }
         });
 
-        // Enhanced select styling
         verifikatorSelect.addEventListener('focus', function() {
-            this.classList.add('border-primary');
+            this.style.borderColor = '#0061ff';
+            this.style.boxShadow = '0 0 0 3px rgba(0,97,255,0.1)';
         });
 
         verifikatorSelect.addEventListener('blur', function() {
-            this.classList.remove('border-primary');
+            this.style.borderColor = '#e2e8f0';
+            this.style.boxShadow = 'none';
         });
     });
 </script>
 
 <style>
-    /* Enhanced form styling */
-    .form-select:focus {
-        border-color: #007bff;
-        box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeInDown {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 768px) {
+    .d-flex.gap-3.justify-content-end {
+        flex-direction: column;
     }
-
-    .form-control-plaintext.bg-light {
-        border: 1px solid #e9ecef;
+    .d-flex.gap-3.justify-content-end > * {
+        width: 100%;
+        text-align: center;
     }
-
-    /* Button enhancements */
-    .btn {
-        transition: all 0.2s ease;
-    }
-
-    .btn:hover:not(.disabled) {
-        transform: translateY(-1px);
-    }
-
-    .btn.disabled {
-        opacity: 0.6;
-        cursor: not-allowed;
-    }
-
-    /* Card enhancements */
-    .card {
-        border: none;
-        transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
-    }
-
-    .card:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.12) !important;
-    }
-
-    /* Badge enhancements */
-    .badge {
-        padding: 0.5em 0.75em;
-    }
-
-    /* Loading animation */
-    @keyframes pulse {
-        0% {
-            opacity: 1;
-        }
-
-        50% {
-            opacity: 0.5;
-        }
-
-        100% {
-            opacity: 1;
-        }
-    }
-
-    .btn.disabled {
-        animation: pulse 2s infinite;
-    }
-
-    /* Responsive design */
-    @media (max-width: 768px) {
-        .d-flex.gap-2 {
-            flex-direction: column;
-        }
-
-        .d-flex.gap-2>* {
-            margin-bottom: 0.5rem;
-        }
-    }
+}
 </style>
