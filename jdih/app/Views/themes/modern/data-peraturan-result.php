@@ -5,14 +5,18 @@ if (!empty($body_class)) {
 }
 ?>
 
-<div class="container-fluid">
-	<div class="d-sm-flex align-items-center justify-content-between mb-4">
-		<h1 class="h3 mb-0 text-gray-800">
-			<i class="fas fa-gavel text-primary me-2"></i><?= esc($current_module['judul_module'] ?? 'Data Peraturan') ?>
-		</h1>
+<div class="container-fluid animate__animated animate__fadeIn">
+	<!-- Modern Header Section -->
+	<div class="d-sm-flex align-items-center justify-content-between mb-5">
+		<div class="header-content">
+			<h1 class="h2 fw-bold text-dark mb-1">
+				<i class="fas fa-gavel text-blue-premium me-3 mb-2"></i><?= esc($current_module['judul_module'] ?? 'Data Peraturan') ?>
+			</h1>
+			<p class="text-muted mb-0">Kelola dan administrasi seluruh data peraturan daerah secara efisien.</p>
+		</div>
 		<nav aria-label="breadcrumb">
-			<ol class="breadcrumb">
-				<li class="breadcrumb-item"><a href="<?= base_url('dashboard') ?>">Dashboard</a></li>
+			<ol class="breadcrumb bg-soft-blue px-4 py-2 rounded-pill shadow-sm mb-0">
+				<li class="breadcrumb-item"><a href="<?= base_url('dashboard') ?>" class="text-blue-premium text-decoration-none"><i class="fas fa-home me-1"></i>Dashboard</a></li>
 				<li class="breadcrumb-item active" aria-current="page">Data Peraturan</li>
 			</ol>
 		</nav>
@@ -21,60 +25,61 @@ if (!empty($body_class)) {
 	<!-- Flash Messages -->
 	<?php if (!empty($msg)): ?>
 		<?php if (is_array($msg) && isset($msg['status'])): ?>
-			<?php if ($msg['status'] === 'success'): ?>
-				<div class="alert alert-success alert-dismissible fade show" role="alert">
-					<i class="fas fa-check-circle me-2"></i><?= esc($msg['content'] ?? $msg['message'] ?? '') ?>
-					<button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+			<div class="alert alert-<?= $msg['status'] === 'success' ? 'success' : 'danger' ?> border-0 shadow-sm animate__animated animate__slideInDown mb-4">
+				<div class="d-flex align-items-center">
+					<i class="fas fa-<?= $msg['status'] === 'success' ? 'check-circle' : 'exclamation-triangle' ?> fs-4 me-3"></i>
+					<div><?= esc($msg['content'] ?? $msg['message'] ?? '') ?></div>
 				</div>
-			<?php elseif ($msg['status'] === 'error'): ?>
-				<div class="alert alert-danger alert-dismissible fade show" role="alert">
-					<i class="fas fa-exclamation-triangle me-2"></i><?= esc($msg['content'] ?? $msg['message'] ?? '') ?>
-					<button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-				</div>
-			<?php endif; ?>
+				<button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+			</div>
 		<?php else: ?>
-			<?= show_alert($msg); ?>
+			<div class="animate__animated animate__slideInDown mb-4"><?= show_alert($msg); ?></div>
 		<?php endif; ?>
 	<?php endif; ?>
 
 	<div class="row">
 		<div class="col-12">
-			<div class="card shadow mb-4">
-				<div class="card-header bg-primary text-white py-3">
-					<div class="d-flex justify-content-between align-items-center">
-						<h6 class="m-0 font-weight-bold">
-							<i class="fas fa-list me-2"></i>Daftar Peraturan
-						</h6>
-						<div>
-							<button type="button" class="btn btn-light btn-sm me-2" data-action="reload-table" title="Refresh Data">
-								<i class="fas fa-sync-alt"></i>
-							</button>
-							<a href="<?= current_url() ?>/add" class="btn btn-light btn-sm">
-								<i class="fas fa-plus me-1"></i>Tambah Data
-							</a>
+			<!-- Glass Card Main Container -->
+			<div class="glass-card shadow-premium mb-5">
+				<div class="card-header-premium p-4 d-flex justify-content-between align-items-center flex-wrap gap-3">
+					<div class="d-flex align-items-center">
+						<div class="icon-box bg-blue-premium text-white rounded-3 me-3 p-2 shadow-sm">
+							<i class="fas fa-database"></i>
 						</div>
+						<h5 class="m-0 fw-bold text-dark">Data Repository</h5>
+					</div>
+					<div class="actions-group d-flex gap-2">
+						<button type="button" class="btn btn-light-premium btn-icon-round" data-action="reload-table" title="Refresh Data">
+							<i class="fas fa-sync-alt"></i>
+						</button>
+						<a href="<?= current_url() ?>/add" class="btn btn-blue-premium px-4 rounded-pill shadow-hover">
+							<i class="fas fa-plus-circle me-2"></i>Tambah Data Baru
+						</a>
 					</div>
 				</div>
-				<div class="card-body">
-					<div class="table-responsive">
-						<table class="table table-striped table-bordered table-hover" id="data-tables">
-							<thead>
-								<tr>
-									<th>No</th>
-									<th>Jenis Peraturan</th>
-									<th>Nomor</th>
-									<th>Tahun</th>
-									<th>Judul</th>
-									<th>Pemrakarsa</th>
-									<th>Status</th>
-									<th>File</th>
-									<th>Aksi</th>
-								</tr>
-							</thead>
-							<tbody>
-								<!-- Data akan dimuat oleh DataTables -->
-							</tbody>
-						</table>
+				
+				<div class="card-body p-4 pt-0">
+					<div class="table-container-premium">
+						<div class="table-responsive">
+							<table class="table table-hover align-middle custom-modern-table" id="data-tables">
+								<thead>
+									<tr>
+										<th width="50">No</th>
+										<th>Jenis</th>
+										<th width="100">Nomor</th>
+										<th width="80">Tahun</th>
+										<th>Judul Peraturan</th>
+										<th>Pemrakarsa</th>
+										<th width="120">Status</th>
+										<th width="100">File</th>
+										<th width="150" class="text-center">Aksi</th>
+									</tr>
+								</thead>
+								<tbody>
+									<!-- DataTables dynamic content -->
+								</tbody>
+							</table>
+						</div>
 					</div>
 				</div>
 			</div>
