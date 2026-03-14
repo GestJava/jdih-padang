@@ -42,6 +42,7 @@ class Finalisasi extends BaseController
         $this->addJs(base_url('vendors/datatables/extensions/Buttons/js/buttons.html5.min.js'));
         $this->addJs(base_url('vendors/datatables/extensions/Buttons/js/buttons.print.min.js'));
         $this->addStyle(base_url('vendors/datatables/extensions/Buttons/css/buttons.bootstrap5.min.css'));
+        $this->addStyle(base_url('jdih/assets/css/harmonisasi-module.css?v=' . time()));
     }
 
     // Menampilkan dashboard untuk finalisator
@@ -126,7 +127,19 @@ class Finalisasi extends BaseController
         $this->data['title'] = 'Proses Finalisasi Ajuan';
         $this->data['ajuan'] = $ajuan;
         $this->data['dokumen'] = $this->harmonisasiDokumenModel->getDokumenByAjuan($id);
-        $this->data['histori'] = $this->harmonisasiHistoriModel->getHistoryByAjuan($id);
+        
+        // Format histori dates
+        $histori = $this->harmonisasiHistoriModel->getHistoryByAjuan($id);
+        foreach ($histori as &$item) {
+            $tanggal = $item['tanggal_aksi'] ?? null;
+            if ($tanggal && strtotime($tanggal) !== false) {
+                $item['tanggal_formatted'] = date('d F Y', strtotime($tanggal)) . ' • ' . date('H:i', strtotime($tanggal));
+            } else {
+                $item['tanggal_formatted'] = 'Belum ada tanggal';
+            }
+        }
+        $this->data['histori'] = $histori;
+        
         $this->data['validation'] = \Config\Services::validation();
         $this->data['user'] = $user;
 
