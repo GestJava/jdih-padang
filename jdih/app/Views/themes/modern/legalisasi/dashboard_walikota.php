@@ -170,7 +170,6 @@
                             <tr>
                                 <th width="50" class="text-center">No</th>
                                 <th>Informasi Dokumen</th>
-                                <th>Jenis & Instansi</th>
                                 <th class="text-center">Tanggal Pengajuan</th>
                                 <th class="text-center">Status Keamanan</th>
                                 <th class="text-center">Aksi</th>
@@ -189,19 +188,10 @@
                                                 <div>
                                                     <div class="fw-bold text-dark mb-1"><?= esc($item['judul_peraturan']) ?></div>
                                                     <div class="text-muted small">
-                                                        <i class="fas fa-user-edit me-1"></i><?= esc($item['nama_pemohon'] ?? 'N/A') ?>
+                                                        <span class="badge bg-soft-info text-info me-2"><?= esc($item['nama_jenis']) ?></span>
+                                                        <i class="fas fa-building me-1"></i><?= esc($item['nama_instansi'] ?? 'N/A') ?>
                                                     </div>
                                                 </div>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div class="mb-1">
-                                                <span class="badge bg-soft-info text-info">
-                                                    <?= esc($item['nama_jenis']) ?>
-                                                </span>
-                                            </div>
-                                            <div class="text-muted small">
-                                                <i class="fas fa-building me-1"></i><?= esc($item['nama_instansi'] ?? 'N/A') ?>
                                             </div>
                                         </td>
                                         <td class="text-center">
@@ -224,7 +214,7 @@
                                 <?php endforeach; ?>
                             <?php else: ?>
                                 <tr>
-                                    <td colspan="6" class="text-center py-5">
+                                    <td colspan="5" class="text-center py-5">
                                         <div class="empty-state">
                                             <i class="fas fa-check-double fa-3x text-premium-muted mb-3"></i>
                                             <h6 class="text-muted">Semua Dokumen Telah Diproses</h6>
@@ -495,12 +485,8 @@
                 language: {
                     url: 'https://cdn.datatables.net/plug-ins/1.13.7/i18n/id.json'
                 },
-                order: [[3, 'asc']],
+                order: [[2, 'asc']],
                 pageLength: 25,
-                columnDefs: [
-                    { targets: [0, 4, 5], orderable: false },
-                    { targets: [0, 3, 4, 5], className: 'text-center' }
-                ],
                 dom: '<"d-flex justify-content-between align-items-center p-3"<"length-menu"l><"search-box"f>>rt<"d-flex justify-content-between align-items-center p-3"<"info"i><"pagination"p>>'
             });
         }
