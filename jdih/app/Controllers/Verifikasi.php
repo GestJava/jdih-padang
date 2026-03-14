@@ -33,6 +33,9 @@ class Verifikasi extends BaseController
         $this->harmonisasiHistoriModel = new HarmonisasiHistoriModel();
         helper(['form', 'url']);
 
+        // Load harmonisasi premium CSS (shared design system)
+        $this->addStyle(base_url('jdih/assets/css/harmonisasi-module.css?v=' . time()));
+
         // Add DataTables Buttons extension scripts (tanpa data-tables.js karena sudah ada inisialisasi manual di view)
         $this->addJs(base_url('vendors/datatables/extensions/Buttons/js/dataTables.buttons.min.js'));
         $this->addJs(base_url('vendors/datatables/extensions/Buttons/js/buttons.bootstrap5.min.js'));
