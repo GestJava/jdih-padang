@@ -286,10 +286,16 @@
                             // Add CSRF token only if enabled
                             if (JDIHModules.Harmonisasi.config.csrfToken) {
                                 d[JDIHModules.Harmonisasi.config.csrfName] = JDIHModules.Harmonisasi.config.csrfToken;
-                                console.log('✅ CSRF token added to request');
-                            } else {
-                                console.warn('⚠️ CSRF token not available');
                             }
+                            
+                            // Add custom filters
+                            d.custom_filters = {
+                                status: $('#statusFilter').val(),
+                                jenis: $('#jenisFilter').val(),
+                                start_date: $('#startDate').val(),
+                                end_date: $('#endDate').val()
+                            };
+                            
                             return d;
                         },
                         error: function(xhr, error, thrown) {
@@ -352,7 +358,17 @@
                             if (JDIHModules.Harmonisasi.config.csrfToken) {
                                 d[JDIHModules.Harmonisasi.config.csrfName] = JDIHModules.Harmonisasi.config.csrfToken;
                             }
-                        }
+
+                            // Add custom filters
+                            d.custom_filters = {
+                                status: $('#statusFilter').val(),
+                                jenis: $('#jenisFilter').val(),
+                                start_date: $('#startDate').val(),
+                                end_date: $('#endDate').val()
+                            };
+
+                            return d;
+                        },
                     }
                 };
                 this.initHarmonisasiMainDataTable('#hasil-table', hasilOptions);
