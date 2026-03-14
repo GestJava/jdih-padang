@@ -498,6 +498,10 @@
             size: 'large',
             className: 'animate__animated animate__zoomIn tte-auth-modal',
             buttons: {
+                cancel: {
+                    label: '<i class="fas fa-times me-1"></i> Batal',
+                    className: 'btn btn-light rounded-pill px-4 border'
+                },
                 verify: {
                     label: '<i class="fas fa-search me-1"></i> Cek Sertifikat',
                     className: 'btn btn-primary rounded-pill px-4',
@@ -505,11 +509,16 @@
                 },
                 proceed: {
                     label: '<i class="fas fa-signature me-1"></i> Tanda Tangani',
-                    className: 'btn btn-success rounded-pill px-4 d-none btn-process-tte-target',
+                    className: 'btn btn-success rounded-pill px-4 btn-process-tte-target',
                     callback: function() { proceedTTE(); return false; }
                 }
             }
         });
+
+        // Set Proceed button to disabled initially
+        setTimeout(() => {
+            $('.btn-process-tte-target').prop('disabled', true);
+        }, 100);
     }
 
     function togglePasswordVisibility() {
@@ -537,9 +546,10 @@
         .then(d => {
             if (d.status === 'success' && d.data?.is_active) {
                 res.innerHTML = '<div class="alert alert-success bg-soft-green text-green border-0 small"><i class="fas fa-check-circle me-2"></i>Sertifikat Aktif. Silakan masukkan passphrase.</div>';
-                $('.btn-process-tte-target').removeClass('d-none').hide().fadeIn();
+                $('.btn-process-tte-target').prop('disabled', false);
             } else {
                 res.innerHTML = '<div class="alert alert-danger bg-soft-danger text-danger border-0 small"><i class="fas fa-times-circle me-2"></i>' + (d.message || 'Sertifikat tidak aktif.') + '</div>';
+                $('.btn-process-tte-target').prop('disabled', true);
             }
         });
     }
