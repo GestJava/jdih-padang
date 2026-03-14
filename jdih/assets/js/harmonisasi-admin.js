@@ -308,6 +308,12 @@ function getStatusColorClass(statusId) {
 
 // Auto-initialize DataTables when document is ready
 $(document).ready(function () {
+    // Skip automatic initialization if complete script is present
+    if (window.JDIHModules && window.JDIHModules.Harmonisasi) {
+        console.log('📋 harmonisasi-complete.js detected, HarmonisasiAdmin will skip DataTable auto-init');
+        return;
+    }
+
     // Skip automatic initialization on Data Peraturan page to avoid conflict
     if ($('body').hasClass('data-peraturan-page')) {
         console.log('📋 Data Peraturan page detected, HarmonisasiAdmin will skip DataTable auto-init');
