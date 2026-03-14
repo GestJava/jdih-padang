@@ -107,12 +107,12 @@
                 this.config.baseUrl = this.config.baseUrl.replace(/^https:\/\//, 'http://');
             }
             
-            this.initDataTables();
+            // this.initDataTables(); // Disabled to prevent client-side initialization conflict
             this.initBulkActions();
             this.initAjaxHandlers();
             this.initFormValidation();
             this.initUIEnhancements();
-            this.initGlobalUtilities();
+            this.initGlobalUtilities(); // This will trigger autoInitDataTables (Server-Side)
             
             console.log('JDIH Harmonisasi Module Initialized Successfully');
         },
@@ -420,26 +420,7 @@
                         targets: 5,
                         className: 'text-center',
                         render: function(data, type, row) {
-                            var cls = JDIHModules.Harmonisasi.getStatusColorClass(parseInt(data));
-                            var txt = '';
-                            switch (parseInt(data)) {
-                                case 1: txt = 'Draft'; break;
-                                case 2: txt = 'Diajukan ke Kabag'; break;
-                                case 3: txt = 'Ditugaskan ke Verifikator'; break;
-                                case 4: txt = 'Proses Validasi'; break;
-                                case 5: txt = 'Revisi'; break;
-                                case 6: txt = 'Proses Finalisasi'; break;
-                                case 7: txt = 'Menunggu Paraf OPD'; break;
-                                case 8: txt = 'Menunggu Paraf Kabag'; break;
-                                case 9: txt = 'Menunggu Paraf Asisten'; break;
-                                case 11: txt = 'Menunggu Paraf/TTE Sekda'; break;
-                                case 12: txt = 'Menunggu Paraf Wawako'; break;
-                                case 13: txt = 'Menunggu TTE Walikota'; break;
-                                case 14: txt = 'Selesai'; break;
-                                case 15: txt = 'Ditolak'; break;
-                                default: txt = 'Status';
-                            }
-                            return '<span class="badge ' + cls + '">' + txt + '</span>';
+                            return JDIHModules.Harmonisasi.getStatusBadge(parseInt(data));
                         }
                     },
                     {
@@ -448,6 +429,9 @@
                         searchable: false,
                         className: 'text-center',
                         render: function(data, type, row) {
+                            return JDIHModules.Harmonisasi.getActionButtons(data, row[5]);
+                        }
+                    }
                             var id = data;
                             var statusId = row[5];
                             var baseUrl = JDIHModules.Harmonisasi.config.baseUrl;
