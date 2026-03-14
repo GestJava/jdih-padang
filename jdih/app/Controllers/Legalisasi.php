@@ -1577,29 +1577,53 @@ class Legalisasi extends BaseController
                 ->first();
 
             if (!$dokumen) {
-                return redirect()->back()->with('error', 'Dokumen hasil TTE tidak ditemukan.');
-            }
+                // Fallback: Cek di harmonisasi_tte_log jika record dokumen tidak ditemukan
+                $tteLog = $this->db->table('harmonisasi_tte_log')
+                    ->where('id_ajuan', $ajuan_id)
+                    ->where('status', 'SUCCESS')
+                    ->orderBy('created_at', 'DESC')
+                    ->get()
+                    ->getRowArray();
 
-            // Path file
-            $filePath = $dokumen['path_file_storage'];
-            if (strpos($filePath, 'uploads/') === 0) {
-                $filePath = substr($filePath, 8);
+                if ($tteLog && !empty($tteLog['signed_path'])) {
+                    $filePath = $tteLog['signed_path'];
+                    $fullPath = ROOTPATH . $filePath; // Log path usually starts from root or contains writable
+                    
+                    // Jika path tidak ditemukan, coba prefix dengan WRITEPATH uploads jika itu path relatif
+                    if (!file_exists($fullPath)) {
+                         // Coba bersihkan path jika ada prefix double
+                         $cleanPath = str_replace('jdih/writable/uploads/', '', $filePath);
+                         $fullPath = WRITEPATH . 'uploads/' . $cleanPath;
+                    }
+                    
+                    $fileName = 'Hasil_TTE_' . $ajuan_id . '.pdf';
+                } else {
+                    return redirect()->back()->with('error', 'Dokumen hasil TTE tidak ditemukan.');
+                }
+            } else {
+                // Path file dari record dokumen
+                $filePath = $dokumen['path_file_storage'];
+                if (strpos($filePath, 'uploads/') === 0) {
+                    $filePath = substr($filePath, 8);
+                }
+                $fullPath = WRITEPATH . 'uploads/' . $filePath;
+                $fileName = $dokumen['nama_file_original'];
             }
-
-            $fullPath = WRITEPATH . 'uploads/' . $filePath;
 
             if (!file_exists($fullPath)) {
+                log_message('error', 'File download tidak ditemukan: ' . $fullPath);
                 return redirect()->back()->with('error', 'File dokumen tidak ditemukan di server.');
             }
 
             // Set headers untuk download
             $this->response->setHeader('Content-Type', 'application/pdf');
-            $this->response->setHeader('Content-Disposition', 'attachment; filename="' . $dokumen['nama_file_original'] . '"');
+            $this->response->setHeader('Content-Disposition', 'attachment; filename="' . $fileName . '"');
             $this->response->setHeader('Content-Length', filesize($fullPath));
 
             return $this->response->setBody(file_get_contents($fullPath));
         } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'File tidak ditemukan.');
+            log_message('error', 'Download error: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Terjadi kesalahan saat mengunduh file.');
         }
     }
 

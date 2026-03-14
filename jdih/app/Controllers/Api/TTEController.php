@@ -277,7 +277,7 @@ class TTEController extends BaseController
 
             if (!$dokumen) {
                 log_message('error', 'TTE SignDocument - Dokumen not found: id_dokumen=' . $idDokumen);
-                return $this->respond(['status' => 'error', 'message' => 'Dokumen not found with id_dokumen: ' . $idDokumen'], 404);
+                return $this->respond(['status' => 'error', 'message' => 'Dokumen not found with id_dokumen: ' . $idDokumen], 404);
             }
 
             log_message('debug', 'TTE SignDocument - Dokumen data: ' . json_encode([

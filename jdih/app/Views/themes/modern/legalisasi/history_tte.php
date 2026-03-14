@@ -237,7 +237,7 @@
                                 </td>
                                 <td class="text-end">
                                     <div class="d-flex justify-content-end gap-2">
-                                        <button class="btn btn-action-circle btn-soft-blue" onclick='showDetailModal(<?= json_encode($log) ?>)' title="Lihat Detail"><i class="fas fa-eye"></i></button>
+                                        <button class="btn btn-action-circle btn-soft-blue" onclick='showDetailModal(<?= htmlspecialchars(json_encode($log), ENT_QUOTES, 'UTF-8') ?>)' title="Lihat Detail"><i class="fas fa-eye"></i></button>
                                         <?php if (($log['signed_path_final'] ?? $log['signed_path']) && $stat == 'SUCCESS'): ?>
                                             <a href="<?= base_url('legalisasi/download/' . $log['id_ajuan']) ?>" class="btn btn-action-circle btn-soft-green" title="Download"><i class="fas fa-download"></i></a>
                                         <?php endif; ?>
@@ -401,6 +401,18 @@
 
     /* DataTable Button positioning */
     .dt-buttons { margin-bottom: 1rem; }
+
+    /* Modal Backdrop Fix */
+    .modal-backdrop { z-index: 1040 !important; }
+    #detailModal { z-index: 1050 !important; }
+    #detailModal .modal-content { z-index: 1051 !important; }
+    
+    /* Ensure modal buttons are interactive */
+    #detailModal .btn, #detailModal a {
+        position: relative;
+        z-index: 1060 !important;
+        pointer-events: auto !important;
+    }
 </style>
 
 <script>
@@ -471,8 +483,11 @@
         }
         footerActions.innerHTML = actionsHtml;
         
-        const modal = new bootstrap.Modal(document.getElementById('detailModal'));
-        modal.show();
+        let modalInstance = bootstrap.Modal.getInstance(document.getElementById('detailModal'));
+        if (!modalInstance) {
+            modalInstance = new bootstrap.Modal(document.getElementById('detailModal'));
+        }
+        modalInstance.show();
     }
 
     function renderDetailItem(label, value, icon) {
