@@ -74,7 +74,7 @@
         }
         ?>
 
-        <?php if ($documentTTE): ?>
+        <?php if ($documentTTE || (isset($tte_log_fallback) && $tte_log_fallback)): ?>
             <!-- TTE Result Card -->
             <div class="glass-card mb-5 border-start border-green border-4 animate__animated animate__fadeIn">
                 <div class="card-body p-4">

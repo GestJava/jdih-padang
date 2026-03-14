@@ -1211,6 +1211,25 @@ class Legalisasi extends BaseController
                 $tteData = $nomorPeraturanModel->getByAjuanAndJenis($ajuan_id, $namaJenis);
             }
 
+            // Fallback: Check harmonisasi_tte_log if FINAL_TTE is not in harmonisasi_dokumen
+            $hasFinalTteInDocs = false;
+            foreach ($dokumen as $doc) {
+                if ($doc['tipe_dokumen'] === 'FINAL_TTE') {
+                    $hasFinalTteInDocs = true;
+                    break;
+                }
+            }
+
+            $tteLogFallback = null;
+            if (!$hasFinalTteInDocs) {
+                $tteLogFallback = $this->db->table('harmonisasi_tte_log')
+                    ->where('id_ajuan', $ajuan_id)
+                    ->where('status', 'SUCCESS')
+                    ->orderBy('created_at', 'DESC')
+                    ->get()
+                    ->getRowArray();
+            }
+
             // Get histori proses - menggunakan method yang sama dengan harmonisasi
             $histori = $this->harmonisasiHistoriModel->getHistoryByAjuan($ajuan_id);
 
@@ -1243,6 +1262,7 @@ class Legalisasi extends BaseController
             $this->data['user_role'] = $user_role;
             $this->data['isKeputusanSekda'] = $isKeputusanSekda;
             $this->data['tte_data'] = $tteData;
+            $this->data['tte_log_fallback'] = $tteLogFallback;
 
             // Debug: Log data being passed to view
             log_message('debug', 'Detail view data: ' . json_encode([
