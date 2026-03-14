@@ -35,7 +35,7 @@
          ============================================================ -->
     <div class="hero-status-card mb-4" style="animation: fadeInUp 0.4s ease;">
         <div class="row align-items-center">
-            <div class="col-lg-8">
+            <div class="col-lg-7">
                 <nav aria-label="breadcrumb" class="mb-2">
                     <ol class="breadcrumb mb-0" style="font-size: 0.8rem;">
                         <li class="breadcrumb-item"><a href="<?= base_url('harmonisasi') ?>" class="text-decoration-none" style="color: #0061ff;">Harmonisasi</a></li>
@@ -48,13 +48,38 @@
                 </h2>
                 <p class="hero-subtitle mb-0"><?= esc($ajuan['judul_peraturan']) ?></p>
             </div>
-            <div class="col-lg-4 mt-3 mt-lg-0">
+            <div class="col-lg-5 mt-3 mt-lg-0">
                 <div class="d-flex flex-column gap-2 align-items-lg-end">
-                    <span class="badge rounded-pill px-3 py-2 fw-semibold" style="background: rgba(0,97,255,0.1); color: #0061ff; font-size: 0.85rem;">
-                        <i class="fas fa-gavel me-1"></i><?= esc($ajuan['nama_jenis']) ?>
-                    </span>
-                    <span class="badge rounded-pill px-3 py-2 fw-semibold" style="background: rgba(255,193,7,0.15); color: #d39e00; font-size: 0.85rem; border: 1px solid rgba(255,193,7,0.3);">
-                        <i class="fas fa-hourglass-half me-1"></i><?= esc($ajuan['nama_status']) ?>
+                    <div class="d-flex align-items-center gap-2">
+                        <div class="rounded-circle d-flex align-items-center justify-content-center" style="width: 36px; height: 36px; background: rgba(0,97,255,0.1);">
+                            <i class="fas fa-calendar-alt" style="color: #0061ff;"></i>
+                        </div>
+                        <div>
+                            <small class="text-muted d-block" style="font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1px;">Tanggal Pengajuan</small>
+                            <span class="fw-bold" style="font-size: 0.95rem; color: #2d3748;">
+                                <?php
+                                $tanggal_tampil = !empty($ajuan['tanggal_pengajuan']) && $ajuan['tanggal_pengajuan'] != '0000-00-00 00:00:00'
+                                    ? $ajuan['tanggal_pengajuan']
+                                    : ($ajuan['created_at'] ?? '-');
+                                echo date('d/m/Y H:i', strtotime($tanggal_tampil));
+                                ?>
+                            </span>
+                        </div>
+                    </div>
+                    <?php
+                        $statusColor = '#28a745';
+                        $statusIcon = 'fa-check-circle';
+                        $statusLower = strtolower($ajuan['nama_status']);
+                        if (strpos($statusLower, 'draft') !== false) { $statusColor = '#6c757d'; $statusIcon = 'fa-pencil-alt'; }
+                        elseif (strpos($statusLower, 'validasi') !== false) { $statusColor = '#17a2b8'; $statusIcon = 'fa-clipboard-check'; }
+                        elseif (strpos($statusLower, 'paraf') !== false) { $statusColor = '#fd7e14'; $statusIcon = 'fa-signature'; }
+                        elseif (strpos($statusLower, 'revisi') !== false) { $statusColor = '#dc3545'; $statusIcon = 'fa-redo'; }
+                        elseif (strpos($statusLower, 'ditolak') !== false) { $statusColor = '#dc3545'; $statusIcon = 'fa-times-circle'; }
+                        elseif (strpos($statusLower, 'selesai') !== false || strpos($statusLower, 'tte') !== false) { $statusColor = '#28a745'; $statusIcon = 'fa-check-double'; }
+                        elseif (strpos($statusLower, 'diajukan') !== false) { $statusColor = '#0061ff'; $statusIcon = 'fa-paper-plane'; }
+                    ?>
+                    <span class="badge rounded-pill px-3 py-2 fw-semibold" style="background: <?= $statusColor ?>15; color: <?= $statusColor ?>; font-size: 0.85rem; border: 1px solid <?= $statusColor ?>30;">
+                        <i class="fas <?= $statusIcon ?> me-1"></i><?= esc($ajuan['nama_status']) ?>
                     </span>
                 </div>
             </div>
