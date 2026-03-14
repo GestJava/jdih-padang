@@ -1,6 +1,3 @@
-<?= $this->extend('themes/modern/layout') ?>
-
-<?= $this->section('content') ?>
 <div class="container-fluid py-4 harmonisasi-module">
     
     <!-- Flash Messages -->
@@ -403,4 +400,3 @@
         });
     });
 </script>
-<?= $this->endSection() ?>
