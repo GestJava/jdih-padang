@@ -65,7 +65,7 @@ class Filters extends BaseConfig
 				'harmonisasi/hasilAjax',
 				'harmonisasi/pending-drafts',
 				'harmonisasi/bulk-submit',
-				'ajax/harmonisasi',
+				'ajax/harmonisasi*',
 				// API endpoints for tags
 				'api/tags/*'
 			]],

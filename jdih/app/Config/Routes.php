@@ -402,7 +402,10 @@ $routes->group('data_agenda', function ($routes) {
 });
 
 // Harmonisasi AJAX (Server-side DataTables)
-$routes->post('ajax/harmonisasi', 'HarmonisasiAjax::list', ['filter' => 'auth']);
+$routes->group('ajax/harmonisasi', ['filter' => 'auth'], function ($routes) {
+    $routes->post('/', 'HarmonisasiAjax::list');
+    $routes->post('hasil', 'HarmonisasiAjax::listHasil');
+});
 
 $routes->get('artikel_hukum/getDataDT', 'Artikel_hukum::getDataDT');
 

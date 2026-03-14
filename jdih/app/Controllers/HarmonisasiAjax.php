@@ -27,10 +27,27 @@ class HarmonisasiAjax extends BaseController
     }
 
     /**
-     * Server-side list
+     * Server-side list (Active items)
      * @return \CodeIgniter\HTTP\ResponseInterface
      */
     public function list(): ResponseInterface
+    {
+        return $this->processList('active');
+    }
+
+    /**
+     * Server-side list (Finished/Rejected items)
+     * @return \CodeIgniter\HTTP\ResponseInterface
+     */
+    public function listHasil(): ResponseInterface
+    {
+        return $this->processList('finished');
+    }
+
+    /**
+     * Internal method to process lists based on type
+     */
+    private function processList(string $type): ResponseInterface
     {
         helper('html');
         // Pastikan user login
@@ -63,9 +80,9 @@ class HarmonisasiAjax extends BaseController
         $orderCol    = $columns[$orderColIdx] ?? 'ha.tanggal_pengajuan';
 
         $db = db_connect();
-        $builder = $db->table('harmonisasi_ajuan ha'); // set alias ha sejak awal
+        $builder = $db->table('harmonisasi_ajuan ha');
 
-        // Aliases dan JOIN (mirip getBaseQueryWithJoins)
+        // Aliases dan JOIN
         $builder->select([
             'ha.*',
             'ha.id               AS id_ajuan',
@@ -79,15 +96,26 @@ class HarmonisasiAjax extends BaseController
             ->join('harmonisasi_jenis_peraturan j', 'j.id = ha.id_jenis_peraturan', 'left')
             ->join('harmonisasi_status s', 's.id = ha.id_status_ajuan', 'left');
 
-        // PERMISSION – filter berdasarkan read_own jika tidak punya read_all
+        // Base Filter by Type
+        if ($type === 'finished') {
+            $builder->whereIn('ha.id_status_ajuan', [14, 15]);
+        } else {
+            // By default, active list excludes finished/rejected unless explicitly filtered
+            $customFilters = $request->getPost('custom_filters');
+            if (empty($customFilters['status'])) {
+                $builder->whereNotIn('ha.id_status_ajuan', [14, 15]);
+            }
+        }
+
+        // PERMISSION
         if (!$this->hasPermission('read_all') && $this->hasPermission('read_own')) {
             $builder->where('ha.id_user_pemohon', $user['id_user']);
         }
 
-        // Hitung total record (hanya dengan base filter & permission, TANPA custom filters/search)
+        // Hitung total record
         $recordsTotal = (clone $builder)->countAllResults(false);
 
-        // CUSTOM FILTERS (from AJAX data)
+        // CUSTOM FILTERS
         $customFilters = $request->getPost('custom_filters');
         if ($customFilters) {
             if (!empty($customFilters['status'])) {
@@ -114,15 +142,14 @@ class HarmonisasiAjax extends BaseController
                 ->groupEnd();
         }
 
-        // Hitung filtered record (setelah filters + search)
+        // Hitung filtered record
         $recordsFiltered = (clone $builder)->countAllResults(false);
 
         // ORDER & LIMIT
         $builder->orderBy($orderCol, $orderDir)
             ->limit($length, $start);
 
-        $query   = $builder->get();
-        $results = $query->getResultArray();
+        $results = $builder->get()->getResultArray();
 
         // Build JSON rows
         $data = [];
@@ -132,13 +159,13 @@ class HarmonisasiAjax extends BaseController
                 : '-';
 
             $data[] = [
-                '',                        // 0: row number (render di client)
+                '',                        // 0
                 $row['judul_peraturan'],   // 1
                 $row['nama_jenis'],        // 2
                 $row['nama_instansi'],     // 3
                 $tanggal,                  // 4
-                $row['id_status_ajuan'],   // 5 – id status
-                $row['id_ajuan']           // 6 – id ajuan (untuk action)
+                $row['id_status_ajuan'],   // 5
+                $row['id_ajuan']           // 6
             ];
         }
 

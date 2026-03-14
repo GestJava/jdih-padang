@@ -260,7 +260,7 @@
                 console.log('🔑 CSRF Token:', this.config.csrfToken ? 'Available' : 'Missing');
                 console.log('🔑 CSRF Name:', this.config.csrfName);
                 
-                var ajaxUrl = this.config.baseUrl + 'harmonisasi/ajax';
+                var ajaxUrl = this.config.baseUrl + 'ajax/harmonisasi';
                 console.log('🌐 AJAX URL:', ajaxUrl);
                 
                 var sspOptions = {
@@ -340,7 +340,7 @@
                     processing: true,
                     serverSide: true,
                     ajax: {
-                        url: this.config.baseUrl + 'harmonisasi/hasil/ajax',
+                        url: this.config.baseUrl + 'ajax/harmonisasi/hasil',
                         type: 'POST',
                         dataType: 'json',
                         crossDomain: false,
@@ -442,11 +442,18 @@
             var finalOptions = $.extend(true, {}, defaultOptions, options);
             
             // Add custom filtering for server-side processing
-            if (options.serverSide) {
+            if (options.serverSide && options.ajax) {
                 finalOptions.ajax = {
                     url: options.ajax.url,
-                    type: 'POST',
+                    type: options.ajax.type || 'POST',
+                    dataType: options.ajax.dataType || 'json',
                     data: function (d) {
+                        // Apply existing data function if provided
+                        if (typeof options.ajax.data === 'function') {
+                            var originalData = options.ajax.data(d);
+                            if (originalData) d = originalData;
+                        }
+                        
                         // Add CSRF token only if enabled
                         if (JDIHModules.Harmonisasi.config.csrfToken) {
                             d[JDIHModules.Harmonisasi.config.csrfName] = JDIHModules.Harmonisasi.config.csrfToken;
@@ -458,25 +465,11 @@
                         var startDate = $('#startDate').val();
                         var endDate = $('#endDate').val();
                         
-                        if (statusFilter) {
-                            d.custom_filters = d.custom_filters || {};
-                            d.custom_filters.status = statusFilter;
-                        }
-                        
-                        if (jenisFilter) {
-                            d.custom_filters = d.custom_filters || {};
-                            d.custom_filters.jenis = jenisFilter;
-                        }
-                        
-                        if (startDate) {
-                            d.custom_filters = d.custom_filters || {};
-                            d.custom_filters.start_date = startDate;
-                        }
-                        
-                        if (endDate) {
-                            d.custom_filters = d.custom_filters || {};
-                            d.custom_filters.end_date = endDate;
-                        }
+                        d.custom_filters = d.custom_filters || {};
+                        if (statusFilter) d.custom_filters.status = statusFilter;
+                        if (jenisFilter) d.custom_filters.jenis = jenisFilter;
+                        if (startDate) d.custom_filters.start_date = startDate;
+                        if (endDate) d.custom_filters.end_date = endDate;
                         
                         return d;
                     },
