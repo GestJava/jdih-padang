@@ -266,10 +266,10 @@ class SimpleQRCodeService
                 mkdir($qrDir, 0777, true);
             }
 
-            // Logo path - hanya menggunakan logo-padang.ico
+            // Logo path - hanya menggunakan logo-padang.png
             // Logo ada di /var/www/jdih/images/ (satu level di atas FCPATH)
             // Gunakan realpath untuk memastikan absolute path yang benar
-            $logoPath = FCPATH . '../images/logo-padang.ico';
+            $logoPath = FCPATH . '../images/logo-padang.png';
             $logoPathReal = realpath($logoPath);
             
             // Validate logo exists
@@ -412,10 +412,10 @@ class SimpleQRCodeService
                 $this->logger->info('FORCE using /usr/bin/python3 for macOS');
             }
             
-            // Logo path - hanya menggunakan logo-padang.ico
+            // Logo path - hanya menggunakan logo-padang.png
             // Logo ada di /var/www/jdih/images/ (satu level di atas FCPATH)
             // Gunakan realpath untuk memastikan absolute path yang benar (penting untuk Python script)
-            $logoPath = FCPATH . '../images/logo-padang.ico';
+            $logoPath = FCPATH . '../images/logo-padang.png';
             $logoPathReal = realpath($logoPath);
             
             // Validate logo exists
