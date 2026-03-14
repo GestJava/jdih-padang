@@ -524,8 +524,15 @@ class Laporan extends BaseController
             $perPage = 50;
             $offset = ($page - 1) * $perPage;
             
-            // Hitung total records untuk pagination
+            // Hitung total records dan statistik status
             $totalRecords = 0;
+            $stats = [
+                'total' => 0,
+                'success' => 0,
+                'failed' => 0,
+                'pending' => 0
+            ];
+            
             try {
                 $countQuery = $this->db->table('harmonisasi_tte_log tte');
                 if ($tahun) {
@@ -553,9 +560,28 @@ class Laporan extends BaseController
                 if ($jenis_aksi) {
                     $countQuery->where('tte.action', $jenis_aksi);
                 }
-                $totalRecords = $countQuery->countAllResults(false);
+                
+                // Ambil statistik per status secara akurat untuk SEMUA record (tidak terpengaruh pagination)
+                $statsQuery = clone $countQuery;
+                $statsQuery->select('tte.status, COUNT(tte.id) as count_status')->groupBy('tte.status');
+                $statusCounts = $statsQuery->get()->getResultArray();
+                
+                foreach ($statusCounts as $row) {
+                    $stat = strtoupper($row['status'] ?? 'UNKNOWN');
+                    if ($stat == 'SUCCESS') {
+                        $stats['success'] += $row['count_status'];
+                    } elseif ($stat == 'FAILED') {
+                        $stats['failed'] += $row['count_status'];
+                    } elseif ($stat == 'PENDING') {
+                        $stats['pending'] += $row['count_status'];
+                    }
+                    $stats['total'] += $row['count_status'];
+                }
+                
+                $totalRecords = $stats['total'];
+                
             } catch (\Exception $e) {
-                log_message('error', 'History TTE count error: ' . $e->getMessage());
+                log_message('error', 'History TTE count/stats error: ' . $e->getMessage());
             }
             
             // Get data dengan limit dan offset
@@ -585,23 +611,6 @@ class Laporan extends BaseController
                 $log['document_number_final'] = $log['document_number'] ?? null;
             }
 
-            // STATISTIK
-            $stats = [
-                'total' => count($allTteLogs),
-                'success' => 0,
-                'failed' => 0,
-                'pending' => 0
-            ];
-            foreach ($allTteLogs as $log) {
-                $stat = strtoupper($log['status_final'] ?? 'UNKNOWN');
-                if ($stat == 'SUCCESS') {
-                    $stats['success']++;
-                } elseif ($stat == 'FAILED') {
-                    $stats['failed']++;
-                } elseif ($stat == 'PENDING') {
-                    $stats['pending']++;
-                }
-            }
             $this->data['stats'] = $stats;
             $this->data['tte_logs'] = $allTteLogs;
 
