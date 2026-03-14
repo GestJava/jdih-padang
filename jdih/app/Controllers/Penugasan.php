@@ -35,6 +35,9 @@ class Penugasan extends BaseController
         $this->userModel = model(UserModel::class);
         helper(['form', 'url']);
 
+        // Load harmonisasi premium CSS (shared with Harmonisasi module)
+        $this->addStyle(base_url('jdih/assets/css/harmonisasi-module.css?v=' . time()));
+
         // Add DataTables Buttons extension scripts (tanpa data-tables.js karena akan ada inisialisasi manual di view)
         $this->addJs(base_url('vendors/datatables/extensions/Buttons/js/dataTables.buttons.min.js'));
         $this->addJs(base_url('vendors/datatables/extensions/Buttons/js/buttons.bootstrap5.min.js'));
@@ -125,11 +128,6 @@ class Penugasan extends BaseController
 
         $data = [
             'title' => 'Tugaskan Verifikator',
-            'breadcrumb' => [
-                'Harmonisasi' => base_url('harmonisasi'),
-                'Penugasan' => base_url('penugasan'),
-                'Tugaskan Verifikator' => ''
-            ],
             'ajuan' => $ajuan,
             'dokumen' => $dokumen,
             'verifikator_list' => $this->getVerifikatorList(),
