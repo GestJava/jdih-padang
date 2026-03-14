@@ -500,14 +500,12 @@
             buttons: {
                 verify: {
                     label: '<i class="fas fa-search me-1"></i> Cek Sertifikat',
-                    className: 'btn rounded-pill px-4 text-white',
-                    style: 'background: #0061ff; border: none;',
+                    className: 'btn btn-primary rounded-pill px-4',
                     callback: function() { verifyTteCertificate(); return false; }
                 },
                 proceed: {
                     label: '<i class="fas fa-signature me-1"></i> Tanda Tangani',
-                    className: 'btn rounded-pill px-4 text-white',
-                    style: 'background: linear-gradient(135deg, #10b981 0%, #059669 100%); display: none;',
+                    className: 'btn btn-success rounded-pill px-4 d-none',
                     id: 'btnProceedTte',
                     callback: function() { proceedTTE(); return false; }
                 }
@@ -540,7 +538,7 @@
         .then(d => {
             if (d.status === 'success' && d.data?.is_active) {
                 res.innerHTML = '<div class="alert alert-success bg-soft-green text-green border-0 small"><i class="fas fa-check-circle me-2"></i>Sertifikat Aktif. Silakan masukkan passphrase.</div>';
-                $('#btnProceedTte').fadeIn();
+                $('#btnProceedTte').removeClass('d-none').hide().fadeIn();
             } else {
                 res.innerHTML = '<div class="alert alert-danger bg-soft-danger text-danger border-0 small"><i class="fas fa-times-circle me-2"></i>' + (d.message || 'Sertifikat tidak aktif.') + '</div>';
             }
