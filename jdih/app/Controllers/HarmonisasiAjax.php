@@ -109,7 +109,13 @@ class HarmonisasiAjax extends BaseController
 
         // PERMISSION
         if (!$this->hasPermission('read_all') && $this->hasPermission('read_own')) {
-            $builder->where('ha.id_user_pemohon', $user['id_user']);
+            // User dengan read_own: Untuk OPD/Instansi, lihat semua data di instansi tersebut
+            // Jika tidak ada instansi, baru fallback ke data milik sendiri (id_user_pemohon)
+            if (isset($user['id_instansi']) && $user['id_instansi']) {
+                $builder->where('ha.id_instansi_pemohon', $user['id_instansi']);
+            } else {
+                $builder->where('ha.id_user_pemohon', $user['id_user']);
+            }
         }
 
         // Hitung total record
