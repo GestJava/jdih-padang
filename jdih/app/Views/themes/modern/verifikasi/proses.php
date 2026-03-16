@@ -350,9 +350,26 @@
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         const form = document.getElementById('verifikasiForm');
-        form.addEventListener('submit', function() {
+        form.addEventListener('submit', function(e) {
             var btn = document.activeElement;
+            
+            // Client side validation
+            var catatanValue = document.getElementById('catatan').value.trim();
+            if (btn && btn.value === 'tolak' && catatanValue === '') {
+                e.preventDefault();
+                alert('Aksi penolakan membutuhkan catatan/review. Silakan isikan catatan terlebih dahulu.');
+                document.getElementById('catatan').focus();
+                return false;
+            }
+
             if (btn && btn.type === 'submit') {
+                // Ensure the button value is submitted by adding a hidden input first
+                var hiddenInput = document.createElement('input');
+                hiddenInput.type = 'hidden';
+                hiddenInput.name = btn.name;
+                hiddenInput.value = btn.value;
+                form.appendChild(hiddenInput);
+                
                 btn.disabled = true;
                 btn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Memproses...';
                 btn.style.opacity = '0.7';
