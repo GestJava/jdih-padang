@@ -125,7 +125,7 @@ class User extends \App\Controllers\BaseController
 		$error = false;
 		if ($this->request->getPost('submit')) {
 			$data['message'] = $this->saveData();
-			if ($data['message']['status'] == 'ok') {
+			if (isset($data['message']['status']) && $data['message']['status'] == 'ok') {
 				$result = $this->model->getUserById($data['message']['id_user'], true);
 
 				if (!$result) {
