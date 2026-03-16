@@ -161,13 +161,8 @@ class Validasi extends BaseController
         $aksi = $this->request->getPost('aksi');
         $catatan = $this->request->getPost('catatan');
 
-        // Validasi
-        $rules = [
-            'aksi' => 'required',
-            'catatan' => 'required_with[aksi,revisi,tolak]',
-            'dokumen_revisi' => 'max_size[dokumen_revisi,25600]|ext_in[dokumen_revisi,pdf,doc,docx]'
-        ];
-        if (!$this->validate($rules)) {
+        // Validasi Aksi & Catatan
+        if (empty($aksi) || (in_array($aksi, ['tolak', 'revisi']) && empty(trim($catatan)))) {
             return redirect()->back()->withInput()->with('error', 'Aksi dan catatan wajib diisi untuk revisi/penolakan.');
         }
 
@@ -189,6 +184,15 @@ class Validasi extends BaseController
         // Handle upload file revisi jika ada
         $file = $this->request->getFile('dokumen_revisi');
         if ($file && $file->isValid() && !$file->hasMoved()) {
+            // Validasi file
+            $allowedTypes = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
+            if (!in_array($file->getMimeType(), $allowedTypes)) {
+                return redirect()->back()->withInput()->with('error', 'File revisi harus berformat PDF, DOC, atau DOCX.');
+            }
+
+            if ($file->getSize() > 25 * 1024 * 1024) { // 25MB
+                return redirect()->back()->withInput()->with('error', 'Ukuran file revisi maksimal 25MB.');
+            }
             $originalName = $file->getName();
             $newName = $file->getRandomName();
             $file->move(WRITEPATH . 'uploads/harmonisasi_dokumen', $newName);
