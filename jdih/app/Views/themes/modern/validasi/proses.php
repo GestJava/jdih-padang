@@ -367,9 +367,26 @@
         // Form submission loading effect
         const form = document.getElementById('validasiForm');
         if (form) {
-            form.addEventListener('submit', function() {
+            form.addEventListener('submit', function(e) {
                 const btn = document.activeElement;
                 if (btn && btn.tagName === 'BUTTON' && btn.type === 'submit') {
+                    
+                    // Client side validation
+                    var catatanValue = document.getElementById('catatan').value.trim();
+                    if ((btn.value === 'tolak' || btn.value === 'revisi') && catatanValue === '') {
+                        e.preventDefault();
+                        alert('Aksi penolakan atau revisi membutuhkan catatan/review. Silakan isikan catatan terlebih dahulu.');
+                        document.getElementById('catatan').focus();
+                        return false;
+                    }
+
+                    // Ensure the button value is submitted by adding a hidden input first
+                    var hiddenInput = document.createElement('input');
+                    hiddenInput.type = 'hidden';
+                    hiddenInput.name = btn.name;
+                    hiddenInput.value = btn.value;
+                    form.appendChild(hiddenInput);
+
                     const originalContent = btn.innerHTML;
                     btn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i><span>Memproses...</span>';
                     btn.classList.add('disabled');
