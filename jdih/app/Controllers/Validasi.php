@@ -15,7 +15,6 @@ class Validasi extends BaseController
 
     public function __construct()
     {
-        die('Validasi controller reached');
         parent::__construct(); // Memanggil konstruktor BaseController
 
         // ============================================================

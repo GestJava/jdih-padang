@@ -229,11 +229,39 @@ class HarmonisasiAjuanModel extends Model
      * Total ajuan yang masuk tahun ini
      */
     /**
-     * Total penugasan (registrasi) tahun ini
+     * Total ajuan yang masuk tahun ini (Generic)
+     */
+    public function getTotalAjuanByYear($year)
+    {
+        return $this->where('YEAR(created_at)', $year)
+            ->countAllResults();
+    }
+
+    /**
+     * Total penugasan (registrasi) tahun ini (Alias for getTotalAjuanByYear)
      */
     public function getTotalTugasByYear($year)
     {
+        return $this->getTotalAjuanByYear($year);
+    }
+
+    /**
+     * Total ajuan yang selesai tahun ini (Status 14)
+     */
+    public function getTotalSelesaiByYear($year)
+    {
         return $this->where('YEAR(created_at)', $year)
+            ->where('id_status_ajuan', HarmonisasiStatus::SELESAI)
+            ->countAllResults();
+    }
+
+    /**
+     * Total ajuan yang ditolak tahun ini (Status 15)
+     */
+    public function getTotalDitolakByYear($year)
+    {
+        return $this->where('YEAR(created_at)', $year)
+            ->where('id_status_ajuan', HarmonisasiStatus::DITOLAK)
             ->countAllResults();
     }
 
@@ -301,12 +329,42 @@ class HarmonisasiAjuanModel extends Model
      * Total ajuan yang ditugaskan ke user tertentu tahun ini
      */
     /**
-     * Total penugasan ke user tertentu tahun ini
+     * Total ajuan yang ditugaskan ke user tertentu tahun ini (Generic)
      */
-    public function getTotalTugasByYearAndUser($year, $user_id)
+    public function getTotalAjuanByYearAndUser($year, $user_id)
     {
         return $this->where('YEAR(created_at)', $year)
             ->where('id_petugas_verifikasi', $user_id)
+            ->countAllResults();
+    }
+
+    /**
+     * Total penugasan ke user tertentu tahun ini (Alias for getTotalAjuanByYearAndUser)
+     */
+    public function getTotalTugasByYearAndUser($year, $user_id)
+    {
+        return $this->getTotalAjuanByYearAndUser($year, $user_id);
+    }
+
+    /**
+     * Total ajuan yang selesai oleh user tertentu tahun ini (Status 14)
+     */
+    public function getTotalSelesaiByYearAndUser($year, $user_id)
+    {
+        return $this->where('YEAR(created_at)', $year)
+            ->where('id_petugas_verifikasi', $user_id)
+            ->where('id_status_ajuan', HarmonisasiStatus::SELESAI)
+            ->countAllResults();
+    }
+
+    /**
+     * Total ajuan yang ditolak oleh user tertentu tahun ini (Status 15)
+     */
+    public function getTotalDitolakByYearAndUser($year, $user_id)
+    {
+        return $this->where('YEAR(created_at)', $year)
+            ->where('id_petugas_verifikasi', $user_id)
+            ->where('id_status_ajuan', HarmonisasiStatus::DITOLAK)
             ->countAllResults();
     }
 
