@@ -482,44 +482,62 @@ class Legalisasi extends BaseController
             // Get instansi yang menjadi kewenangan asisten untuk filter statistik
             $user = session()->get('user');
             $id_user_asisten = $user['id_user'] ?? null;
-            $instansiModel = new \App\Models\InstansiModel();
-            $instansiList = $instansiModel->getInstansiByAsisten($id_user_asisten);
-            $id_instansi_array = !empty($instansiList) ? array_column($instansiList, 'id') : [0];
+            
+            // Cek apakah user adalah admin
+            $isAdmin = false;
+            foreach ($user['role'] ?? [] as $role) {
+                if (strpos(strtolower($role['nama_role'] ?? ''), 'admin') !== false) {
+                    $isAdmin = true;
+                    break;
+                }
+            }
 
-            // Hitung statistik untuk Asisten (Filter berdasarkan instansi kewenangan, tahun berjalan)
+            $instansiModel = new \App\Models\InstansiModel();
+            $id_instansi_array = [];
+            
+            if (!$isAdmin) {
+                $instansiList = $instansiModel->getInstansiByAsisten($id_user_asisten);
+                $id_instansi_array = !empty($instansiList) ? array_column($instansiList, 'id') : [0];
+            }
+
+            // Hitung statistik untuk Asisten (Filter berdasarkan instansi kewenangan jika bukan admin, tahun berjalan)
             $currentYear = date('Y');
             
             // 1. Menunggu Paraf Asisten (status 9)
-            $pendingAsistenParaf = $this->harmonisasiAjuanModel
-                ->where('id_status_ajuan', HarmonisasiStatus::PARAF_ASISTEN)
-                ->whereIn('id_instansi_pemohon', $id_instansi_array)
-                ->countAllResults();
+            $pendingQuery = $this->harmonisasiAjuanModel->where('id_status_ajuan', HarmonisasiStatus::PARAF_ASISTEN);
+            if (!$isAdmin) {
+                $pendingQuery->whereIn('id_instansi_pemohon', $id_instansi_array);
+            }
+            $pendingAsistenParaf = $pendingQuery->countAllResults();
             
             // 2. Total Ajuan (semua status) di tahun ini
-            $totalAjuan = $this->harmonisasiAjuanModel
-                ->where('YEAR(created_at)', $currentYear)
-                ->whereIn('id_instansi_pemohon', $id_instansi_array)
-                ->countAllResults();
+            $totalQuery = $this->harmonisasiAjuanModel->where('YEAR(created_at)', $currentYear);
+            if (!$isAdmin) {
+                $totalQuery->whereIn('id_instansi_pemohon', $id_instansi_array);
+            }
+            $totalAjuan = $totalQuery->countAllResults();
             
             // 3. Dalam Proses (status 11, 12, 13) - setelah paraf Asisten
-            $dalamProses = $this->harmonisasiAjuanModel
-                ->whereIn('id_status_ajuan', [
-                    HarmonisasiStatus::PARAF_SEKDA,      // 11
-                    HarmonisasiStatus::PARAF_WAWAKO,     // 12
-                    HarmonisasiStatus::TTE_WALIKOTA      // 13
-                ])
-                ->whereIn('id_instansi_pemohon', $id_instansi_array)
-                ->countAllResults();
+            $prosesQuery = $this->harmonisasiAjuanModel->whereIn('id_status_ajuan', [
+                HarmonisasiStatus::PARAF_SEKDA,      // 11
+                HarmonisasiStatus::PARAF_WAWAKO,     // 12
+                HarmonisasiStatus::TTE_WALIKOTA      // 13
+            ]);
+            if (!$isAdmin) {
+                $prosesQuery->whereIn('id_instansi_pemohon', $id_instansi_array);
+            }
+            $dalamProses = $prosesQuery->countAllResults();
             
             // 4. Selesai (status 14, 15) di tahun ini
-            $selesai = $this->harmonisasiAjuanModel
-                ->where('YEAR(created_at)', $currentYear)
+            $selesaiQuery = $this->harmonisasiAjuanModel->where('YEAR(created_at)', $currentYear)
                 ->whereIn('id_status_ajuan', [
                     HarmonisasiStatus::SELESAI,  // 14
                     HarmonisasiStatus::DITOLAK   // 15
-                ])
-                ->whereIn('id_instansi_pemohon', $id_instansi_array)
-                ->countAllResults();
+                ]);
+            if (!$isAdmin) {
+                $selesaiQuery->whereIn('id_instansi_pemohon', $id_instansi_array);
+            }
+            $selesai = $selesaiQuery->countAllResults();
 
             // Statistik untuk Asisten
             $this->data['stats'] = [
@@ -1770,27 +1788,42 @@ class Legalisasi extends BaseController
                 return [];
             }
 
-            // Get instansi yang menjadi kewenangan asisten
-            $instansiModel = new \App\Models\InstansiModel();
-            $instansiList = $instansiModel->getInstansiByAsisten($id_user_asisten);
-            
-            if (empty($instansiList)) {
-                // Jika asisten tidak punya kewenangan instansi, return empty
-                log_message('debug', 'getAjuanForAsistenParaf - Asisten tidak punya kewenangan instansi. User ID: ' . $id_user_asisten);
-                return [];
+            // Cek apakah user adalah admin
+            $isAdmin = false;
+            foreach ($user['role'] ?? [] as $role) {
+                if (strpos(strtolower($role['nama_role'] ?? ''), 'admin') !== false) {
+                    $isAdmin = true;
+                    break;
+                }
             }
 
-            // Extract id instansi
-            $id_instansi_array = array_column($instansiList, 'id');
+            // Extract id instansi jika bukan admin
+            $id_instansi_array = [];
+            if (!$isAdmin) {
+                // Get instansi yang menjadi kewenangan asisten
+                $instansiModel = new \App\Models\InstansiModel();
+                $instansiList = $instansiModel->getInstansiByAsisten($id_user_asisten);
+                
+                if (empty($instansiList)) {
+                    // Jika asisten tidak punya kewenangan instansi, return empty
+                    log_message('debug', 'getAjuanForAsistenParaf - Asisten tidak punya kewenangan instansi. User ID: ' . $id_user_asisten);
+                    return [];
+                }
+                $id_instansi_array = array_column($instansiList, 'id');
+            }
 
-            // Query ajuan dengan filter instansi kewenangan
-            $result = $this->db->table('harmonisasi_ajuan ha')
+            // Query ajuan
+            $builder = $this->db->table('harmonisasi_ajuan ha')
                 ->select("ha.*, ha.id as id_ajuan, j.nama_jenis, i.nama_instansi, COALESCE(ha.tanggal_selesai, ha.updated_at) AS tanggal_finalisasi")
                 ->join('harmonisasi_jenis_peraturan j', 'ha.id_jenis_peraturan = j.id', 'left')
                 ->join('instansi i', 'i.id = ha.id_instansi_pemohon', 'left')
-                ->where('ha.id_status_ajuan', HarmonisasiStatus::PARAF_ASISTEN)
-                ->whereIn('ha.id_instansi_pemohon', $id_instansi_array) // FILTER BERDASARKAN INSTANSI KEWENANGAN
-                ->orderBy('ha.updated_at', 'DESC')
+                ->where('ha.id_status_ajuan', HarmonisasiStatus::PARAF_ASISTEN);
+
+            if (!$isAdmin) {
+                $builder->whereIn('ha.id_instansi_pemohon', $id_instansi_array); // FILTER BERDASARKAN INSTANSI KEWENANGAN
+            }
+
+            $result = $builder->orderBy('ha.updated_at', 'DESC')
                 ->get()
                 ->getResultArray();
             
