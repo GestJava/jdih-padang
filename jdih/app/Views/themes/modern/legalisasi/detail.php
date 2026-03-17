@@ -680,7 +680,7 @@
                 formData.append('catatan', res.value);
                 formData.append('<?= csrf_token() ?>', '<?= csrf_hash() ?>');
 
-                fetch('<?= base_url('legalisasi/revisiToFinalisasi') ?>/' + ajuanId, {
+                fetch('<?= base_url('legalisasi/revisiKeFinalisasi') ?>/' + ajuanId, {
                     method: 'POST',
                     body: formData
                 })
