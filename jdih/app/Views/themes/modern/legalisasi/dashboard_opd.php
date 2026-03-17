@@ -38,11 +38,11 @@
                             <div class="stat-icon-wrapper bg-soft-warning">
                                 <i class="fas fa-signature text-warning"></i>
                             </div>
-                            <?php if (($stats['pending_paraf'] ?? 0) > 0): ?>
+                            <?php if (($stats['pending_opd_paraf'] ?? 0) > 0): ?>
                                 <span class="badge pulse-warning">Pending</span>
                             <?php endif; ?>
                         </div>
-                        <h3 class="stat-value"><?= number_format($stats['pending_paraf'] ?? 0) ?></h3>
+                        <h3 class="stat-value"><?= number_format($stats['pending_opd_paraf'] ?? 0) ?></h3>
                         <p class="stat-label">Menunggu Paraf Anda</p>
                         <div class="stat-progress">
                             <div class="progress" style="height: 4px;">
@@ -63,7 +63,7 @@
                             </div>
                             <span class="badge bg-soft-info text-info">Bulan Ini</span>
                         </div>
-                        <h3 class="stat-value"><?= number_format($stats['total_bulan_ini'] ?? 0) ?></h3>
+                        <h3 class="stat-value"><?= number_format($stats['dalam_proses'] ?? 0) ?></h3>
                         <p class="stat-label">Dokumen Terproses</p>
                         <div class="stat-progress">
                             <div class="progress" style="height: 4px;">
@@ -84,7 +84,7 @@
                             </div>
                             <span class="badge bg-soft-dark text-dark">Total</span>
                         </div>
-                        <h3 class="stat-value"><?= number_format($stats['total_terproses'] ?? 0) ?></h3>
+                        <h3 class="stat-value"><?= number_format($stats['selesai'] ?? 0) ?></h3>
                         <p class="stat-label">Riwayat Paraf</p>
                         <div class="stat-progress">
                             <div class="progress" style="height: 4px;">
