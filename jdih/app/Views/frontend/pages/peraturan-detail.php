@@ -992,6 +992,12 @@
 
         const chunkText = speechQueue[currentSentenceIndex];
 
+        // --- VISUAL CAPTION UPDATE ---
+        const captionTextElem = document.getElementById('a11yCaptionText');
+        if (captionTextElem) {
+            captionTextElem.innerText = chunkText;
+        }
+
 
         speakWithBrowser(chunkText);
     }
@@ -1086,7 +1092,8 @@
         const btn = document.getElementById('btn-read-pdf');
         const statusDiv = document.getElementById('pdf-speech-status');
         const controlsDiv = document.getElementById('pdf-speech-controls');
-
+        const captionTextElem = document.getElementById('a11yCaptionText');
+        
         if(btn) {
             btn.innerHTML = '<i class="fas fa-volume-up me-2"></i> Baca Dokumen PDF';
             btn.classList.remove('btn-danger');
@@ -1094,6 +1101,7 @@
             btn.classList.remove('disabled');
         }
         if(controlsDiv) controlsDiv.style.display = 'none';
+        if(captionTextElem) captionTextElem.innerText = ''; // Clear the caption text
         if(statusDiv) {
             statusDiv.style.display = 'none';
             statusDiv.classList.remove('text-danger');

@@ -50,8 +50,40 @@ document.addEventListener('DOMContentLoaded', function() {
                 </button>
             </div>
 
+            <div class="a11y-item">
+                <span>Caption Visual</span>
+                <button class="a11y-btn" id="toggleCaptions" title="Tampilkan Teks Bacaan">
+                    <i class="fas fa-closed-captioning"></i>
+                </button>
+            </div>
+
+            <div class="a11y-item">
+                <span>Bahasa Isyarat</span>
+                <button class="a11y-btn" id="toggleSL" title="Tampilkan Isyarat">
+                    <i class="fas fa-hands-helping"></i>
+                </button>
+            </div>
+
             <hr style="margin: 5px 0;">
             <button class="btn btn-sm btn-outline-danger w-100" id="resetA11y">Reset Pengaturan</button>
+        </div>
+    </div>
+
+    <div id="a11yCaptionBox" class="a11y-caption-container">
+        <div class="a11y-caption-label">Visual Caption</div>
+        <div id="a11yCaptionText">...</div>
+    </div>
+
+    <div id="a11ySLBox" class="a11y-sl-container">
+        <div class="bg-primary text-white p-2 d-flex justify-content-between">
+            <span>Bahasa Isyarat (BISINDO)</span>
+            <i class="fas fa-times cursor-pointer" onclick="document.getElementById('toggleSL').click()"></i>
+        </div>
+        <div class="a11y-sl-video">
+            <div class="text-center">
+                <i class="fas fa-video-slash mb-2 d-block fa-2x"></i>
+                Maaf, video isyarat untuk dokumen ini belum tersedia di database JDIH.
+            </div>
         </div>
     </div>
     `;
@@ -69,7 +101,9 @@ document.addEventListener('DOMContentLoaded', function() {
         contrast: false,
         monochrome: false,
         highlightLinks: false,
-        readableFont: false
+        readableFont: false,
+        visualCaptions: false,
+        signLanguage: false
     };
 
     function applySettings() {
@@ -93,6 +127,14 @@ document.addEventListener('DOMContentLoaded', function() {
         // Font
         body.classList.toggle('a11y-readable-font', settings.readableFont);
         document.getElementById('toggleFont').classList.toggle('active', settings.readableFont);
+
+        // Captions
+        document.getElementById('a11yCaptionBox').classList.toggle('active', settings.visualCaptions);
+        document.getElementById('toggleCaptions').classList.toggle('active', settings.visualCaptions);
+
+        // Sign Language
+        document.getElementById('a11ySLBox').classList.toggle('active', settings.signLanguage);
+        document.getElementById('toggleSL').classList.toggle('active', settings.signLanguage);
 
         // Update Font Buttons active state
         document.querySelectorAll('[data-fz]').forEach(btn => {
@@ -146,6 +188,18 @@ document.addEventListener('DOMContentLoaded', function() {
         applySettings();
     };
 
+    document.getElementById('toggleCaptions').onclick = () => {
+        settings.visualCaptions = !settings.visualCaptions;
+        applySettings();
+        // Global signal for other scripts
+        window.dispatchEvent(new CustomEvent('a11y_captions_changed', { detail: settings.visualCaptions }));
+    };
+
+    document.getElementById('toggleSL').onclick = () => {
+        settings.signLanguage = !settings.signLanguage;
+        applySettings();
+    };
+
     // Reset
     document.getElementById('resetA11y').onclick = () => {
         settings.fontSize = 'normal';
@@ -153,6 +207,8 @@ document.addEventListener('DOMContentLoaded', function() {
         settings.monochrome = false;
         settings.highlightLinks = false;
         settings.readableFont = false;
+        settings.visualCaptions = false;
+        settings.signLanguage = false;
         applySettings();
     };
 });
