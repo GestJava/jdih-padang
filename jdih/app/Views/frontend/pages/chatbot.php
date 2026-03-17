@@ -35,8 +35,8 @@
                         <!-- Dynamic messages will be appended here -->
                     </div>
                     <div class="chat-input-area">
-                        <textarea id="userInput" placeholder="Ketik pertanyaan Anda di sini..." spellcheck="false" required></textarea>
-                        <button id="sendButton" class="btn btn-primary"><i class="fas fa-paper-plane"></i></button>
+                        <textarea id="userInput" placeholder="Ketik pertanyaan Anda di sini..." aria-label="Ketik pertanyaan untuk Chatbot" spellcheck="false" required></textarea>
+                        <button id="sendButton" class="btn btn-primary" aria-label="Kirim Pesan"><i class="fas fa-paper-plane"></i></button>
                     </div>
                 </div>
             </div>
@@ -139,7 +139,46 @@
             // Ini aman dilakukan setelah sanitasi.
             formattedText = formattedText.replace(/\n/g, '<br>');
 
-            return formattedText;
+        // Fungsi untuk memberikan efek mengetik pada respons bot
+        function typeWriter(element, html, speed = 15) {
+            let i = 0;
+            element.innerHTML = "";
+            
+            // Temporary div to parse HTML nodes
+            const tempDiv = document.createElement('div');
+            tempDiv.innerHTML = html;
+            const nodes = Array.from(tempDiv.childNodes);
+            
+            function renderNode(nodeIndex) {
+                if (nodeIndex >= nodes.length) {
+                    chatArea.scrollTo(0, chatArea.scrollHeight);
+                    return;
+                }
+                
+                const node = nodes[nodeIndex];
+                if (node.nodeType === Node.TEXT_NODE) {
+                    let charIndex = 0;
+                    const text = node.textContent;
+                    function typeText() {
+                        if (charIndex < text.length) {
+                            element.innerHTML += text.charAt(charIndex);
+                            charIndex++;
+                            chatArea.scrollTo(0, chatArea.scrollHeight);
+                            setTimeout(typeText, speed);
+                        } else {
+                            renderNode(nodeIndex + 1);
+                        }
+                    }
+                    typeText();
+                } else {
+                    // It's an HTML element (like <br> or <strong>)
+                    element.innerHTML += node.outerHTML;
+                    chatArea.scrollTo(0, chatArea.scrollHeight);
+                    renderNode(nodeIndex + 1);
+                }
+            }
+            
+            renderNode(0);
         }
 
         function appendMessage(sender, text, interactionId = null) {
@@ -150,8 +189,9 @@
             const messagePara = document.createElement('p');
 
             if (sender === 'bot') {
-                // Proses respons bot untuk merender HTML (link & baris baru)
-                messagePara.innerHTML = parseBotResponse(text);
+                // Proses respons bot untuk merender HTML dengan efek mengetik
+                const htmlContent = parseBotResponse(text);
+                typeWriter(messagePara, htmlContent);
             } else {
                 // Tampilkan pesan pengguna sebagai teks biasa
                 messagePara.textContent = text;
@@ -159,27 +199,16 @@
 
             messageWrapper.appendChild(messagePara);
 
-            /*
-            // Temporarily disabled feedback logic to debug rendering issue
             if (sender === 'bot' && interactionId) {
                 const feedbackContainer = document.createElement('div');
                 feedbackContainer.className = 'feedback-container';
+                feedbackContainer.dataset.interactionId = interactionId;
                 feedbackContainer.innerHTML = `
-                    <button class="feedback-btn" title="Jawaban ini membantu"><i class="fas fa-thumbs-up"></i></button>
-                    <button class="feedback-btn" title="Jawaban ini tidak membantu"><i class="fas fa-thumbs-down"></i></button>
+                    <button class="feedback-btn like" title="Jawaban ini membantu"><i class="fas fa-thumbs-up"></i></button>
+                    <button class="feedback-btn dislike" title="Jawaban ini tidak membantu"><i class="fas fa-thumbs-down"></i></button>
                 `;
-                feedbackContainer.querySelector('.fa-thumbs-up').parentElement.addEventListener('click', (e) => {
-                    sendFeedback(interactionId, 1);
-                    e.target.closest('.feedback-container').innerHTML = '<span class="feedback-thanks">Terima kasih atas masukan Anda!</span>';
-                });
-                feedbackContainer.querySelector('.fa-thumbs-down').parentElement.addEventListener('click', (e) => {
-                    sendFeedback(interactionId, 0);
-                    e.target.closest('.feedback-container').innerHTML = '<span class="feedback-thanks">Terima kasih atas masukan Anda!</span>';
-                });
-
-                messagePara.appendChild(feedbackContainer);
+                messageWrapper.appendChild(feedbackContainer);
             }
-            */
 
             chatArea.appendChild(messageWrapper);
             chatArea.scrollTo(0, chatArea.scrollHeight);
