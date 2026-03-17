@@ -84,6 +84,12 @@
                                             <label class="form-label small fw-bold">Pilih Suara</label>
                                             <select id="tts-voice" class="form-select form-select-sm">
                                                 <option value="">Default Browser (Id)</option>
+                                                <optgroup label="Google AI Premium (Neural)">
+                                                    <option value="google-A">Google AI - Wanita A (Wavenet)</option>
+                                                    <option value="google-D">Google AI - Wanita B (Wavenet)</option>
+                                                    <option value="google-B">Google AI - Pria A (Wavenet)</option>
+                                                    <option value="google-C">Google AI - Pria B (Wavenet)</option>
+                                                </optgroup>
                                             </select>
                                         </div>
                                         <div class="col-md-3">
@@ -869,10 +875,15 @@
     // Global variables for speech queue
     let speechQueue = [];
     let currentSentenceIndex = 0;
+    let premiumAudio = null;
 
     window.speakText = function(text) {
         // Cancel previous
         window.speechSynthesis.cancel();
+        if (premiumAudio) {
+            premiumAudio.pause();
+            premiumAudio = null;
+        }
         speechQueue = [];
         currentSentenceIndex = 0;
 
@@ -985,6 +996,52 @@
         if (isPaused || !isSpeaking) return;
 
         const chunkText = speechQueue[currentSentenceIndex];
+
+        // --- GOOGLE AI PREMIUM LOGIC ---
+        if (ttsSettings.voiceURI && ttsSettings.voiceURI.startsWith('google-')) {
+            const voiceType = ttsSettings.voiceURI.replace('google-', '');
+            const encodedText = encodeURIComponent(chunkText);
+            const audioUrl = `<?= base_url('tts/synthesize') ?>?text=${encodedText}&voice=${voiceType}&rate=${ttsSettings.rate}`;
+            
+            console.log("Playing Premium Audio for chunk " + currentSentenceIndex);
+            
+            const statusText = document.getElementById('pdf-speech-status-text');
+            const statusDiv = document.getElementById('pdf-speech-status');
+            
+            if (statusDiv) statusDiv.style.display = 'block';
+            if (statusText) statusText.innerText = 'Menyiapkan suara AI...';
+
+            premiumAudio = new Audio(audioUrl);
+            
+            premiumAudio.oncanplaythrough = () => {
+                if (statusDiv) statusDiv.style.display = 'none';
+                premiumAudio.play().catch(e => {
+                    console.error("Audio playback error:", e);
+                    // Fallback to browser TTS if audio failed
+                    speakWithBrowser(chunkText);
+                });
+            };
+
+            premiumAudio.onended = () => {
+                if (isSpeaking && !isPaused) {
+                    currentSentenceIndex++;
+                    speakNextChunk();
+                }
+            };
+
+            premiumAudio.onerror = (e) => {
+                console.error("Premium Audio Error:", e);
+                if (statusText) statusText.innerText = 'Suara Premium gagal. Menggunakan suara standar...';
+                speakWithBrowser(chunkText);
+            };
+
+            return;
+        }
+
+        speakWithBrowser(chunkText);
+    }
+
+    function speakWithBrowser(chunkText) {
         speechUtterance = new SpeechSynthesisUtterance(chunkText);
         
         // --- Apply Custom Voice Settings ---
@@ -1015,21 +1072,13 @@
         speechUtterance.onerror = function(event) {
             console.error('Speech error on chunk ' + currentSentenceIndex + ':', event);
             
-            // If user clicked Pause, we cancelled it. ERROR is expected.
-            // We do NOT increment index, so we can resume later.
-            if (isPaused) {
-                console.log("Paused (Cancelled) logic triggered.");
-                return;
-            }
+            if (isPaused) return;
 
-            // Real error or Interrupted by browser
             if (event.error !== 'interrupted' || (isSpeaking && !isPaused)) {
                  currentSentenceIndex++;
                  speakNextChunk();
             } else {
-                if (!isSpeaking) {
-                    resetUI();
-                }
+                if (!isSpeaking) resetUI();
             }
         };
 
@@ -1041,19 +1090,25 @@
     window.pauseSpeech = function() {
         if (isSpeaking && !isPaused) {
             isPaused = true;
-            console.log("Pausing... (Cancelling current utterance)");
-            window.speechSynthesis.cancel(); 
+            console.log("Pausing...");
+            window.speechSynthesis.cancel();
+            if (premiumAudio) {
+                premiumAudio.pause();
+            }
         }
     };
 
     window.resumeSpeech = function() {
         if (isPaused) {
-            console.log("Resuming... (Replaying from index " + currentSentenceIndex + ")");
+            console.log("Resuming...");
             isPaused = false;
-            // Introduce tiny delay to ensure cancel is fully processed
-            setTimeout(() => {
-                speakNextChunk();
-            }, 50);
+            if (premiumAudio && ttsSettings.voiceURI.startsWith('google-')) {
+                premiumAudio.play();
+            } else {
+                setTimeout(() => {
+                    speakNextChunk();
+                }, 50);
+            }
         }
     };
 
@@ -1063,6 +1118,10 @@
         speechQueue = [];
         currentSentenceIndex = 0;
         window.speechSynthesis.cancel();
+        if (premiumAudio) {
+            premiumAudio.pause();
+            premiumAudio = null;
+        }
         resetUI();
     };
 

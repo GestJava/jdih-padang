@@ -346,6 +346,9 @@ $routes->post('integrasiJDIH/cleanup-rate-limit', 'Api\JdihIntegrationController
 
 // Visitor Stats API
 $routes->get('api/visitor-stats', 'Frontend::getVisitorStats');
+
+// TTS API
+$routes->get('tts/synthesize', 'Tts::synthesize');
 /*
 |--------------------------------------------------------------------------
 | PUBLIC API ROUTES (No authentication required)
