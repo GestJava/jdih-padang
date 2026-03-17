@@ -433,7 +433,8 @@ class Data_peraturan extends \App\Controllers\BaseController
 
 					// Dapatkan jenis peraturan untuk validasi yang sesuai
 					$jenis_peraturan = $this->getJenisPeraturanById($validationData['id_jenis_dokumen']);
-					$validationRules = $this->getValidationRulesByJenis($jenis_peraturan, false);
+					$isSync = !empty($this->request->getPost('source_file'));
+					$validationRules = $this->getValidationRulesByJenis($jenis_peraturan, false, $isSync);
 
 					if ($this->validateData($validationData, $validationRules)) {
 						log_message('debug', '=== VALIDATION PASSED ===');
@@ -653,7 +654,7 @@ class Data_peraturan extends \App\Controllers\BaseController
 	/**
 	 * Mendapatkan aturan validasi berdasarkan jenis peraturan
 	 */
-	private function getValidationRulesByJenis($jenis_peraturan, $isEdit = false)
+	private function getValidationRulesByJenis($jenis_peraturan, $isEdit = false, $isSync = false)
 	{
 		$baseRules = [
 			'id_jenis_dokumen' => [
@@ -707,7 +708,7 @@ class Data_peraturan extends \App\Controllers\BaseController
 			],
 			'file_dokumen' => [
 				'label' => 'File Dokumen',
-				'rules' => $isEdit ? 'permit_empty|max_size[file_dokumen,25600]|mime_in[file_dokumen,application/pdf]|ext_in[file_dokumen,pdf]' : 'uploaded[file_dokumen]|max_size[file_dokumen,25600]|mime_in[file_dokumen,application/pdf]|ext_in[file_dokumen,pdf]',
+				'rules' => ($isEdit || $isSync) ? 'permit_empty|max_size[file_dokumen,25600]|mime_in[file_dokumen,application/pdf]|ext_in[file_dokumen,pdf]' : 'uploaded[file_dokumen]|max_size[file_dokumen,25600]|mime_in[file_dokumen,application/pdf]|ext_in[file_dokumen,pdf]',
 				'errors' => [
 					'uploaded' => '{field} wajib diunggah.',
 					'max_size' => '{field} maksimal 25MB.',
