@@ -267,15 +267,6 @@
                                         </td>
                                     </tr>
                                     <?php endforeach; ?>
-                                <?php else: ?>
-                                    <tr>
-                                        <td colspan="6" class="text-center py-5">
-                                            <div class="empty-state">
-                                                <i class="material-icons display-1 text-muted opacity-25">description</i>
-                                                <h5 class="text-muted mt-3">Tidak ada ajuan yang perlu diverifikasi.</h5>
-                                            </div>
-                                        </td>
-                                    </tr>
                                 <?php endif; ?>
                             </tbody>
                         </table>
