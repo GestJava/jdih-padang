@@ -98,77 +98,56 @@
                 </div>
             </div>
 
-            <!-- Selesai (Paraf) -->
+            <!-- Selesai (Finalisasi) -->
             <div class="col-xl-3 col-md-6 mb-4">
                 <div class="glass-card h-100 p-4 border-0 shadow-sm relative overflow-hidden group">
                     <div class="card-accent bg-success"></div>
                     <div class="d-flex justify-content-between align-items-center mb-3">
                         <div class="icon-shape bg-soft-success rounded-circle">
-                            <span class="material-icons-round text-success">task_alt</span>
+                            <span class="material-icons-round text-success">verified_user</span>
                         </div>
                         <span class="badge badge-soft-success">Selesai</span>
                     </div>
                     <h3 class="fw-800 mb-1 text-dark-blue"><?= number_format($year_stats['total_selesai_tahun_ini']) ?></h3>
-                    <p class="text-muted small mb-0">
-                        <?php
-                        $persentase_selesai = $year_stats['total_ajuan_tahun_ini'] > 0
-                            ? round(($year_stats['total_selesai_tahun_ini'] / $year_stats['total_ajuan_tahun_ini']) * 100, 1)
-                            : 0;
-                        echo $persentase_selesai . '% dari total';
-                        ?>
-                    </p>
+                    <p class="text-muted small mb-0">Total Selesai Finalisasi</p>
                     <div class="progress mt-3 progress-thin">
-                        <div class="progress-bar bg-success" style="width: <?= $persentase_selesai ?>%"></div>
+                        <div class="progress-bar bg-success" style="width: <?= $year_stats['total_ajuan_tahun_ini'] > 0 ? ($year_stats['total_selesai_tahun_ini'] / $year_stats['total_ajuan_tahun_ini']) * 100 : 0 ?>%"></div>
                     </div>
                 </div>
             </div>
 
-            <!-- Ditolak -->
+            <!-- Revisi -->
             <div class="col-xl-3 col-md-6 mb-4">
                 <div class="glass-card h-100 p-4 border-0 shadow-sm relative overflow-hidden group">
                     <div class="card-accent bg-danger"></div>
                     <div class="d-flex justify-content-between align-items-center mb-3">
                         <div class="icon-shape bg-soft-danger rounded-circle">
-                            <span class="material-icons-round text-danger">cancel_presentation</span>
+                            <span class="material-icons-round text-danger">history</span>
                         </div>
-                        <span class="badge badge-soft-danger">Ditolak</span>
+                        <span class="badge badge-soft-danger">Revisi</span>
                     </div>
-                    <h3 class="fw-800 mb-1 text-dark-blue"><?= number_format($year_stats['total_ditolak_tahun_ini']) ?></h3>
-                    <p class="text-muted small mb-0">
-                        <?php
-                        $persentase_ditolak = $year_stats['total_ajuan_tahun_ini'] > 0
-                            ? round(($year_stats['total_ditolak_tahun_ini'] / $year_stats['total_ajuan_tahun_ini']) * 100, 1)
-                            : 0;
-                        echo $persentase_ditolak . '% dari total';
-                        ?>
-                    </p>
+                    <h3 class="fw-800 mb-1 text-dark-blue"><?= number_format($year_stats['total_revisi_tahun_ini']) ?></h3>
+                    <p class="text-muted small mb-0">Total Kembali (Revisi)</p>
                     <div class="progress mt-3 progress-thin">
-                        <div class="progress-bar bg-danger" style="width: <?= $persentase_ditolak ?>%"></div>
+                        <div class="progress-bar bg-danger" style="width: <?= $year_stats['total_ajuan_tahun_ini'] > 0 ? ($year_stats['total_revisi_tahun_ini'] / $year_stats['total_ajuan_tahun_ini']) * 100 : 0 ?>%"></div>
                     </div>
                 </div>
             </div>
 
-            <!-- Antrean/Proses -->
+            <!-- Antrean Aktif -->
             <div class="col-xl-3 col-md-6 mb-4">
                 <div class="glass-card h-100 p-4 border-0 shadow-sm relative overflow-hidden group">
                     <div class="card-accent bg-warning"></div>
                     <div class="d-flex justify-content-between align-items-center mb-3">
                         <div class="icon-shape bg-soft-warning rounded-circle">
-                            <span class="material-icons-round text-warning">hourglass_top</span>
+                            <span class="material-icons-round text-warning">pending_actions</span>
                         </div>
                         <span class="badge badge-soft-warning">Antrean</span>
                     </div>
-                    <h3 class="fw-800 mb-1 text-dark-blue"><?= number_format($year_stats['total_proses_tahun_ini']) ?></h3>
-                    <p class="text-muted small mb-0">
-                        <?php
-                        $persentase_proses = $year_stats['total_ajuan_tahun_ini'] > 0
-                            ? round(($year_stats['total_proses_tahun_ini'] / $year_stats['total_ajuan_tahun_ini']) * 100, 1)
-                            : 0;
-                        echo $persentase_proses . '% dari total';
-                        ?>
-                    </p>
+                    <h3 class="fw-800 mb-1 text-dark-blue"><?= number_format($year_stats['antrean_aktif']) ?></h3>
+                    <p class="text-muted small mb-0">Menunggu Finalisasi</p>
                     <div class="progress mt-3 progress-thin">
-                        <div class="progress-bar bg-warning" style="width: <?= $persentase_proses ?>%"></div>
+                        <div class="progress-bar bg-warning" style="width: 100%"></div>
                     </div>
                 </div>
             </div>

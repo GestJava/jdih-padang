@@ -272,28 +272,57 @@ class HarmonisasiAjuanModel extends Model
     {
         return $this->where('YEAR(created_at)', $year)
             ->where('id_status_ajuan >', HarmonisasiStatus::VERIFIKASI)
-            ->where('id_status_ajuan !=', HarmonisasiStatus::REVISI)
+            ->whereNotIn('id_status_ajuan', [HarmonisasiStatus::REVISI, HarmonisasiStatus::DITOLAK])
             ->countAllResults();
     }
 
     /**
-     * Total dikembalikan/revisi tahun ini (status 5)
+     * Total selesai validasi tahun ini (status > 4)
+     */
+    public function getTotalSelesaiValidasiByYear($year)
+    {
+        return $this->where('YEAR(created_at)', $year)
+            ->where('id_status_ajuan >', HarmonisasiStatus::VALIDASI)
+            ->whereNotIn('id_status_ajuan', [HarmonisasiStatus::REVISI, HarmonisasiStatus::REVISI_FINALISASI, HarmonisasiStatus::DITOLAK])
+            ->countAllResults();
+    }
+
+    /**
+     * Total selesai finalisasi tahun ini (status > 6)
+     */
+    public function getTotalSelesaiFinalisasiByYear($year)
+    {
+        return $this->where('YEAR(created_at)', $year)
+            ->where('id_status_ajuan >', HarmonisasiStatus::FINALISASI)
+            ->whereNotIn('id_status_ajuan', [HarmonisasiStatus::REVISI, HarmonisasiStatus::REVISI_FINALISASI, HarmonisasiStatus::DITOLAK])
+            ->countAllResults();
+    }
+
+    /**
+     * Total dikembalikan/revisi tahun ini (status 5 atau 10)
      */
     public function getTotalRevisiByYear($year)
     {
         return $this->where('YEAR(created_at)', $year)
-            ->where('id_status_ajuan', HarmonisasiStatus::REVISI)
+            ->groupStart()
+                ->where('id_status_ajuan', HarmonisasiStatus::REVISI)
+                ->orWhere('id_status_ajuan', HarmonisasiStatus::REVISI_FINALISASI)
+            ->groupEnd()
             ->countAllResults();
     }
 
     /**
-     * Total antrean aktif (status 3) - TANPA FILTER TAHUN
+     * Total antrean aktif (Generic) - TANPA FILTER TAHUN
      */
-    public function getAntreanAktif($user_id = null)
+    public function getAntreanAktif($status_id = HarmonisasiStatus::VERIFIKASI, $user_id = null)
     {
-        $builder = $this->where('id_status_ajuan', HarmonisasiStatus::VERIFIKASI);
+        $builder = $this->where('id_status_ajuan', $status_id);
         if ($user_id) {
-            $builder->where('id_petugas_verifikasi', $user_id);
+            // Field filter berbeda tergantung status
+            if ($status_id == HarmonisasiStatus::VERIFIKASI) {
+                $builder->where('id_petugas_verifikasi', $user_id);
+            }
+            // Tambahkan filter lain jika ada penugasan spesifik untuk validator/finalisator
         }
         return $builder->countAllResults();
     }

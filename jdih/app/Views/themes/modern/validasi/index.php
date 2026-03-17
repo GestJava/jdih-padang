@@ -144,51 +144,44 @@
                 </div>
             </div>
 
-            <!-- Total Ditolak Tahun Ini -->
+            <!-- Total Revisi Tahun Ini -->
             <div class="col-xl-3 col-md-6">
                 <div class="stat-card card border-0 shadow-sm glass-bg-rose h-100">
                     <div class="card-body p-4">
                         <div class="d-flex justify-content-between align-items-start mb-4">
                             <div class="stat-icon-premium">
-                                <i class="material-icons">cancel</i>
+                                <i class="material-icons">history</i>
                             </div>
                             <div class="glass-badge px-3 py-1 rounded-pill small fw-bold text-white">
                                 <?php
-                                $persentase_ditolak = $year_stats['total_ajuan_tahun_ini'] > 0
-                                    ? round(($year_stats['total_ditolak_tahun_ini'] / $year_stats['total_ajuan_tahun_ini']) * 100, 1)
+                                $persentase_revisi = $year_stats['total_ajuan_tahun_ini'] > 0
+                                    ? round(($year_stats['total_revisi_tahun_ini'] / $year_stats['total_ajuan_tahun_ini']) * 100, 1)
                                     : 0;
-                                echo $persentase_ditolak . '%';
+                                echo $persentase_revisi . '%';
                                 ?>
                             </div>
                         </div>
                         <div class="stat-content">
-                            <h2 class="display-6 fw-800 text-white mb-1"><?= number_format($year_stats['total_ditolak_tahun_ini']) ?></h2>
-                            <h6 class="text-white-50 text-uppercase ls-1 fw-bold small">Kembali / Ditolak</h6>
+                            <h2 class="display-6 fw-800 text-white mb-1"><?= number_format($year_stats['total_revisi_tahun_ini']) ?></h2>
+                            <h6 class="text-white-50 text-uppercase ls-1 fw-bold small">Dikembalikan (Revisi)</h6>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Total Proses Tahun Ini -->
+            <!-- Antrean Aktif -->
             <div class="col-xl-3 col-md-6">
                 <div class="stat-card card border-0 shadow-sm glass-bg-amber h-100">
                     <div class="card-body p-4">
                         <div class="d-flex justify-content-between align-items-start mb-4">
                             <div class="stat-icon-premium">
-                                <i class="material-icons">schedule</i>
+                                <i class="material-icons">pending_actions</i>
                             </div>
-                            <div class="glass-badge px-3 py-1 rounded-pill small fw-bold text-white">
-                                <?php
-                                $persentase_proses = $year_stats['total_ajuan_tahun_ini'] > 0
-                                    ? round(($year_stats['total_proses_tahun_ini'] / $year_stats['total_ajuan_tahun_ini']) * 100, 1)
-                                    : 0;
-                                echo $persentase_proses . '%';
-                                ?>
-                            </div>
+                            <div class="glass-badge px-3 py-1 rounded-pill small fw-bold text-white">Aktif</div>
                         </div>
                         <div class="stat-content">
-                            <h2 class="display-6 fw-800 text-white mb-1"><?= number_format($year_stats['total_proses_tahun_ini']) ?></h2>
-                            <h6 class="text-white-50 text-uppercase ls-1 fw-bold small">Dalam Antrean</h6>
+                            <h2 class="display-6 fw-800 text-white mb-1"><?= number_format($year_stats['antrean_aktif']) ?></h2>
+                            <h6 class="text-white-50 text-uppercase ls-1 fw-bold small">Menunggu Validasi</h6>
                         </div>
                     </div>
                 </div>

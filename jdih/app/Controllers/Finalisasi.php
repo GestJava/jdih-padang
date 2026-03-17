@@ -86,20 +86,20 @@ class Finalisasi extends BaseController
         $year_stats = [];
 
         if ($this->hasPermission('read_all')) {
-            // Admin/Supervisor: Statistik tahun ini untuk semua finalisator
+            // Admin/Supervisor bisa melihat statistik semua finalisator
             $year_stats = [
                 'total_ajuan_tahun_ini' => $this->harmonisasiAjuanModel->getTotalAjuanByYear($current_year),
-                'total_selesai_tahun_ini' => $this->harmonisasiAjuanModel->getTotalSelesaiByYear($current_year),
-                'total_ditolak_tahun_ini' => $this->harmonisasiAjuanModel->getTotalDitolakByYear($current_year),
-                'total_proses_tahun_ini' => $this->harmonisasiAjuanModel->getTotalProsesByYear($current_year)
+                'total_selesai_tahun_ini' => $this->harmonisasiAjuanModel->getTotalSelesaiFinalisasiByYear($current_year),
+                'total_revisi_tahun_ini' => $this->harmonisasiAjuanModel->getTotalRevisiByYear($current_year),
+                'antrean_aktif' => $this->harmonisasiAjuanModel->getAntreanAktif(\App\Config\HarmonisasiStatus::FINALISASI)
             ];
         } elseif ($this->hasPermission('read_own')) {
             // Finalisator: Statistik tahun ini untuk semua ajuan yang masuk ke tahap finalisasi
             $year_stats = [
                 'total_ajuan_tahun_ini' => $this->harmonisasiAjuanModel->getTotalAjuanByYear($current_year),
-                'total_selesai_tahun_ini' => $this->harmonisasiAjuanModel->getTotalSelesaiByYear($current_year),
-                'total_ditolak_tahun_ini' => $this->harmonisasiAjuanModel->getTotalDitolakByYear($current_year),
-                'total_proses_tahun_ini' => $this->harmonisasiAjuanModel->getTotalProsesByYear($current_year)
+                'total_selesai_tahun_ini' => $this->harmonisasiAjuanModel->getTotalSelesaiFinalisasiByYear($current_year),
+                'total_revisi_tahun_ini' => $this->harmonisasiAjuanModel->getTotalRevisiByYear($current_year),
+                'antrean_aktif' => $this->harmonisasiAjuanModel->getAntreanAktif(\App\Config\HarmonisasiStatus::FINALISASI)
             ];
         }
 
