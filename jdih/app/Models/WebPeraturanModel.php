@@ -167,7 +167,7 @@ class WebPeraturanModel extends Model
             // Jika tidak ada file baru, gunakan file yang sudah ada
         } else {
             // Peraturan baru - file wajib
-            if ($file === null || $file->getError() !== 0) {
+            if (($file === null || $file->getError() !== 0) && empty($peraturan_data['file_dokumen'])) {
                 $errorMsg = 'File dokumen wajib diunggah untuk peraturan baru.';
                 if ($file !== null) {
                     $errorMsg .= ' Error: ' . $file->getErrorString();
@@ -177,7 +177,7 @@ class WebPeraturanModel extends Model
                 return $return_data;
             }
 
-            if ($file->isValid() && !$file->hasMoved()) {
+            if ($file !== null && $file->isValid() && !$file->hasMoved()) {
                 $newFileName = $file->getRandomName();
 
                 if ($file->move($uploadPath, $newFileName)) {
@@ -188,8 +188,11 @@ class WebPeraturanModel extends Model
                     log_message('error', '[ERROR] ' . $errorMsg);
                     return $return_data;
                 }
+            } else if (!empty($peraturan_data['file_dokumen'])) {
+                // File already set (likely from sync), just proceed
+                log_message('info', 'File already set in data: ' . $peraturan_data['file_dokumen']);
             } else {
-                $errorMsg = 'File tidak valid: ' . $file->getErrorString();
+                $errorMsg = 'File tidak valid: ' . ($file ? $file->getErrorString() : 'No file provided');
                 $return_data['error']['message'] = $errorMsg;
                 log_message('error', '[ERROR] ' . $errorMsg);
                 return $return_data;
