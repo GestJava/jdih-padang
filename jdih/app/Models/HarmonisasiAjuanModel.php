@@ -261,11 +261,18 @@ class HarmonisasiAjuanModel extends Model
     {
         return $this->where('YEAR(created_at)', $year)
             ->whereIn('id_status_ajuan', [
-                HarmonisasiStatus::DIAJUKAN,
-                HarmonisasiStatus::VERIFIKASI,
-                HarmonisasiStatus::VALIDASI,
-                HarmonisasiStatus::FINALISASI,
-                HarmonisasiStatus::REVISI
+                HarmonisasiStatus::DIAJUKAN,        // 2
+                HarmonisasiStatus::VERIFIKASI,      // 3
+                HarmonisasiStatus::VALIDASI,        // 4
+                HarmonisasiStatus::REVISI,          // 5
+                HarmonisasiStatus::FINALISASI,      // 6
+                HarmonisasiStatus::PARAF_OPD,       // 7
+                HarmonisasiStatus::PARAF_KABAG,     // 8
+                HarmonisasiStatus::PARAF_ASISTEN,   // 9
+                HarmonisasiStatus::REVISI_FINALISASI, // 10
+                HarmonisasiStatus::PARAF_SEKDA,      // 11
+                HarmonisasiStatus::PARAF_WAWAKO,     // 12
+                HarmonisasiStatus::TTE_WALIKOTA      // 13
             ])
             ->countAllResults(false);
     }
@@ -314,11 +321,18 @@ class HarmonisasiAjuanModel extends Model
         return $this->where('YEAR(created_at)', $year)
             ->where('id_petugas_verifikasi', $user_id)
             ->whereIn('id_status_ajuan', [
-                HarmonisasiStatus::DIAJUKAN,
-                HarmonisasiStatus::VERIFIKASI,
-                HarmonisasiStatus::VALIDASI,
-                HarmonisasiStatus::FINALISASI,
-                HarmonisasiStatus::REVISI
+                HarmonisasiStatus::DIAJUKAN,        // 2
+                HarmonisasiStatus::VERIFIKASI,      // 3
+                HarmonisasiStatus::VALIDASI,        // 4
+                HarmonisasiStatus::REVISI,          // 5
+                HarmonisasiStatus::FINALISASI,      // 6
+                HarmonisasiStatus::PARAF_OPD,       // 7
+                HarmonisasiStatus::PARAF_KABAG,     // 8
+                HarmonisasiStatus::PARAF_ASISTEN,   // 9
+                HarmonisasiStatus::REVISI_FINALISASI, // 10
+                HarmonisasiStatus::PARAF_SEKDA,      // 11
+                HarmonisasiStatus::PARAF_WAWAKO,     // 12
+                HarmonisasiStatus::TTE_WALIKOTA      // 13
             ])
             ->countAllResults(false);
     }
