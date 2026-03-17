@@ -44,6 +44,7 @@
     <link rel="stylesheet" href="<?= base_url('assets/css/jdih-custom.css') ?>?v=<?= $cssVersion ?>">
     <link rel="stylesheet" href="<?= base_url('assets/css/navbar-fix.css') ?>?v=<?= $navbarVersion ?>">
     <link rel="stylesheet" href="<?= base_url('assets/css/news-styles.css') ?>?v=<?= $newsVersion ?>">
+    <link rel="stylesheet" href="<?= base_url('assets/css/accessibility.css') ?>?v=<?= time() ?>">
 
     <!-- Load AOS CSS only when needed (for pages with animations) -->
     <?php if (isset($useAOS) && $useAOS): ?>
@@ -102,6 +103,7 @@
     <!-- Core scripts with optimized loading -->
     <?php $mainJsPath = FCPATH . 'assets/js/main.js'; ?>
     <script src="<?= base_url('assets/js/main.js') ?>?v=<?= is_file($mainJsPath) ? filemtime($mainJsPath) : time() ?>" defer></script>
+    <script src="<?= base_url('assets/js/accessibility.js') ?>?v=<?= time() ?>" defer></script>
 
     <!-- Tambahan script dari section lain -->
     <?= $this->renderSection('scripts') ?>

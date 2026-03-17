@@ -1,283 +1,148 @@
-/* Accessibility Widget Styles */
+/* Accessibility Toolkit Styles - JDIH Kota Padang */
 
-/* Floating Button */
-.accessibility-toggle {
+/* Floating Widget */
+.a11y-widget {
     position: fixed;
-    bottom: 20px;
     right: 20px;
-    width: 60px;
-    height: 60px;
-    background-color: #0d6efd;
-    color: white;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 9999;
+}
+
+.a11y-toggle {
+    width: 50px;
+    height: 50px;
     border-radius: 50%;
+    background: #0d6efd;
+    color: white;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 2rem;
     cursor: pointer;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-    z-index: 1050;
-    transition: transform 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    transition: all 0.3s ease;
+    border: none;
+    font-size: 1.5rem;
 }
 
-.accessibility-toggle:hover {
+.a11y-toggle:hover {
+    background: #0b5ed7;
     transform: scale(1.1);
 }
 
-/* Accessibility Menu Panel */
-.accessibility-menu {
-    position: fixed;
-    bottom: 90px;
-    right: 20px;
-    width: 280px;
-    background-color: #ffffff;
+.a11y-panel {
+    position: absolute;
+    right: 60px;
+    top: 0;
+    width: 250px;
+    background: white;
     border-radius: 12px;
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
-    padding: 15px;
-    z-index: 1049;
-    opacity: 0;
-    transform: translateY(20px);
-    visibility: hidden;
-    transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s;
-}
-
-.accessibility-menu.active {
-    opacity: 1;
-    transform: translateY(0);
-    visibility: visible;
-}
-
-.accessibility-menu h4 {
-    font-size: 1.1rem;
-    font-weight: 600;
-    margin-top: 0;
-    margin-bottom: 15px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    padding: 20px;
+    display: none;
+    flex-direction: column;
+    gap: 15px;
     color: #333;
-    text-align: center;
+}
+
+.a11y-panel.active {
+    display: flex;
+}
+
+.a11y-panel h5 {
+    margin: 0;
+    font-size: 1.1rem;
+    font-weight: 700;
     border-bottom: 1px solid #eee;
     padding-bottom: 10px;
 }
 
-.accessibility-options {
-    list-style: none;
-    padding: 0;
-    margin: 0;
+.a11y-item {
     display: flex;
-    flex-direction: column;
-    gap: 10px;
+    justify-content: space-between;
+    align-items: center;
 }
 
-.accessibility-options button {
-    width: 100%;
-    padding: 12px 15px;
-    background-color: #f8f9fa;
-    border: 1px solid #dee2e6;
-    border-radius: 8px;
-    cursor: pointer;
-    text-align: left;
-    font-size: 0.95rem;
-    font-weight: 500;
-    color: #495057;
+.a11y-item span {
+    font-size: 0.9rem;
+}
+
+.a11y-btn-group {
+    display: flex;
+    gap: 5px;
+}
+
+.a11y-btn {
+    width: 32px;
+    height: 32px;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+    background: #f8f9fa;
     display: flex;
     align-items: center;
-    gap: 10px;
-    transition: background-color 0.2s, border-color 0.2s;
+    justify-content: center;
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.2s;
 }
 
-.accessibility-options button:hover {
-    background-color: #e9ecef;
-    border-color: #ced4da;
+.a11y-btn.active {
+    background: #0d6efd;
+    color: white;
+    border-color: #0d6efd;
 }
 
-.accessibility-options button i {
-    font-size: 1.2rem;
-    color: #0d6efd;
-    width: 20px;
-    text-align: center;
+.a11y-btn:hover {
+    background: #e9ecef;
 }
 
-/* High Contrast Mode */
-body.high-contrast {
+/* Accessibility Themes */
+
+/* High Contrast mode */
+body.a11y-high-contrast {
     background-color: #000 !important;
-    color: #fff !important;
-}
-
-body.high-contrast a {
     color: #ffff00 !important;
 }
 
-body.high-contrast .card, 
-body.high-contrast .modal-content,
-body.high-contrast .bg-light,
-body.high-contrast .bg-white {
-    background-color: #111 !important;
-    color: #fff !important;
-    border: 1px solid #ffff00;
+body.a11y-high-contrast * {
+    background-color: transparent !important;
+    color: inherit !important;
+    border-color: #ffff00 !important;
+    box-shadow: none !important;
 }
 
-body.high-contrast h1, body.high-contrast h2, body.high-contrast h3, body.high-contrast h4, body.high-contrast h5, body.high-contrast h6 {
-    color: #fff !important;
+body.a11y-high-contrast a {
+    color: #00ffff !important;
+    text-decoration: underline !important;
 }
 
-/* Highlight Links */
-body.links-highlighted a {
+body.a11y-high-contrast .btn {
+    border: 2px solid #ffff00 !important;
+    padding: 10px !important;
+}
+
+/* Monochrome */
+body.a11y-monochrome {
+    filter: grayscale(100%);
+}
+
+/* Link Highlights */
+body.a11y-highlight-links a {
     background-color: yellow !important;
     color: black !important;
-    border: 2px solid blue !important;
-    padding: 2px;
+    text-decoration: underline !important;
+    font-weight: bold !important;
 }
 
-/* Mobile Responsive Design for Accessibility Widget */
-@media (max-width: 768px) {
-    /* Floating Button - Mobile Optimization */
-    .accessibility-toggle {
-        width: 50px;
-        height: 50px;
-        bottom: 15px;
-        right: 15px;
-        font-size: 1.5rem;
-        /* Ensure touch-friendly size */
-        min-height: 44px;
-        min-width: 44px;
-    }
-    
-    /* Accessibility Menu Panel - Mobile Optimization */
-    .accessibility-menu {
-        bottom: 75px;
-        right: 15px;
-        left: 15px;
-        width: auto;
-        max-width: calc(100vw - 30px);
-        padding: 12px;
-        border-radius: 8px;
-    }
-    
-    .accessibility-menu h4 {
-        font-size: 1rem;
-        margin-bottom: 12px;
-        padding-bottom: 8px;
-    }
-    
-    .accessibility-options button {
-        padding: 15px 12px;
-        font-size: 0.9rem;
-        /* Ensure touch-friendly button size */
-        min-height: 44px;
-    }
-    
-    .accessibility-options button i {
-        font-size: 1.1rem;
-        width: 18px;
-    }
+/* Readable Font */
+body.a11y-readable-font {
+    font-family: Arial, Helvetica, sans-serif !important;
 }
 
-/* Extra Small Devices */
-@media (max-width: 576px) {
-    .accessibility-toggle {
-        width: 45px;
-        height: 45px;
-        bottom: 10px;
-        right: 10px;
-        font-size: 1.3rem;
-    }
-    
-    .accessibility-menu {
-        bottom: 65px;
-        right: 10px;
-        left: 10px;
-        max-width: calc(100vw - 20px);
-        padding: 10px;
-    }
-    
-    .accessibility-menu h4 {
-        font-size: 0.9rem;
-        margin-bottom: 10px;
-    }
-    
-    .accessibility-options button {
-        padding: 12px 10px;
-        font-size: 0.85rem;
-    }
-    
-    .accessibility-options button i {
-        font-size: 1rem;
-        width: 16px;
-    }
+/* Font Size Scaling */
+body.a11y-font-size-large {
+    font-size: 1.25rem !important;
 }
-
-/* Landscape Mobile Optimization */
-@media (max-width: 768px) and (orientation: landscape) {
-    .accessibility-toggle {
-        bottom: 10px;
-        right: 10px;
-        width: 40px;
-        height: 40px;
-        font-size: 1.2rem;
-    }
-    
-    .accessibility-menu {
-        bottom: 55px;
-        right: 10px;
-        left: 10px;
-        max-height: 60vh;
-        overflow-y: auto;
-    }
-    
-    .accessibility-menu h4 {
-        font-size: 0.9rem;
-        margin-bottom: 8px;
-    }
-    
-    .accessibility-options button {
-        padding: 8px 10px;
-        font-size: 0.8rem;
-    }
-}
-
-/* High DPI Displays */
-@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
-    .accessibility-toggle {
-        -webkit-font-smoothing: antialiased;
-        -moz-osx-font-smoothing: grayscale;
-    }
-}
-
-/* Reduced Motion for Accessibility */
-@media (prefers-reduced-motion: reduce) {
-    .accessibility-toggle,
-    .accessibility-menu {
-        transition: none !important;
-    }
-    
-    .accessibility-toggle:hover {
-        transform: none !important;
-    }
-}
-
-/* Dark Mode Support */
-@media (prefers-color-scheme: dark) {
-    .accessibility-menu {
-        background-color: #2d3748;
-        color: #e2e8f0;
-    }
-    
-    .accessibility-menu h4 {
-        color: #e2e8f0;
-        border-bottom-color: #4a5568;
-    }
-    
-    .accessibility-options button {
-        background-color: #4a5568;
-        border-color: #718096;
-        color: #e2e8f0;
-    }
-    
-    .accessibility-options button:hover {
-        background-color: #718096;
-        border-color: #a0aec0;
-    }
-    
-    .accessibility-options button i {
-        color: #63b3ed;
-    }
+body.a11y-font-size-xlarge {
+    font-size: 1.5rem !important;
 }

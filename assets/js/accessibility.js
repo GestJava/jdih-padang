@@ -1,131 +1,158 @@
+/**
+ * Accessibility Toolkit JS - JDIH Kota Padang
+ * Handles logic for High Contrast, Font Size, and Monochrome modes.
+ */
+
 document.addEventListener('DOMContentLoaded', function() {
-    const toggleButton = document.getElementById('accessibility-toggle');
-    const menu = document.getElementById('accessibility-menu');
+    // Create UI Elements
+    const a11yHtml = `
+    <div class="a11y-widget">
+        <button class="a11y-toggle" id="a11yToggle" title="Fitur Aksesibilitas">
+            <i class="fas fa-universal-access"></i>
+        </button>
+        <div class="a11y-panel" id="a11yPanel">
+            <h5>Fitur Aksesibilitas</h5>
+            
+            <div class="a11y-item">
+                <span>Ukuran Teks</span>
+                <div class="a11y-btn-group">
+                    <button class="a11y-btn" data-fz="normal" title="Normal">A</button>
+                    <button class="a11y-btn" data-fz="large" title="Besar">A+</button>
+                    <button class="a11y-btn" data-fz="xlarge" title="Sangat Besar">A++</button>
+                </div>
+            </div>
+
+            <div class="a11y-item">
+                <span>Kontras Tinggi</span>
+                <button class="a11y-btn" id="toggleContrast" title="Toggle Kontras">
+                    <i class="fas fa-adjust"></i>
+                </button>
+            </div>
+
+            <div class="a11y-item">
+                <span>Mode Monokrom</span>
+                <button class="a11y-btn" id="toggleMonochrome" title="Toggle Monokrom">
+                    <i class="fas fa-palette"></i>
+                </button>
+            </div>
+
+            <div class="a11y-item">
+                <span>Sorot Link</span>
+                <button class="a11y-btn" id="toggleLinks" title="Sorot Link">
+                    <i class="fas fa-link"></i>
+                </button>
+            </div>
+
+            <div class="a11y-item">
+                <span>Font Mudah Baca</span>
+                <button class="a11y-btn" id="toggleFont" title="Ganti Font">
+                    <i class="fas fa-font"></i>
+                </button>
+            </div>
+
+            <hr style="margin: 5px 0;">
+            <button class="btn btn-sm btn-outline-danger w-100" id="resetA11y">Reset Pengaturan</button>
+        </div>
+    </div>
+    `;
+
+    document.body.insertAdjacentHTML('beforeend', a11yHtml);
+
+    // Elements
+    const toggle = document.getElementById('a11yToggle');
+    const panel = document.getElementById('a11yPanel');
     const body = document.body;
 
-    // Check if elements exist
-    if (!toggleButton || !menu) {
-        console.error('Accessibility widget elements not found.');
-        return;
-    }
+    // Load saved settings
+    const settings = JSON.parse(localStorage.getItem('jdih_a11y_settings')) || {
+        fontSize: 'normal',
+        contrast: false,
+        monochrome: false,
+        highlightLinks: false,
+        readableFont: false
+    };
 
-    const increaseTextButton = document.getElementById('increase-text');
-    const decreaseTextButton = document.getElementById('decrease-text');
-    const highContrastButton = document.getElementById('high-contrast');
-    const highlightLinksButton = document.getElementById('highlight-links');
-    const resetButton = document.getElementById('reset-accessibility');
-
-    const FONT_SIZE_KEY = 'accessibility_font_size';
-    const CONTRAST_KEY = 'accessibility_contrast';
-    const LINKS_KEY = 'accessibility_links';
-    const BASE_FONT_SIZE = 16; // Assuming base font size is 16px
-
-    // Function to apply settings from localStorage
-    function applySavedSettings() {
+    function applySettings() {
         // Font Size
-        const savedFontSize = localStorage.getItem(FONT_SIZE_KEY);
-        if (savedFontSize) {
-            body.style.fontSize = savedFontSize + 'px';
-        }
+        body.classList.remove('a11y-font-size-large', 'a11y-font-size-xlarge');
+        if (settings.fontSize === 'large') body.classList.add('a11y-font-size-large');
+        if (settings.fontSize === 'xlarge') body.classList.add('a11y-font-size-xlarge');
 
-        // High Contrast
-        if (localStorage.getItem(CONTRAST_KEY) === 'true') {
-            body.classList.add('high-contrast');
-        }
+        // Contrast
+        body.classList.toggle('a11y-high-contrast', settings.contrast);
+        document.getElementById('toggleContrast').classList.toggle('active', settings.contrast);
 
-        // Highlight Links
-        if (localStorage.getItem(LINKS_KEY) === 'true') {
-            body.classList.add('links-highlighted');
-        }
-    }
+        // Monochrome
+        body.classList.toggle('a11y-monochrome', settings.monochrome);
+        document.getElementById('toggleMonochrome').classList.toggle('active', settings.monochrome);
 
-    // Function to get current font size
-    function getCurrentFontSize() {
-        const currentSize = parseFloat(window.getComputedStyle(body, null).getPropertyValue('font-size'));
-        return currentSize;
-    }
+        // Links
+        body.classList.toggle('a11y-highlight-links', settings.highlightLinks);
+        document.getElementById('toggleLinks').classList.toggle('active', settings.highlightLinks);
 
-    // Toggle menu visibility
-    toggleButton.addEventListener('click', function() {
-        menu.classList.toggle('active');
-    });
+        // Font
+        body.classList.toggle('a11y-readable-font', settings.readableFont);
+        document.getElementById('toggleFont').classList.toggle('active', settings.readableFont);
 
-    // Increase text size
-    increaseTextButton.addEventListener('click', function() {
-        let currentSize = getCurrentFontSize();
-        if (currentSize < 24) { // Max size limit
-            let newSize = currentSize + 1;
-            body.style.fontSize = newSize + 'px';
-            localStorage.setItem(FONT_SIZE_KEY, newSize);
-        }
-    });
-
-    // Decrease text size
-    decreaseTextButton.addEventListener('click', function() {
-        let currentSize = getCurrentFontSize();
-        if (currentSize > 12) { // Min size limit
-            let newSize = currentSize - 1;
-            body.style.fontSize = newSize + 'px';
-            localStorage.setItem(FONT_SIZE_KEY, newSize);
-        }
-    });
-
-    // Toggle high contrast
-    highContrastButton.addEventListener('click', function() {
-        const isContrast = body.classList.toggle('high-contrast');
-        localStorage.setItem(CONTRAST_KEY, isContrast);
-    });
-
-    // Toggle highlight links
-    highlightLinksButton.addEventListener('click', function() {
-        const areLinksHighlighted = body.classList.toggle('links-highlighted');
-        localStorage.setItem(LINKS_KEY, areLinksHighlighted);
-    });
-
-    // Reset all settings
-    resetButton.addEventListener('click', function() {
-        // Reset styles
-        body.style.fontSize = BASE_FONT_SIZE + 'px';
-        body.classList.remove('high-contrast', 'links-highlighted');
-
-        // Clear localStorage
-        localStorage.removeItem(FONT_SIZE_KEY);
-        localStorage.removeItem(CONTRAST_KEY);
-        localStorage.removeItem(LINKS_KEY);
-    });
-
-    // Apply settings on page load
-    applySavedSettings();
-
-    // === Text to Speech ===
-    (function(){
-        const btnSpeak = document.getElementById('speak-page');
-        const btnStop  = document.getElementById('stop-speech');
-        if(!btnSpeak || !btnStop) return;
-
-        function getPageText(){
-            const main = document.querySelector('main');
-            return (main ? main.innerText : document.body.innerText).replace(/\s+/g,' ').trim();
-        }
-
-        btnSpeak.addEventListener('click', ()=>{
-            if(!('speechSynthesis' in window)){
-                alert('Browser Anda tidak mendukung Text-to-Speech.');
-                return;
-            }
-            if(window.speechSynthesis.speaking){
-                // jika sedang membaca, abaikan
-                return;
-            }
-            const utter = new SpeechSynthesisUtterance(getPageText());
-            utter.lang = 'id-ID';
-            window.speechSynthesis.speak(utter);
+        // Update Font Buttons active state
+        document.querySelectorAll('[data-fz]').forEach(btn => {
+            btn.classList.toggle('active', btn.getAttribute('data-fz') === settings.fontSize);
         });
 
-        btnStop.addEventListener('click', ()=>{
-            if('speechSynthesis' in window){
-                window.speechSynthesis.cancel();
-            }
+        localStorage.setItem('jdih_a11y_settings', JSON.stringify(settings));
+    }
+
+    // Initial apply
+    applySettings();
+
+    // Toggle Panel
+    toggle.addEventListener('click', (e) => {
+        e.stopPropagation();
+        panel.classList.toggle('active');
+    });
+
+    document.addEventListener('click', (e) => {
+        if (!panel.contains(e.target) && !toggle.contains(e.target)) {
+            panel.classList.remove('active');
+        }
+    });
+
+    // Font Size Handlers
+    document.querySelectorAll('[data-fz]').forEach(btn => {
+        btn.addEventListener('click', () => {
+            settings.fontSize = btn.getAttribute('data-fz');
+            applySettings();
         });
-    })();
+    });
+
+    // Toggle Handlers
+    document.getElementById('toggleContrast').onclick = () => {
+        settings.contrast = !settings.contrast;
+        applySettings();
+    };
+
+    document.getElementById('toggleMonochrome').onclick = () => {
+        settings.monochrome = !settings.monochrome;
+        applySettings();
+    };
+
+    document.getElementById('toggleLinks').onclick = () => {
+        settings.highlightLinks = !settings.highlightLinks;
+        applySettings();
+    };
+
+    document.getElementById('toggleFont').onclick = () => {
+        settings.readableFont = !settings.readableFont;
+        applySettings();
+    };
+
+    // Reset
+    document.getElementById('resetA11y').onclick = () => {
+        settings.fontSize = 'normal';
+        settings.contrast = false;
+        settings.monochrome = false;
+        settings.highlightLinks = false;
+        settings.readableFont = false;
+        applySettings();
+    };
 });
