@@ -67,9 +67,40 @@
                             </button>
                         </div>
                         <div class="mb-3">
-                             <a href="javascript:void(0)" onclick="readPdfContent()" id="btn-read-pdf" class="btn btn-info btn-lg text-white">
-                                <i class="fas fa-volume-up me-2"></i> Baca Dokumen PDF
-                            </a>
+                            <div class="d-flex align-items-center mb-2">
+                                <a href="javascript:void(0)" onclick="readPdfContent()" id="btn-read-pdf" class="btn btn-info btn-lg text-white me-2">
+                                    <i class="fas fa-volume-up me-2"></i> Baca Dokumen PDF
+                                </a>
+                                <button class="btn btn-outline-secondary btn-lg" type="button" data-bs-toggle="collapse" data-bs-target="#audioSettings" aria-expanded="false" title="Pengaturan Audio">
+                                    <i class="fas fa-cog"></i>
+                                </button>
+                            </div>
+                            
+                            <div class="collapse" id="audioSettings">
+                                <div class="card card-body bg-light border-0 shadow-sm mb-3">
+                                    <h6 class="fw-bold mb-3"><i class="fas fa-sliders-h me-2"></i> Pengaturan Suara</h6>
+                                    <div class="row g-3">
+                                        <div class="col-md-6">
+                                            <label class="form-label small fw-bold">Pilih Suara</label>
+                                            <select id="tts-voice" class="form-select form-select-sm">
+                                                <option value="">Default Browser (Id)</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label class="form-label small fw-bold">Kecepatan: <span id="rate-val">1.0</span>x</label>
+                                            <input type="range" class="form-range" id="tts-rate" min="0.5" max="2" step="0.1" value="1">
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label class="form-label small fw-bold">Nada: <span id="pitch-val">1.0</span></label>
+                                            <input type="range" class="form-range" id="tts-pitch" min="0" max="2" step="0.1" value="1">
+                                        </div>
+                                    </div>
+                                    <div class="mt-2">
+                                        <small class="text-muted italic">* Kualitas suara bergantung pada dukungan browser Anda.</small>
+                                    </div>
+                                </div>
+                            </div>
+
                             <div id="pdf-speech-status" class="mt-2 text-muted small" style="display:none;">
                                 <i class="fas fa-spinner fa-spin me-1"></i> <span id="pdf-speech-status-text">Memproses dokumen...</span>
                             </div>
@@ -875,6 +906,74 @@
         }, 100);
     };
 
+    // --- Audio Settings Logic ---
+    let ttsSettings = {
+        voiceURI: localStorage.getItem('jdih_tts_voice') || '',
+        rate: parseFloat(localStorage.getItem('jdih_tts_rate')) || 1.0,
+        pitch: parseFloat(localStorage.getItem('jdih_tts_pitch')) || 1.0
+    };
+
+    function initAudioSettings() {
+        const voiceSelect = document.getElementById('tts-voice');
+        const rateInput = document.getElementById('tts-rate');
+        const pitchInput = document.getElementById('tts-pitch');
+        const rateVal = document.getElementById('rate-val');
+        const pitchVal = document.getElementById('pitch-val');
+
+        // Initial UI values
+        rateInput.value = ttsSettings.rate;
+        pitchInput.value = ttsSettings.pitch;
+        rateVal.innerText = ttsSettings.rate.toFixed(1);
+        pitchVal.innerText = ttsSettings.pitch.toFixed(1);
+
+        const loadVoices = () => {
+            const voices = window.speechSynthesis.getVoices();
+            voiceSelect.innerHTML = '<option value="">Default Browser (Id)</option>';
+            
+            // Filter Indonesian voices
+            const idVoices = voices.filter(v => v.lang.startsWith('id'));
+            
+            idVoices.forEach(voice => {
+                const option = document.createElement('option');
+                option.value = voice.voiceURI;
+                option.textContent = `${voice.name} (${voice.lang})`;
+                if (voice.voiceURI === ttsSettings.voiceURI) option.selected = true;
+                voiceSelect.appendChild(option);
+            });
+
+            // If no Indonesian voice, show all optionally or warning
+            if (idVoices.length === 0) {
+                 const option = document.createElement('option');
+                 option.disabled = true;
+                 option.textContent = "Tidak ditemukan suara Bahasa Indonesia di perangkat ini";
+                 voiceSelect.appendChild(option);
+            }
+        };
+
+        // Voices are loaded asynchronously
+        window.speechSynthesis.onvoiceschanged = loadVoices;
+        loadVoices();
+
+        // Listeners
+        voiceSelect.onchange = (e) => {
+            ttsSettings.voiceURI = e.target.value;
+            localStorage.setItem('jdih_tts_voice', ttsSettings.voiceURI);
+        };
+        rateInput.oninput = (e) => {
+            ttsSettings.rate = parseFloat(e.target.value);
+            rateVal.innerText = ttsSettings.rate.toFixed(1);
+            localStorage.setItem('jdih_tts_rate', ttsSettings.rate);
+        };
+        pitchInput.oninput = (e) => {
+            ttsSettings.pitch = parseFloat(e.target.value);
+            pitchVal.innerText = ttsSettings.pitch.toFixed(1);
+            localStorage.setItem('jdih_tts_pitch', ttsSettings.pitch);
+        };
+    }
+
+    // Run init on DOM load
+    document.addEventListener('DOMContentLoaded', initAudioSettings);
+
     function speakNextChunk() {
         if (currentSentenceIndex >= speechQueue.length) {
             console.log("Finished reading all chunks.");
@@ -888,15 +987,22 @@
         const chunkText = speechQueue[currentSentenceIndex];
         speechUtterance = new SpeechSynthesisUtterance(chunkText);
         
-        // Voice Selection (Do this every chunk to be safe/consistent)
+        // --- Apply Custom Voice Settings ---
         const voices = window.speechSynthesis.getVoices();
-        const idVoice = voices.find(v => v.lang === 'id-ID' || v.lang === 'id_ID');
-        if (idVoice) {
-            speechUtterance.voice = idVoice;
-            speechUtterance.lang = 'id-ID';
+        let selectedVoice = voices.find(v => v.voiceURI === ttsSettings.voiceURI);
+        
+        // Fallback to any Indonesian voice if selection is empty or not found
+        if (!selectedVoice) {
+            selectedVoice = voices.find(v => v.lang === 'id-ID' || v.lang === 'id_ID');
         }
 
-        speechUtterance.rate = 1.0;
+        if (selectedVoice) {
+            speechUtterance.voice = selectedVoice;
+            speechUtterance.lang = selectedVoice.lang;
+        }
+
+        speechUtterance.rate = ttsSettings.rate;
+        speechUtterance.pitch = ttsSettings.pitch;
         
         speechUtterance.onend = function() {
             // Natural finish: Move to next index
