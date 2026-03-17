@@ -33,8 +33,8 @@
             <!-- Pending TTE -->
             <div class="col-xl-3 col-md-6">
                 <div class="glass-card stat-card border-bottom-danger h-100">
-                    <div class="card-body">
-                        <div class="d-flex align-items-center justify-content-between mb-3">
+                    <div class="card-body p-4">
+                        <div class="d-flex align-items-center justify-content-between mb-4">
                             <div class="stat-icon-wrapper bg-soft-danger">
                                 <i class="fas fa-stamp text-danger"></i>
                             </div>
@@ -42,11 +42,11 @@
                                 <span class="badge pulse-danger">Pending</span>
                             <?php endif; ?>
                         </div>
-                        <h3 class="stat-value"><?= number_format($stats['pending_walikota_tte'] ?? 0) ?></h3>
-                        <p class="stat-label">Menunggu TTE Walikota</p>
+                        <h3 class="stat-value display-5 fw-bold text-dark mb-1"><?= number_format($stats['pending_walikota_tte'] ?? 0) ?></h3>
+                        <p class="stat-label text-muted fs-6 mb-4">Menunggu TTE Walikota</p>
                         <div class="stat-progress">
-                            <div class="progress" style="height: 4px;">
-                                <div class="progress-bar bg-danger" role="progressbar" style="width: 100%"></div>
+                            <div class="progress" style="height: 6px; border-radius: 4px;">
+                                <div class="progress-bar bg-danger" role="progressbar" style="width: 100%; border-radius: 4px;"></div>
                             </div>
                         </div>
                     </div>
@@ -56,18 +56,18 @@
             <!-- TTE Tahun Ini -->
             <div class="col-xl-3 col-md-6">
                 <div class="glass-card stat-card border-bottom-success h-100">
-                    <div class="card-body">
-                        <div class="d-flex align-items-center justify-content-between mb-3">
+                    <div class="card-body p-4">
+                        <div class="d-flex align-items-center justify-content-between mb-4">
                             <div class="stat-icon-wrapper bg-soft-success">
                                 <i class="fas fa-check-double text-success"></i>
                             </div>
                             <span class="badge bg-soft-success text-success">Tahun Ini</span>
                         </div>
-                        <h3 class="stat-value"><?= number_format($stats['tte_tahun_ini'] ?? 0) ?></h3>
-                        <p class="stat-label">Dokumen Disahkan (TTE)</p>
+                        <h3 class="stat-value display-5 fw-bold text-dark mb-1"><?= number_format($stats['tte_tahun_ini'] ?? 0) ?></h3>
+                        <p class="stat-label text-muted fs-6 mb-4">Dokumen Disahkan (TTE)</p>
                         <div class="stat-progress">
-                            <div class="progress" style="height: 4px;">
-                                <div class="progress-bar bg-success" role="progressbar" style="width: 100%"></div>
+                            <div class="progress" style="height: 6px; border-radius: 4px;">
+                                <div class="progress-bar bg-success" role="progressbar" style="width: 100%; border-radius: 4px;"></div>
                             </div>
                         </div>
                     </div>
@@ -77,18 +77,18 @@
             <!-- Total Selesai -->
             <div class="col-xl-3 col-md-6">
                 <div class="glass-card stat-card border-bottom-info h-100">
-                    <div class="card-body">
-                        <div class="d-flex align-items-center justify-content-between mb-3">
+                    <div class="card-body p-4">
+                        <div class="d-flex align-items-center justify-content-between mb-4">
                             <div class="stat-icon-wrapper bg-soft-info">
                                 <i class="fas fa-archive text-info"></i>
                             </div>
                             <span class="badge bg-soft-info text-info">Global</span>
                         </div>
-                        <h3 class="stat-value"><?= number_format($stats['selesai'] ?? 0) ?></h3>
-                        <p class="stat-label">Total Dokumen Selesai</p>
+                        <h3 class="stat-value display-5 fw-bold text-dark mb-1"><?= number_format($stats['selesai'] ?? 0) ?></h3>
+                        <p class="stat-label text-muted fs-6 mb-4">Total Dokumen Selesai</p>
                         <div class="stat-progress">
-                            <div class="progress" style="height: 4px;">
-                                <div class="progress-bar bg-info" role="progressbar" style="width: 100%"></div>
+                            <div class="progress" style="height: 6px; border-radius: 4px;">
+                                <div class="progress-bar bg-info" role="progressbar" style="width: 100%; border-radius: 4px;"></div>
                             </div>
                         </div>
                     </div>
@@ -98,18 +98,18 @@
             <!-- Total Ajuan -->
             <div class="col-xl-3 col-md-6">
                 <div class="glass-card stat-card border-bottom-primary h-100">
-                    <div class="card-body">
-                        <div class="d-flex align-items-center justify-content-between mb-3">
+                    <div class="card-body p-4">
+                        <div class="d-flex align-items-center justify-content-between mb-4">
                             <div class="stat-icon-wrapper bg-soft-primary">
                                 <i class="fas fa-file-invoice text-primary"></i>
                             </div>
-                            <span class="badge bg-soft-primary text-primary">2024</span>
+                            <span class="badge bg-soft-primary text-primary">Tahun <?= date('Y') ?></span>
                         </div>
-                        <h3 class="stat-value"><?= number_format($stats['total_ajuan'] ?? 0) ?></h3>
-                        <p class="stat-label">Total Pengajuan Masuk</p>
+                        <h3 class="stat-value display-5 fw-bold text-dark mb-1"><?= number_format($stats['total_ajuan'] ?? 0) ?></h3>
+                        <p class="stat-label text-muted fs-6 mb-4">Total Pengajuan Masuk</p>
                         <div class="stat-progress">
-                            <div class="progress" style="height: 4px;">
-                                <div class="progress-bar bg-primary" role="progressbar" style="width: 100%"></div>
+                            <div class="progress" style="height: 6px; border-radius: 4px;">
+                                <div class="progress-bar bg-primary" role="progressbar" style="width: 100%; border-radius: 4px;"></div>
                             </div>
                         </div>
                     </div>

@@ -33,20 +33,20 @@
             <!-- Pending TTE -->
             <div class="col-xl-3 col-md-6">
                 <div class="glass-card stat-card border-bottom-success h-100">
-                    <div class="card-body">
-                        <div class="d-flex align-items-center justify-content-between mb-3">
+                    <div class="card-body p-4">
+                        <div class="d-flex align-items-center justify-content-between mb-4">
                             <div class="stat-icon-wrapper bg-soft-success">
                                 <i class="fas fa-stamp text-success"></i>
                             </div>
-                            <?php if (($stats['pending_tte'] ?? 0) > 0): ?>
+                            <?php if (($stats['pending_tte_sekda'] ?? 0) > 0): ?>
                                 <span class="badge pulse-success">Final TTE</span>
                             <?php endif; ?>
                         </div>
-                        <h3 class="stat-value"><?= number_format($stats['pending_tte_sekda'] ?? 0) ?></h3>
-                        <p class="stat-label">Menunggu TTE Sekda</p>
+                        <h3 class="stat-value display-5 fw-bold text-dark mb-1"><?= number_format($stats['pending_tte_sekda'] ?? 0) ?></h3>
+                        <p class="stat-label text-muted fs-6 mb-4">Menunggu TTE Sekda</p>
                         <div class="stat-progress">
-                            <div class="progress" style="height: 4px;">
-                                <div class="progress-bar bg-success" role="progressbar" style="width: 100%"></div>
+                            <div class="progress" style="height: 6px; border-radius: 4px;">
+                                <div class="progress-bar bg-success" role="progressbar" style="width: 100%; border-radius: 4px;"></div>
                             </div>
                         </div>
                     </div>
@@ -56,20 +56,20 @@
             <!-- Pending Paraf -->
             <div class="col-xl-3 col-md-6">
                 <div class="glass-card stat-card border-bottom-primary h-100">
-                    <div class="card-body">
-                        <div class="d-flex align-items-center justify-content-between mb-3">
+                    <div class="card-body p-4">
+                        <div class="d-flex align-items-center justify-content-between mb-4">
                             <div class="stat-icon-wrapper bg-soft-primary">
                                 <i class="fas fa-signature text-primary"></i>
                             </div>
-                            <?php if (($stats['pending_paraf'] ?? 0) > 0): ?>
+                            <?php if (($stats['pending_paraf_sekda'] ?? 0) > 0): ?>
                                 <span class="badge bg-soft-primary text-primary">Paraf</span>
                             <?php endif; ?>
                         </div>
-                        <h3 class="stat-value"><?= number_format($stats['pending_paraf_sekda'] ?? 0) ?></h3>
-                        <p class="stat-label">Menunggu Paraf Sekda</p>
+                        <h3 class="stat-value display-5 fw-bold text-dark mb-1"><?= number_format($stats['pending_paraf_sekda'] ?? 0) ?></h3>
+                        <p class="stat-label text-muted fs-6 mb-4">Menunggu Paraf Sekda</p>
                         <div class="stat-progress">
-                            <div class="progress" style="height: 4px;">
-                                <div class="progress-bar bg-primary" role="progressbar" style="width: 100%"></div>
+                            <div class="progress" style="height: 6px; border-radius: 4px;">
+                                <div class="progress-bar bg-primary" role="progressbar" style="width: 100%; border-radius: 4px;"></div>
                             </div>
                         </div>
                     </div>
@@ -79,18 +79,18 @@
             <!-- Total Bulan Ini -->
             <div class="col-xl-3 col-md-6">
                 <div class="glass-card stat-card border-bottom-info h-100">
-                    <div class="card-body">
-                        <div class="d-flex align-items-center justify-content-between mb-3">
+                    <div class="card-body p-4">
+                        <div class="d-flex align-items-center justify-content-between mb-4">
                             <div class="stat-icon-wrapper bg-soft-info">
-                                <i class="fas fa-chart-line text-info"></i>
+                                <i class="fas fa-file-invoice text-info"></i>
                             </div>
-                            <span class="badge bg-soft-info text-info">Bulan Ini</span>
+                            <span class="badge bg-soft-info text-info">Tahun <?= date('Y') ?></span>
                         </div>
-                        <h3 class="stat-value"><?= number_format($stats['total_bulan_ini'] ?? 0) ?></h3>
-                        <p class="stat-label">Dokumen Terproses</p>
+                        <h3 class="stat-value display-5 fw-bold text-dark mb-1"><?= number_format($stats['total_ajuan'] ?? 0) ?></h3>
+                        <p class="stat-label text-muted fs-6 mb-4">Total Pengajuan JDIH</p>
                         <div class="stat-progress">
-                            <div class="progress" style="height: 4px;">
-                                <div class="progress-bar bg-info" role="progressbar" style="width: 100%"></div>
+                            <div class="progress" style="height: 6px; border-radius: 4px;">
+                                <div class="progress-bar bg-info" role="progressbar" style="width: 100%; border-radius: 4px;"></div>
                             </div>
                         </div>
                     </div>
@@ -100,18 +100,18 @@
             <!-- Total Terproses -->
             <div class="col-xl-3 col-md-6">
                 <div class="glass-card stat-card border-bottom-dark h-100">
-                    <div class="card-body">
-                        <div class="d-flex align-items-center justify-content-between mb-3">
+                    <div class="card-body p-4">
+                        <div class="d-flex align-items-center justify-content-between mb-4">
                             <div class="stat-icon-wrapper bg-soft-dark">
                                 <i class="fas fa-history text-dark"></i>
                             </div>
-                            <span class="badge bg-soft-dark text-dark">Total</span>
+                            <span class="badge bg-soft-dark text-dark">Global</span>
                         </div>
-                        <h3 class="stat-value"><?= number_format($stats['total_terproses'] ?? 0) ?></h3>
-                        <p class="stat-label">Riwayat Penandatanganan</p>
+                        <h3 class="stat-value display-5 fw-bold text-dark mb-1"><?= number_format($stats['selesai'] ?? 0) ?></h3>
+                        <p class="stat-label text-muted fs-6 mb-4">Total Dokumen Selesai</p>
                         <div class="stat-progress">
-                            <div class="progress" style="height: 4px;">
-                                <div class="progress-bar bg-dark" role="progressbar" style="width: 100%"></div>
+                            <div class="progress" style="height: 6px; border-radius: 4px;">
+                                <div class="progress-bar bg-dark" role="progressbar" style="width: 100%; border-radius: 4px;"></div>
                             </div>
                         </div>
                     </div>

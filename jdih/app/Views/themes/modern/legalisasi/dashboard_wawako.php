@@ -33,20 +33,20 @@
             <!-- Pending Paraf -->
             <div class="col-xl-4 col-md-6">
                 <div class="glass-card stat-card border-bottom-emerald h-100">
-                    <div class="card-body">
-                        <div class="d-flex align-items-center justify-content-between mb-3">
+                    <div class="card-body p-4">
+                        <div class="d-flex align-items-center justify-content-between mb-4">
                             <div class="stat-icon-wrapper bg-soft-emerald">
                                 <i class="fas fa-stamp text-emerald"></i>
                             </div>
-                            <?php if (($stats['pending_paraf'] ?? 0) > 0): ?>
+                            <?php if (($stats['pending_wawako_paraf'] ?? 0) > 0): ?>
                                 <span class="badge pulse-emerald">Menunggu</span>
                             <?php endif; ?>
                         </div>
-                        <h3 class="stat-value"><?= number_format($stats['pending_paraf'] ?? 0) ?></h3>
-                        <p class="stat-label">Menunggu Paraf Wawako</p>
+                        <h3 class="stat-value display-5 fw-bold text-dark mb-1"><?= number_format($stats['pending_wawako_paraf'] ?? 0) ?></h3>
+                        <p class="stat-label text-muted fs-6 mb-4">Menunggu Paraf Wawako</p>
                         <div class="stat-progress">
-                            <div class="progress" style="height: 4px;">
-                                <div class="progress-bar bg-emerald" role="progressbar" style="width: 100%"></div>
+                            <div class="progress" style="height: 6px; border-radius: 4px;">
+                                <div class="progress-bar bg-emerald" role="progressbar" style="width: 100%; border-radius: 4px;"></div>
                             </div>
                         </div>
                     </div>
@@ -56,18 +56,18 @@
             <!-- Total Bulan Ini -->
             <div class="col-xl-4 col-md-6">
                 <div class="glass-card stat-card border-bottom-teal h-100">
-                    <div class="card-body">
-                        <div class="d-flex align-items-center justify-content-between mb-3">
+                    <div class="card-body p-4">
+                        <div class="d-flex align-items-center justify-content-between mb-4">
                             <div class="stat-icon-wrapper bg-soft-teal">
                                 <i class="fas fa-clipboard-check text-teal"></i>
                             </div>
                             <span class="badge bg-soft-teal text-teal">Bulan Ini</span>
                         </div>
-                        <h3 class="stat-value"><?= number_format($stats['total_bulan_ini'] ?? 0) ?></h3>
-                        <p class="stat-label">Dokumen Tervalidasi</p>
+                        <h3 class="stat-value display-5 fw-bold text-dark mb-1"><?= number_format($stats['dalam_proses'] ?? 0) ?></h3>
+                        <p class="stat-label text-muted fs-6 mb-4">Dokumen Tervalidasi</p>
                         <div class="stat-progress">
-                            <div class="progress" style="height: 4px;">
-                                <div class="progress-bar bg-teal" role="progressbar" style="width: 100%"></div>
+                            <div class="progress" style="height: 6px; border-radius: 4px;">
+                                <div class="progress-bar bg-teal" role="progressbar" style="width: 100%; border-radius: 4px;"></div>
                             </div>
                         </div>
                     </div>
@@ -77,18 +77,18 @@
             <!-- Total Terproses -->
             <div class="col-xl-4 col-md-6">
                 <div class="glass-card stat-card border-bottom-dark h-100">
-                    <div class="card-body">
-                        <div class="d-flex align-items-center justify-content-between mb-3">
+                    <div class="card-body p-4">
+                        <div class="d-flex align-items-center justify-content-between mb-4">
                             <div class="stat-icon-wrapper bg-soft-dark">
                                 <i class="fas fa-history text-dark"></i>
                             </div>
                             <span class="badge bg-soft-dark text-dark">Total</span>
                         </div>
-                        <h3 class="stat-value"><?= number_format($stats['total_terproses'] ?? 0) ?></h3>
-                        <p class="stat-label">Riwayat Paraf JDIH</p>
+                        <h3 class="stat-value display-5 fw-bold text-dark mb-1"><?= number_format($stats['selesai'] ?? 0) ?></h3>
+                        <p class="stat-label text-muted fs-6 mb-4">Riwayat Paraf JDIH</p>
                         <div class="stat-progress">
-                            <div class="progress" style="height: 4px;">
-                                <div class="progress-bar bg-dark" role="progressbar" style="width: 100%"></div>
+                            <div class="progress" style="height: 6px; border-radius: 4px;">
+                                <div class="progress-bar bg-dark" role="progressbar" style="width: 100%; border-radius: 4px;"></div>
                             </div>
                         </div>
                     </div>
