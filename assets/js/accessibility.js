@@ -4,6 +4,9 @@
  */
 
 document.addEventListener('DOMContentLoaded', function() {
+    // Check if we are on a page with PDF Reader (detail peraturan)
+    const hasPdfReader = document.getElementById('btn-read-pdf') !== null;
+
     // Create UI Elements
     const a11yHtml = `
     <div class="a11y-widget">
@@ -50,6 +53,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 </button>
             </div>
 
+            ${hasPdfReader ? `
             <div class="a11y-item">
                 <span>Caption Visual</span>
                 <button class="a11y-btn" id="toggleCaptions" title="Tampilkan Teks Bacaan">
@@ -63,12 +67,14 @@ document.addEventListener('DOMContentLoaded', function() {
                     <i class="fas fa-hands-helping"></i>
                 </button>
             </div>
+            ` : ''}
 
             <hr style="margin: 5px 0;">
             <button class="btn btn-sm btn-outline-danger w-100" id="resetA11y">Reset Pengaturan</button>
         </div>
     </div>
 
+    ${hasPdfReader ? `
     <div id="a11yCaptionBox" class="a11y-caption-container">
         <div class="a11y-caption-label">Visual Caption</div>
         <div id="a11yCaptionText">...</div>
@@ -86,6 +92,7 @@ document.addEventListener('DOMContentLoaded', function() {
             </div>
         </div>
     </div>
+    ` : ''}
     `;
 
     document.body.insertAdjacentHTML('beforeend', a11yHtml);
@@ -129,12 +136,16 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('toggleFont').classList.toggle('active', settings.readableFont);
 
         // Captions
-        document.getElementById('a11yCaptionBox').classList.toggle('active', settings.visualCaptions);
-        document.getElementById('toggleCaptions').classList.toggle('active', settings.visualCaptions);
+        const captionBox = document.getElementById('a11yCaptionBox');
+        const toggleCaptions = document.getElementById('toggleCaptions');
+        if (captionBox) captionBox.classList.toggle('active', settings.visualCaptions);
+        if (toggleCaptions) toggleCaptions.classList.toggle('active', settings.visualCaptions);
 
         // Sign Language
-        document.getElementById('a11ySLBox').classList.toggle('active', settings.signLanguage);
-        document.getElementById('toggleSL').classList.toggle('active', settings.signLanguage);
+        const slBox = document.getElementById('a11ySLBox');
+        const toggleSL = document.getElementById('toggleSL');
+        if (slBox) slBox.classList.toggle('active', settings.signLanguage);
+        if (toggleSL) toggleSL.classList.toggle('active', settings.signLanguage);
 
         // Update Font Buttons active state
         document.querySelectorAll('[data-fz]').forEach(btn => {
@@ -168,34 +179,40 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     // Toggle Handlers
-    document.getElementById('toggleContrast').onclick = () => {
+    const contrastBtn = document.getElementById('toggleContrast');
+    if (contrastBtn) contrastBtn.onclick = () => {
         settings.contrast = !settings.contrast;
         applySettings();
     };
 
-    document.getElementById('toggleMonochrome').onclick = () => {
+    const monochromeBtn = document.getElementById('toggleMonochrome');
+    if (monochromeBtn) monochromeBtn.onclick = () => {
         settings.monochrome = !settings.monochrome;
         applySettings();
     };
 
-    document.getElementById('toggleLinks').onclick = () => {
+    const linksBtn = document.getElementById('toggleLinks');
+    if (linksBtn) linksBtn.onclick = () => {
         settings.highlightLinks = !settings.highlightLinks;
         applySettings();
     };
 
-    document.getElementById('toggleFont').onclick = () => {
+    const fontBtn = document.getElementById('toggleFont');
+    if (fontBtn) fontBtn.onclick = () => {
         settings.readableFont = !settings.readableFont;
         applySettings();
     };
 
-    document.getElementById('toggleCaptions').onclick = () => {
+    const captionsBtn = document.getElementById('toggleCaptions');
+    if (captionsBtn) captionsBtn.onclick = () => {
         settings.visualCaptions = !settings.visualCaptions;
         applySettings();
         // Global signal for other scripts
         window.dispatchEvent(new CustomEvent('a11y_captions_changed', { detail: settings.visualCaptions }));
     };
 
-    document.getElementById('toggleSL').onclick = () => {
+    const slBtn = document.getElementById('toggleSL');
+    if (slBtn) slBtn.onclick = () => {
         settings.signLanguage = !settings.signLanguage;
         applySettings();
     };
