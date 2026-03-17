@@ -940,17 +940,7 @@
         const loadVoices = () => {
             const voices = window.speechSynthesis.getVoices();
             
-            // Define Premium Options
-            let optionsHtml = `
-                <option value="">Default Browser (Id)</option>
-                <optgroup label="Google AI Premium (Neural)">
-                    <option value="google-A" ${ttsSettings.voiceURI === 'google-A' ? 'selected' : ''}>Google AI - Wanita A (Wavenet)</option>
-                    <option value="google-D" ${ttsSettings.voiceURI === 'google-D' ? 'selected' : ''}>Google AI - Wanita B (Wavenet)</option>
-                    <option value="google-B" ${ttsSettings.voiceURI === 'google-B' ? 'selected' : ''}>Google AI - Pria A (Wavenet)</option>
-                    <option value="google-C" ${ttsSettings.voiceURI === 'google-C' ? 'selected' : ''}>Google AI - Pria B (Wavenet)</option>
-                </optgroup>
-                <optgroup label="Suara Sistem (Browser)">
-            `;
+            let optionsHtml = '<option value="">Default Browser (Id)</option>';
             
             // Filter Indonesian voices
             const idVoices = voices.filter(v => v.lang.startsWith('id'));
@@ -960,10 +950,9 @@
             });
 
             if (idVoices.length === 0) {
-                 optionsHtml += `<option disabled>Tidak ditemukan suara ID tambahan di browser</option>`;
+                 optionsHtml += `<option disabled>Tidak ditemukan suara Bahasa Indonesia di perangkat ini</option>`;
             }
 
-            optionsHtml += `</optgroup>`;
             voiceSelect.innerHTML = optionsHtml;
         };
 
@@ -1003,52 +992,6 @@
 
         const chunkText = speechQueue[currentSentenceIndex];
 
-        // --- GOOGLE AI PREMIUM LOGIC ---
-        if (ttsSettings.voiceURI && ttsSettings.voiceURI.startsWith('google-')) {
-            const voiceType = ttsSettings.voiceURI.replace('google-', '');
-            const encodedText = encodeURIComponent(chunkText);
-            const audioUrl = `<?= base_url('tts/synthesize') ?>?text=${encodedText}&voice=${voiceType}&rate=${ttsSettings.rate}`;
-            
-            console.log("Playing Premium Audio for chunk " + currentSentenceIndex);
-            
-            const statusText = document.getElementById('pdf-speech-status-text');
-            const statusDiv = document.getElementById('pdf-speech-status');
-            
-            if (statusDiv) statusDiv.style.display = 'block';
-            if (statusText) statusText.innerText = 'Menyiapkan suara AI...';
-
-            premiumAudio = new Audio(audioUrl);
-            
-            premiumAudio.oncanplaythrough = () => {
-                if (statusDiv) statusDiv.style.display = 'none';
-                premiumAudio.play().catch(e => {
-                    console.error("Audio playback error:", e);
-                    // Fallback to browser TTS if audio failed
-                    speakWithBrowser(chunkText);
-                });
-            };
-
-            premiumAudio.onended = () => {
-                if (isSpeaking && !isPaused) {
-                    currentSentenceIndex++;
-                    speakNextChunk();
-                }
-            };
-
-            premiumAudio.onerror = (e) => {
-                console.error("Premium Audio Error:", e);
-                if (statusText) {
-                    statusText.innerText = 'Suara Premium (Google Cloud) gagal diakses. Pastikan API "Cloud Text-to-Speech" sudah diaktifkan di Google Console Anda.';
-                    statusDiv.style.display = 'block';
-                    statusDiv.classList.add('alert', 'alert-warning');
-                }
-                setTimeout(() => {
-                    speakWithBrowser(chunkText);
-                }, 3000);
-            };
-
-            return;
-        }
 
         speakWithBrowser(chunkText);
     }
