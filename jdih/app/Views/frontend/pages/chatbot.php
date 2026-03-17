@@ -139,6 +139,9 @@
             // Ini aman dilakukan setelah sanitasi.
             formattedText = formattedText.replace(/\n/g, '<br>');
 
+            return formattedText;
+        }
+
         // Fungsi untuk memberikan efek mengetik pada respons bot
         function typeWriter(element, html, speed = 15) {
             let i = 0;
