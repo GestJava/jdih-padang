@@ -1037,8 +1037,14 @@
 
             premiumAudio.onerror = (e) => {
                 console.error("Premium Audio Error:", e);
-                if (statusText) statusText.innerText = 'Suara Premium gagal. Menggunakan suara standar...';
-                speakWithBrowser(chunkText);
+                if (statusText) {
+                    statusText.innerText = 'Suara Premium (Google Cloud) gagal diakses. Pastikan API "Cloud Text-to-Speech" sudah diaktifkan di Google Console Anda.';
+                    statusDiv.style.display = 'block';
+                    statusDiv.classList.add('alert', 'alert-warning');
+                }
+                setTimeout(() => {
+                    speakWithBrowser(chunkText);
+                }, 3000);
             };
 
             return;

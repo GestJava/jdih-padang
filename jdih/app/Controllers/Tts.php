@@ -7,11 +7,11 @@ use Config\TtsConfig;
 
 class Tts extends BaseController
 {
-    protected TtsConfig $config;
+    protected TtsConfig $ttsConfig;
 
     public function __construct()
     {
-        $this->config = new TtsConfig();
+        $this->ttsConfig = new TtsConfig();
     }
 
     /**
@@ -36,7 +36,7 @@ class Tts extends BaseController
 
         // Generate cache filename
         $cacheKey = md5($text . $voiceType . $rate);
-        $cacheDir = $this->config->cachePath;
+        $cacheDir = $this->ttsConfig->cachePath;
         $cacheFile = $cacheDir . $cacheKey . '.mp3';
 
         // Check cache
@@ -48,7 +48,7 @@ class Tts extends BaseController
         }
 
         // Check API Key
-        if (empty($this->config->apiKey)) {
+        if (empty($this->ttsConfig->apiKey)) {
             return $this->response->setStatusCode(500)->setJSON(['error' => 'Google TTS API Key is not configured']);
         }
 
@@ -64,13 +64,13 @@ class Tts extends BaseController
                 'ssmlGender' => $gender
             ],
             'audioConfig' => [
-                'audioEncoding' => $this->config->audioEncoding,
+                'audioEncoding' => $this->ttsConfig->audioEncoding,
                 'speakingRate' => (float)$rate
             ]
         ];
 
         try {
-            $apiUrl = "https://texttospeech.googleapis.com/v1/text:synthesize?key=" . $this->config->apiKey;
+            $apiUrl = "https://texttospeech.googleapis.com/v1/text:synthesize?key=" . $this->ttsConfig->apiKey;
             
             $client = Services::curlrequest([
                 'timeout' => 30,
