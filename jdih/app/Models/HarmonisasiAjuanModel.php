@@ -234,7 +234,7 @@ class HarmonisasiAjuanModel extends Model
     public function getTotalTugasByYear($year)
     {
         return $this->where('YEAR(created_at)', $year)
-            ->countAllResults(false);
+            ->countAllResults();
     }
 
     /**
@@ -245,7 +245,7 @@ class HarmonisasiAjuanModel extends Model
         return $this->where('YEAR(created_at)', $year)
             ->where('id_status_ajuan >', HarmonisasiStatus::VERIFIKASI)
             ->where('id_status_ajuan !=', HarmonisasiStatus::REVISI)
-            ->countAllResults(false);
+            ->countAllResults();
     }
 
     /**
@@ -255,7 +255,7 @@ class HarmonisasiAjuanModel extends Model
     {
         return $this->where('YEAR(created_at)', $year)
             ->where('id_status_ajuan', HarmonisasiStatus::REVISI)
-            ->countAllResults(false);
+            ->countAllResults();
     }
 
     /**
@@ -267,7 +267,7 @@ class HarmonisasiAjuanModel extends Model
         if ($user_id) {
             $builder->where('id_petugas_verifikasi', $user_id);
         }
-        return $builder->countAllResults(false);
+        return $builder->countAllResults();
     }
 
     /**
@@ -290,7 +290,7 @@ class HarmonisasiAjuanModel extends Model
                 HarmonisasiStatus::PARAF_WAWAKO,     // 12
                 HarmonisasiStatus::TTE_WALIKOTA      // 13
             ])
-            ->countAllResults(false);
+            ->countAllResults();
     }
 
     // ============================================================
@@ -307,7 +307,7 @@ class HarmonisasiAjuanModel extends Model
     {
         return $this->where('YEAR(created_at)', $year)
             ->where('id_petugas_verifikasi', $user_id)
-            ->countAllResults(false);
+            ->countAllResults();
     }
 
     /**
@@ -319,7 +319,7 @@ class HarmonisasiAjuanModel extends Model
             ->where('id_petugas_verifikasi', $user_id)
             ->where('id_status_ajuan >', HarmonisasiStatus::VERIFIKASI)
             ->where('id_status_ajuan !=', HarmonisasiStatus::REVISI)
-            ->countAllResults(false);
+            ->countAllResults();
     }
 
     /**
@@ -330,7 +330,7 @@ class HarmonisasiAjuanModel extends Model
         return $this->where('YEAR(created_at)', $year)
             ->where('id_petugas_verifikasi', $user_id)
             ->where('id_status_ajuan', HarmonisasiStatus::REVISI)
-            ->countAllResults(false);
+            ->countAllResults();
     }
 
     /**
