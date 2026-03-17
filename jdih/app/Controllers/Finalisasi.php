@@ -91,7 +91,7 @@ class Finalisasi extends BaseController
                 'total_ajuan_tahun_ini' => $this->harmonisasiAjuanModel->getTotalAjuanByYear($current_year),
                 'total_selesai_tahun_ini' => $this->harmonisasiAjuanModel->getTotalSelesaiFinalisasiByYear($current_year),
                 'total_revisi_tahun_ini' => $this->harmonisasiAjuanModel->getTotalRevisiByYear($current_year),
-                'antrean_aktif' => $this->harmonisasiAjuanModel->getAntreanAktif(\App\Config\HarmonisasiStatus::FINALISASI)
+                'antrean_aktif' => $this->harmonisasiAjuanModel->getAntreanAktif([\App\Config\HarmonisasiStatus::FINALISASI, \App\Config\HarmonisasiStatus::REVISI_FINALISASI])
             ];
         } elseif ($this->hasPermission('read_own')) {
             // Finalisator: Statistik tahun ini untuk semua ajuan yang masuk ke tahap finalisasi
@@ -99,7 +99,7 @@ class Finalisasi extends BaseController
                 'total_ajuan_tahun_ini' => $this->harmonisasiAjuanModel->getTotalAjuanByYear($current_year),
                 'total_selesai_tahun_ini' => $this->harmonisasiAjuanModel->getTotalSelesaiFinalisasiByYear($current_year),
                 'total_revisi_tahun_ini' => $this->harmonisasiAjuanModel->getTotalRevisiByYear($current_year),
-                'antrean_aktif' => $this->harmonisasiAjuanModel->getAntreanAktif(\App\Config\HarmonisasiStatus::FINALISASI)
+                'antrean_aktif' => $this->harmonisasiAjuanModel->getAntreanAktif([\App\Config\HarmonisasiStatus::FINALISASI, \App\Config\HarmonisasiStatus::REVISI_FINALISASI])
             ];
         }
 

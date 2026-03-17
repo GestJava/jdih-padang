@@ -316,15 +316,24 @@ class HarmonisasiAjuanModel extends Model
      */
     public function getAntreanAktif($status_id = HarmonisasiStatus::VERIFIKASI, $user_id = null)
     {
-        $builder = $this->where('id_status_ajuan', $status_id);
-        if ($user_id) {
-            // Field filter berbeda tergantung status
-            if ($status_id == HarmonisasiStatus::VERIFIKASI) {
-                $builder->where('id_petugas_verifikasi', $user_id);
-            }
-            // Tambahkan filter lain jika ada penugasan spesifik untuk validator/finalisator
+        if (is_array($status_id)) {
+            $this->whereIn('id_status_ajuan', $status_id);
+        } else {
+            $this->where('id_status_ajuan', $status_id);
         }
-        return $builder->countAllResults();
+
+        if ($user_id) {
+            // Jika array, cek apakah mengandung status tertentu
+            $is_verif = is_array($status_id) ? in_array(HarmonisasiStatus::VERIFIKASI, $status_id) : ($status_id == HarmonisasiStatus::VERIFIKASI);
+            $is_final = is_array($status_id) ? in_array(HarmonisasiStatus::FINALISASI, $status_id) : ($status_id == HarmonisasiStatus::FINALISASI);
+
+            if ($is_verif) {
+                $this->where('id_petugas_verifikasi', $user_id);
+            } elseif ($is_final) {
+                $this->where('id_petugas_finalisasi', $user_id);
+            }
+        }
+        return $this->countAllResults();
     }
 
     /**
