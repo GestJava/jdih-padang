@@ -228,34 +228,50 @@ class HarmonisasiAjuanModel extends Model
     /**
      * Total ajuan yang masuk tahun ini
      */
-    public function getTotalAjuanByYear($year)
-    {
-        return $this->where('YEAR(created_at)', $year)
-            ->countAllResults(false);
-    }
-
     /**
-     * Total ajuan yang selesai tahun ini
+     * Total penugasan (registrasi) tahun ini
      */
-    public function getTotalSelesaiByYear($year)
+    public function getTotalTugasByYear($year)
     {
         return $this->where('YEAR(created_at)', $year)
-            ->where('id_status_ajuan', HarmonisasiStatus::SELESAI)
             ->countAllResults(false);
     }
 
     /**
-     * Total ajuan yang ditolak tahun ini
+     * Total selesai verifikasi tahun ini (status > 3)
      */
-    public function getTotalDitolakByYear($year)
+    public function getTotalSelesaiVerifikasiByYear($year)
     {
         return $this->where('YEAR(created_at)', $year)
-            ->where('id_status_ajuan', HarmonisasiStatus::DITOLAK)
+            ->where('id_status_ajuan >', HarmonisasiStatus::VERIFIKASI)
+            ->where('id_status_ajuan !=', HarmonisasiStatus::REVISI)
             ->countAllResults(false);
     }
 
     /**
-     * Total ajuan yang masih dalam proses tahun ini
+     * Total dikembalikan/revisi tahun ini (status 5)
+     */
+    public function getTotalRevisiByYear($year)
+    {
+        return $this->where('YEAR(created_at)', $year)
+            ->where('id_status_ajuan', HarmonisasiStatus::REVISI)
+            ->countAllResults(false);
+    }
+
+    /**
+     * Total antrean aktif (status 3) - TANPA FILTER TAHUN
+     */
+    public function getAntreanAktif($user_id = null)
+    {
+        $builder = $this->where('id_status_ajuan', HarmonisasiStatus::VERIFIKASI);
+        if ($user_id) {
+            $builder->where('id_petugas_verifikasi', $user_id);
+        }
+        return $builder->countAllResults(false);
+    }
+
+    /**
+     * Total ajuan yang masih dalam proses tahun ini (Logic lama - dipertahankan jika perlu)
      */
     public function getTotalProsesByYear($year)
     {
@@ -284,37 +300,41 @@ class HarmonisasiAjuanModel extends Model
     /**
      * Total ajuan yang ditugaskan ke user tertentu tahun ini
      */
-    public function getTotalAjuanByYearAndUser($year, $user_id)
-    {
-        return $this->where('YEAR(created_at)', $year)
-            ->where('id_petugas_verifikasi', $user_id)
-            ->countAllResults(false);
-    }
-
     /**
-     * Total ajuan yang selesai oleh user tertentu tahun ini
+     * Total penugasan ke user tertentu tahun ini
      */
-    public function getTotalSelesaiByYearAndUser($year, $user_id)
+    public function getTotalTugasByYearAndUser($year, $user_id)
     {
         return $this->where('YEAR(created_at)', $year)
             ->where('id_petugas_verifikasi', $user_id)
-            ->where('id_status_ajuan', HarmonisasiStatus::SELESAI)
             ->countAllResults(false);
     }
 
     /**
-     * Total ajuan yang ditolak oleh user tertentu tahun ini
+     * Total selesai verifikasi oleh user tertentu tahun ini (status > 3)
      */
-    public function getTotalDitolakByYearAndUser($year, $user_id)
+    public function getTotalSelesaiVerifikasiByYearAndUser($year, $user_id)
     {
         return $this->where('YEAR(created_at)', $year)
             ->where('id_petugas_verifikasi', $user_id)
-            ->where('id_status_ajuan', HarmonisasiStatus::DITOLAK)
+            ->where('id_status_ajuan >', HarmonisasiStatus::VERIFIKASI)
+            ->where('id_status_ajuan !=', HarmonisasiStatus::REVISI)
             ->countAllResults(false);
     }
 
     /**
-     * Total ajuan yang masih dalam proses oleh user tertentu tahun ini
+     * Total dikembalikan/revisi oleh user tertentu tahun ini (status 5)
+     */
+    public function getTotalRevisiByYearAndUser($year, $user_id)
+    {
+        return $this->where('YEAR(created_at)', $year)
+            ->where('id_petugas_verifikasi', $user_id)
+            ->where('id_status_ajuan', HarmonisasiStatus::REVISI)
+            ->countAllResults(false);
+    }
+
+    /**
+     * Total ajuan dalam proses oleh user tertentu tahun ini (Logic lama)
      */
     public function getTotalProsesByYearAndUser($year, $user_id)
     {

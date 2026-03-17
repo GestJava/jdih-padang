@@ -122,18 +122,18 @@ class Verifikasi extends BaseController
         if ($this->hasPermission('read_all')) {
             // Admin/Supervisor: Statistik tahun ini untuk semua verifikator
             $year_stats = [
-                'total_ajuan_tahun_ini' => $this->harmonisasiAjuanModel->getTotalAjuanByYear($current_year),
-                'total_selesai_tahun_ini' => $this->harmonisasiAjuanModel->getTotalSelesaiByYear($current_year),
-                'total_ditolak_tahun_ini' => $this->harmonisasiAjuanModel->getTotalDitolakByYear($current_year),
-                'total_proses_tahun_ini' => $this->harmonisasiAjuanModel->getTotalProsesByYear($current_year)
+                'total_tugas' => $this->harmonisasiAjuanModel->getTotalTugasByYear($current_year),
+                'total_selesai_verifikasi' => $this->harmonisasiAjuanModel->getTotalSelesaiVerifikasiByYear($current_year),
+                'total_revisi' => $this->harmonisasiAjuanModel->getTotalRevisiByYear($current_year),
+                'total_antrean_aktif' => $this->harmonisasiAjuanModel->getAntreanAktif()
             ];
         } elseif ($this->hasPermission('read_own')) {
             // Verifikator: Statistik tahun ini untuk user ini saja
             $year_stats = [
-                'total_ajuan_tahun_ini' => $this->harmonisasiAjuanModel->getTotalAjuanByYearAndUser($current_year, $user['id_user']),
-                'total_selesai_tahun_ini' => $this->harmonisasiAjuanModel->getTotalSelesaiByYearAndUser($current_year, $user['id_user']),
-                'total_ditolak_tahun_ini' => $this->harmonisasiAjuanModel->getTotalDitolakByYearAndUser($current_year, $user['id_user']),
-                'total_proses_tahun_ini' => $this->harmonisasiAjuanModel->getTotalProsesByYearAndUser($current_year, $user['id_user'])
+                'total_tugas' => $this->harmonisasiAjuanModel->getTotalTugasByYearAndUser($current_year, $user['id_user']),
+                'total_selesai_verifikasi' => $this->harmonisasiAjuanModel->getTotalSelesaiVerifikasiByYearAndUser($current_year, $user['id_user']),
+                'total_revisi' => $this->harmonisasiAjuanModel->getTotalRevisiByYearAndUser($current_year, $user['id_user']),
+                'total_antrean_aktif' => $this->harmonisasiAjuanModel->getAntreanAktif($user['id_user'])
             ];
         }
 
