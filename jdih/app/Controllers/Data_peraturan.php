@@ -374,6 +374,15 @@ class Data_peraturan extends \App\Controllers\BaseController
 			$data['tags'] = $this->loadModel('tagModel')->getAllTags();
 			$data['selected_tags'] = [];
 
+			// Pre-fill if source_id is provided
+			$source_id = $this->request->getGet('source_id');
+			if ($source_id && $this->request->getMethod() !== 'post') {
+				$prefillData = $this->prefillFromHarmonisasi($source_id);
+				if ($prefillData) {
+					$data['peraturan'] = $prefillData;
+				}
+			}
+
 			// Submit
 			if ($this->request->getMethod() === 'post') {
 				log_message('debug', '=== POST REQUEST DETECTED ===');
@@ -387,7 +396,11 @@ class Data_peraturan extends \App\Controllers\BaseController
 				$form_errors = false;
 
 				if ($file->getError() !== 0) { // File harus diupload untuk add
-					$form_errors['file_dokumen'] = 'File dokumen wajib diunggah untuk peraturan baru.';
+					// Check if we have a source file from sync
+					$source_file = $this->request->getPost('source_file');
+					if (!$source_file) {
+						$form_errors['file_dokumen'] = 'File dokumen wajib diunggah untuk peraturan baru.';
+					}
 				} else if ($file->getError() === 0) { // File diupload
 					if ($file->getExtension() !== 'pdf') {
 						$form_errors['file_dokumen'] = 'File harus berformat PDF';
@@ -462,7 +475,21 @@ class Data_peraturan extends \App\Controllers\BaseController
 							log_message('debug', 'File object: ' . ($file ? 'exists' : 'null'));
 
 							// Update data peraturan menggunakan fungsi saveData()
-							$save = $this->loadModel('model')->saveData($peraturan_data, $file);
+							if ($file && $file->isValid() && !$file->hasMoved()) {
+								$save = $this->loadModel('model')->saveData($peraturan_data, $file);
+							} else if ($this->request->getPost('source_file')) {
+								// Sync file from harmonization
+								$source_file_path = $this->request->getPost('source_file');
+								$new_filename = $this->copySyncFile($source_file_path);
+								if ($new_filename) {
+									$peraturan_data['file_dokumen'] = $new_filename;
+									$save = $this->loadModel('model')->saveData($peraturan_data, null);
+								} else {
+									throw new \Exception('Gagal menyalin file TTE dari sumber.');
+								}
+							} else {
+								$save = $this->loadModel('model')->saveData($peraturan_data, $file);
+							}
 
 							// Tambahkan log untuk debugging
 							log_message('debug', 'Hasil saveData: ' . json_encode($save));
@@ -511,6 +538,9 @@ class Data_peraturan extends \App\Controllers\BaseController
 			}
 
 			$data['form_errors'] = $form_errors ?? [];
+			$data['source_id'] = $source_id;
+			$data['source_file'] = $this->request->getVar('source_file') ?: ($data['peraturan']['source_file'] ?? null);
+			
 			return $this->view('data-peraturan-add', $data);
 		} catch (\Exception $e) {
 			log_message('error', 'Error in add method: ' . $e->getMessage());
@@ -530,6 +560,92 @@ class Data_peraturan extends \App\Controllers\BaseController
 		$jenisModel = new JenisDokumenModel();
 		$jenis = $jenisModel->find($id_jenis_dokumen);
 		return $jenis ? $jenis['nama_jenis'] : null;
+	}
+
+	/**
+	 * Pre-fill data from harmonization module
+	 */
+	private function prefillFromHarmonisasi($id_ajuan)
+	{
+		$builder = $this->db->table('harmonisasi_ajuan');
+		$builder->select('harmonisasi_ajuan.*, 
+						 harmonisasi_nomor_peraturan.nomor_peraturan, 
+						 harmonisasi_nomor_peraturan.tahun as tahun_nomor, 
+						 harmonisasi_nomor_peraturan.tanggal_pengesahan, 
+						 harmonisasi_nomor_peraturan.tte_file_path, 
+						 harmonisasi_jenis_peraturan.nama_jenis as nama_jenis_harmonisasi,
+						 instansi.nama_instansi');
+		$builder->join('harmonisasi_nomor_peraturan', 'harmonisasi_nomor_peraturan.id_ajuan = harmonisasi_ajuan.id', 'left');
+		$builder->join('harmonisasi_jenis_peraturan', 'harmonisasi_jenis_peraturan.id = harmonisasi_ajuan.id_jenis_peraturan', 'left');
+		$builder->join('instansi', 'instansi.id = harmonisasi_ajuan.id_instansi_pemohon', 'left');
+		$builder->where('harmonisasi_ajuan.id', $id_ajuan);
+		
+		$row = $builder->get()->getRowArray();
+
+		if (!$row) return null;
+
+		// Mapping Jenis Peraturan
+		$id_jenis_dokumen = '';
+		$jenis_map = [
+			'Keputusan Walikota' => 3,
+			'Peraturan Walikota' => 2,
+			'Edaran Walikota' => 6,
+			'Keputusan Sekretaris Daerah' => 3, 
+		];
+		
+		if (isset($jenis_map[$row['nama_jenis_harmonisasi']])) {
+			$id_jenis_dokumen = $jenis_map[$row['nama_jenis_harmonisasi']];
+		}
+
+		return [
+			'id_jenis_dokumen' => $id_jenis_dokumen,
+			'nomor' => $row['nomor_peraturan'] ?? '',
+			'tahun' => $row['tahun_nomor'] ?? date('Y'),
+			'judul' => $row['judul_peraturan'],
+			'tgl_penetapan' => $row['tanggal_pengesahan'] ?? '',
+			'id_instansi' => $row['id_instansi_pemohon'],
+			'nama_instansi' => $row['nama_instansi'], // Untuk pre-fill Select2
+			'id_status' => 1, // Berlaku (Default)
+			'source_id' => $id_ajuan,
+			'source_file' => $row['tte_file_path']
+		];
+	}
+
+	/**
+	 * Copy TTE signed file to public peraturan folder
+	 */
+	private function copySyncFile($source_path)
+	{
+		if (empty($source_path)) return null;
+
+		// Handle the jdih/ prefix if it exists in DB path
+		$clean_path = str_replace('jdih/', '', $source_path);
+		
+		// The path is relative to the root of CI4 application (FCPATH)
+		$full_source_path = FCPATH . $clean_path;
+		
+		if (!file_exists($full_source_path)) {
+			// Try another possible root (parent folder)
+			$full_source_path = dirname(FCPATH) . DIRECTORY_SEPARATOR . $source_path;
+			if (!file_exists($full_source_path)) {
+				log_message('error', 'Source TTE file not found: ' . $full_source_path);
+				return null;
+			}
+		}
+
+		$filename = basename($full_source_path);
+		
+		// Destination path
+		$target_dir = ROOTPATH . 'uploads/peraturan/';
+		if (!is_dir($target_dir)) {
+			mkdir($target_dir, 0755, true);
+		}
+
+		if (copy($full_source_path, $target_dir . $filename)) {
+			return $filename;
+		}
+
+		return null;
 	}
 
 

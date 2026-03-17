@@ -89,6 +89,13 @@ Halaman hasil/index.php: Tabel ajuan status SELESAI & DITOLAK dengan pencarian s
                                        title="Detail">
                                         <i class="fas fa-eye"></i>
                                     </a>
+                                    <?php if ($row['id_status_ajuan'] == 14): ?>
+                                    <a href="<?= base_url('data_peraturan/add?source_id=' . $row['id_ajuan']) ?>" 
+                                       class="btn btn-outline-success btn-sm" 
+                                       title="Sinkron ke JDIH">
+                                        <i class="fas fa-sync-alt"></i>
+                                    </a>
+                                    <?php endif; ?>
                                     <?php 
                                     // Check if 'delete' permission exists using RBA data passed from BaseController
                                     // Also allow if user is strictly 'Administrator' (failsafe)

@@ -195,10 +195,10 @@
 						<small class="small" style="display:block">Peraturan yang dipublikasikan akan muncul dalam pencarian</small>
 					</div>
 				</div>
-				<div class="row">
-					<div class="col-sm-9 offset-sm-3">
 						<button type="submit" name="submit" value="submit" class="btn btn-primary">Simpan</button>
 						<input type="hidden" name="id_peraturan" value="<?= esc($peraturan['id_peraturan'] ?? '') ?>" />
+						<input type="hidden" name="source_id" value="<?= esc($source_id ?? '') ?>" />
+						<input type="hidden" name="source_file" value="<?= esc($source_file ?? '') ?>" />
 					</div>
 				</div>
 			</div>
