@@ -479,17 +479,26 @@ class Legalisasi extends BaseController
             // Ambil data sesuai kewenangan - SEMUA JENIS DOKUMEN
             $this->data['pending_paraf'] = $this->getAjuanForAsistenParaf();
 
-            // Hitung statistik untuk Asisten (global - semua instansi, semua jenis, tahun berjalan)
+            // Get instansi yang menjadi kewenangan asisten untuk filter statistik
+            $user = session()->get('user');
+            $id_user_asisten = $user['id_user'] ?? null;
+            $instansiModel = new \App\Models\InstansiModel();
+            $instansiList = $instansiModel->getInstansiByAsisten($id_user_asisten);
+            $id_instansi_array = !empty($instansiList) ? array_column($instansiList, 'id') : [0];
+
+            // Hitung statistik untuk Asisten (Filter berdasarkan instansi kewenangan, tahun berjalan)
             $currentYear = date('Y');
             
-            // 1. Menunggu Paraf Asisten (status 9) - semua instansi, semua jenis
+            // 1. Menunggu Paraf Asisten (status 9)
             $pendingAsistenParaf = $this->harmonisasiAjuanModel
                 ->where('id_status_ajuan', HarmonisasiStatus::PARAF_ASISTEN)
+                ->whereIn('id_instansi_pemohon', $id_instansi_array)
                 ->countAllResults();
             
-            // 2. Total Ajuan (semua status) di tahun ini - global
+            // 2. Total Ajuan (semua status) di tahun ini
             $totalAjuan = $this->harmonisasiAjuanModel
                 ->where('YEAR(created_at)', $currentYear)
+                ->whereIn('id_instansi_pemohon', $id_instansi_array)
                 ->countAllResults();
             
             // 3. Dalam Proses (status 11, 12, 13) - setelah paraf Asisten
@@ -499,15 +508,17 @@ class Legalisasi extends BaseController
                     HarmonisasiStatus::PARAF_WAWAKO,     // 12
                     HarmonisasiStatus::TTE_WALIKOTA      // 13
                 ])
+                ->whereIn('id_instansi_pemohon', $id_instansi_array)
                 ->countAllResults();
             
-            // 4. Selesai (status 14, 15) di tahun ini - global
+            // 4. Selesai (status 14, 15) di tahun ini
             $selesai = $this->harmonisasiAjuanModel
                 ->where('YEAR(created_at)', $currentYear)
                 ->whereIn('id_status_ajuan', [
                     HarmonisasiStatus::SELESAI,  // 14
                     HarmonisasiStatus::DITOLAK   // 15
                 ])
+                ->whereIn('id_instansi_pemohon', $id_instansi_array)
                 ->countAllResults();
 
             // Statistik untuk Asisten
