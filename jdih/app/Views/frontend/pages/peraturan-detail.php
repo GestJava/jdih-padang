@@ -939,26 +939,32 @@
 
         const loadVoices = () => {
             const voices = window.speechSynthesis.getVoices();
-            voiceSelect.innerHTML = '<option value="">Default Browser (Id)</option>';
+            
+            // Define Premium Options
+            let optionsHtml = `
+                <option value="">Default Browser (Id)</option>
+                <optgroup label="Google AI Premium (Neural)">
+                    <option value="google-A" ${ttsSettings.voiceURI === 'google-A' ? 'selected' : ''}>Google AI - Wanita A (Wavenet)</option>
+                    <option value="google-D" ${ttsSettings.voiceURI === 'google-D' ? 'selected' : ''}>Google AI - Wanita B (Wavenet)</option>
+                    <option value="google-B" ${ttsSettings.voiceURI === 'google-B' ? 'selected' : ''}>Google AI - Pria A (Wavenet)</option>
+                    <option value="google-C" ${ttsSettings.voiceURI === 'google-C' ? 'selected' : ''}>Google AI - Pria B (Wavenet)</option>
+                </optgroup>
+                <optgroup label="Suara Sistem (Browser)">
+            `;
             
             // Filter Indonesian voices
             const idVoices = voices.filter(v => v.lang.startsWith('id'));
             
             idVoices.forEach(voice => {
-                const option = document.createElement('option');
-                option.value = voice.voiceURI;
-                option.textContent = `${voice.name} (${voice.lang})`;
-                if (voice.voiceURI === ttsSettings.voiceURI) option.selected = true;
-                voiceSelect.appendChild(option);
+                optionsHtml += `<option value="${voice.voiceURI}" ${voice.voiceURI === ttsSettings.voiceURI ? 'selected' : ''}>${voice.name} (${voice.lang})</option>`;
             });
 
-            // If no Indonesian voice, show all optionally or warning
             if (idVoices.length === 0) {
-                 const option = document.createElement('option');
-                 option.disabled = true;
-                 option.textContent = "Tidak ditemukan suara Bahasa Indonesia di perangkat ini";
-                 voiceSelect.appendChild(option);
+                 optionsHtml += `<option disabled>Tidak ditemukan suara ID tambahan di browser</option>`;
             }
+
+            optionsHtml += `</optgroup>`;
+            voiceSelect.innerHTML = optionsHtml;
         };
 
         // Voices are loaded asynchronously
