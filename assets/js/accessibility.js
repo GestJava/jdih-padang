@@ -124,7 +124,7 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('toggleContrast').classList.toggle('active', settings.contrast);
 
         // Monochrome
-        body.classList.toggle('a11y-monochrome', settings.monochrome);
+        document.documentElement.classList.toggle('a11y-monochrome', settings.monochrome);
         document.getElementById('toggleMonochrome').classList.toggle('active', settings.monochrome);
 
         // Links
