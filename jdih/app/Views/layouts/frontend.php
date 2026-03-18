@@ -204,7 +204,6 @@ $is_localhost = $is_valid_host && (
     </main>
 
     <?= $this->include('frontend/components/footer') ?>
-    <?= $this->include('frontend/components/accessibility_widget') ?>
 
     <a href="#" class="back-to-top d-flex align-items-center justify-content-center">
         <i class="fas fa-arrow-up icon-sm"></i>
