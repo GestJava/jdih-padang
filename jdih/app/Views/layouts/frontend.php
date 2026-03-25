@@ -113,6 +113,7 @@ $is_localhost = $is_valid_host && (
 
     <!-- Favicon konsisten hanya .ico -->
     <link rel="icon" type="image/x-icon" href="<?= base_url('favicon.ico') ?>">
+    <link rel="apple-touch-icon" sizes="192x192" href="<?= base_url('images/icons/icon-192x192.png') ?>">
 
     <!-- PWA Manifest -->
     <link rel="manifest" href="<?= base_url('manifest.json') ?>">
@@ -330,6 +331,25 @@ $is_localhost = $is_valid_host && (
             }
         });
 
+    </script>
+
+    <!-- Service Worker Registration -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', function() {
+                navigator.serviceWorker.register('/sw.js', { scope: '/' })
+                    .then(function(registration) {
+                        console.log('[PWA] Service Worker registered, scope:', registration.scope);
+                        // Check for updates periodically
+                        setInterval(function() {
+                            registration.update();
+                        }, 60 * 60 * 1000); // Check every hour
+                    })
+                    .catch(function(error) {
+                        console.warn('[PWA] Service Worker registration failed:', error);
+                    });
+            });
+        }
     </script>
 </body>
 

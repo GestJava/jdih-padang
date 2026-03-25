@@ -1,6 +1,7 @@
 // Dynamic cache version - update this when you want to force cache refresh
-const CACHE_VERSION = 'v1.1.1';
+const CACHE_VERSION = 'v1.2.0';
 const CACHE_NAME = `jdih-padang-${CACHE_VERSION}`;
+const MAX_CACHE_ITEMS = 100;
 
 // Get base URL dynamically
 const getBaseUrl = () => {
@@ -25,9 +26,8 @@ const getUrlsToCache = () => {
         `${base}/favicon.ico`,
         `${base}/images/logo-jdih.png`,
         `${base}/images/jdihkotapadang.png`,
-        `${base}/assets/css/home-optimized.css`,
-        `${base}/assets/js/home-optimized.js`,
-        `${base}/assets/img/hero-image.webp`,
+        `${base}/images/icons/icon-192x192.png`,
+        `${base}/images/icons/icon-512x512.png`,
         `${base}/vendors/bootstrap/css/bootstrap.min.css`,
         `${base}/vendors/fontawesome/css/all.min.css`,
         `${base}/vendors/jquery/jquery.min.js`,
@@ -35,7 +35,17 @@ const getUrlsToCache = () => {
     ];
 };
 
-// Install event - skip waiting to activate immediately
+// Limit cache size to prevent unbounded growth
+async function trimCache(cacheName, maxItems) {
+    const cache = await caches.open(cacheName);
+    const keys = await cache.keys();
+    if (keys.length > maxItems) {
+        await cache.delete(keys[0]);
+        return trimCache(cacheName, maxItems);
+    }
+}
+
+// Install event
 self.addEventListener('install', event => {
     console.log('[ServiceWorker] Installing...', CACHE_NAME);
     
@@ -44,11 +54,10 @@ self.addEventListener('install', event => {
             .then(cache => {
                 console.log('[ServiceWorker] Cache opened:', CACHE_NAME);
                 const urlsToCache = getUrlsToCache();
-                // Use addAll with error handling
                 return Promise.allSettled(
                     urlsToCache.map(url => 
                         cache.add(url).catch(err => {
-                            console.warn('[ServiceWorker] Failed to cache:', url, err);
+                            console.warn('[ServiceWorker] Failed to cache:', url, err.message);
                             return null;
                         })
                     )
@@ -60,16 +69,14 @@ self.addEventListener('install', event => {
                     console.log(`[ServiceWorker] Cached ${results.length - failed} resources`);
                 });
             })
+            .then(() => self.skipWaiting()) // skipWaiting inside waitUntil chain
             .catch(err => {
                 console.error('[ServiceWorker] Install failed:', err);
             })
     );
-    
-    // Force activation of new service worker
-    self.skipWaiting();
 });
 
-// Fetch event with smart caching strategy - More permissive to avoid canceling requests
+// Fetch event with smart caching strategy
 self.addEventListener('fetch', event => {
     // Skip non-GET requests
     if (event.request.method !== 'GET') {
@@ -91,7 +98,7 @@ self.addEventListener('fetch', event => {
         url.pathname.startsWith('/api/') ||
         url.pathname.startsWith('/ajax/') ||
         url.pathname.includes('/integrasiJDIH/')) {
-        return; // Let browser handle these normally
+        return;
     }
 
     // Skip admin panel and protected routes
@@ -99,7 +106,7 @@ self.addEventListener('fetch', event => {
         url.pathname.startsWith('/harmonisasi') ||
         url.pathname.startsWith('/login') ||
         url.pathname.startsWith('/legalisasi')) {
-        return; // Don't cache admin pages
+        return;
     }
 
     // Only intercept specific resource types
@@ -108,30 +115,25 @@ self.addEventListener('fetch', event => {
     const isStaticAsset = acceptHeader.includes('text/css') || 
                          acceptHeader.includes('application/javascript') ||
                          acceptHeader.includes('image/') ||
-                         url.pathname.match(/\.(css|js|png|jpg|jpeg|gif|svg|ico|woff|woff2|ttf|eot)$/i);
+                         url.pathname.match(/\.(css|js|png|jpg|jpeg|gif|svg|ico|woff|woff2|ttf|eot|webp)$/i);
 
     // For HTML pages, use network-first with cache fallback
     if (isHTML) {
         event.respondWith(
             (async () => {
                 try {
-                    // Try network first
                     const networkResponse = await fetch(event.request.clone());
                     
-                    // Only cache successful responses
                     if (networkResponse && networkResponse.status === 200) {
                         const cache = await caches.open(CACHE_NAME);
-                        // Clone response before caching
-                        cache.put(event.request, networkResponse.clone()).catch(err => {
-                            console.warn('[ServiceWorker] Failed to cache:', event.request.url, err);
-                        });
+                        cache.put(event.request, networkResponse.clone()).catch(() => {});
+                        trimCache(CACHE_NAME, MAX_CACHE_ITEMS).catch(() => {});
                     }
                     
                     return networkResponse;
                 } catch (err) {
-                    console.warn('[ServiceWorker] Network failed, trying cache:', event.request.url);
+                    console.warn('[ServiceWorker] Network failed, trying cache:', url.pathname);
                     
-                    // Fallback to cache
                     const cachedResponse = await caches.match(event.request);
                     if (cachedResponse) {
                         return cachedResponse;
@@ -145,8 +147,12 @@ self.addEventListener('fetch', event => {
                         }
                     }
                     
-                    // If all else fails, let browser handle it
-                    return fetch(event.request);
+                    // Return a simple offline response
+                    return new Response('Offline', {
+                        status: 503,
+                        statusText: 'Service Unavailable',
+                        headers: new Headers({ 'Content-Type': 'text/plain' })
+                    });
                 }
             })()
         );
@@ -158,42 +164,41 @@ self.addEventListener('fetch', event => {
         event.respondWith(
             (async () => {
                 try {
-                    // Try cache first
                     const cachedResponse = await caches.match(event.request);
                     if (cachedResponse) {
-                        // Update cache in background (don't wait)
+                        // Stale-while-revalidate: update cache in background
                         fetch(event.request.clone()).then(response => {
                             if (response && response.status === 200) {
                                 caches.open(CACHE_NAME).then(cache => {
                                     cache.put(event.request, response.clone());
+                                    trimCache(CACHE_NAME, MAX_CACHE_ITEMS).catch(() => {});
                                 });
                             }
-                        }).catch(() => {
-                            // Silently fail background update
-                        });
+                        }).catch(() => {});
                         return cachedResponse;
                     }
 
                     // If not in cache, fetch from network
                     const networkResponse = await fetch(event.request);
                     if (networkResponse && networkResponse.status === 200) {
-                        // Cache for future use
                         const cache = await caches.open(CACHE_NAME);
                         cache.put(event.request, networkResponse.clone()).catch(() => {});
+                        trimCache(CACHE_NAME, MAX_CACHE_ITEMS).catch(() => {});
                     }
                     return networkResponse;
                 } catch (err) {
-                    console.warn('[ServiceWorker] Static asset fetch failed:', event.request.url, err);
-                    // Return cached version if available, otherwise let browser handle
                     const cachedResponse = await caches.match(event.request);
-                    return cachedResponse || fetch(event.request);
+                    if (cachedResponse) {
+                        return cachedResponse;
+                    }
+                    return new Response('', { status: 408, statusText: 'Request Timeout' });
                 }
             })()
         );
         return;
     }
 
-    // For other requests, don't intercept - let browser handle normally
+    // For other requests, don't intercept
     return;
 });
 
@@ -212,26 +217,10 @@ self.addEventListener('activate', event => {
                 })
             );
         }).then(() => {
-            // Take control of all pages immediately
             return self.clients.claim();
         })
     );
 });
-
-// Background sync for offline functionality
-self.addEventListener('sync', event => {
-    if (event.tag === 'background-sync') {
-        event.waitUntil(doBackgroundSync());
-    }
-});
-
-function doBackgroundSync() {
-    // Sync any pending data when back online
-    console.log('JDIH Padang: Background sync triggered');
-    
-    // Could sync offline form submissions, feedback, etc.
-    return Promise.resolve();
-}
 
 // Handle push notifications
 self.addEventListener('push', event => {
@@ -240,8 +229,8 @@ self.addEventListener('push', event => {
     let notificationData = {
         title: 'JDIH Kota Padang',
         body: 'Ada dokumen hukum baru di JDIH Kota Padang',
-        icon: `${getBaseUrl()}/images/logo-jdih.png`,
-        badge: `${getBaseUrl()}/images/logo-jdih.png`,
+        icon: `${getBaseUrl()}/images/icons/icon-192x192.png`,
+        badge: `${getBaseUrl()}/images/icons/icon-192x192.png`,
         vibrate: [100, 50, 100],
         data: {
             url: `${getBaseUrl()}/`,
@@ -249,7 +238,6 @@ self.addEventListener('push', event => {
         }
     };
 
-    // Parse push data if available
     if (event.data) {
         try {
             const data = event.data.json();
@@ -265,7 +253,7 @@ self.addEventListener('push', event => {
             {
                 action: 'explore',
                 title: 'Lihat Dokumen',
-                icon: `${getBaseUrl()}/images/logo-jdih.png`
+                icon: `${getBaseUrl()}/images/icons/icon-192x192.png`
             },
             {
                 action: 'close',
